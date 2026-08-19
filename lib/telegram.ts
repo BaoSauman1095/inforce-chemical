@@ -1,8 +1,12 @@
-import type { ContactFormInput } from "./validation";
+import type { ContactFormInput, ProductOrderInput, ProductQuestionInput } from "./validation";
 
 /** Escapes characters that are special in Telegram's MarkdownV2 parse mode. */
 function escapeMarkdownV2(value: string): string {
   return value.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, (ch) => `\\${ch}`);
+}
+
+function timestampLine(): string {
+  return `_${escapeMarkdownV2(new Date().toLocaleString("uk-UA"))}_`;
 }
 
 function formatLeadMessage(data: ContactFormInput): string {
@@ -20,7 +24,43 @@ function formatLeadMessage(data: ContactFormInput): string {
     lines.push("", `*Повідомлення:*`, escapeMarkdownV2(data.message));
   }
 
-  lines.push("", `_${escapeMarkdownV2(new Date().toLocaleString("uk-UA"))}_`);
+  lines.push("", timestampLine());
+
+  return lines.join("\n");
+}
+
+function formatOrderMessage(data: ProductOrderInput): string {
+  const lines = [
+    "🛒 *Нове замовлення товару — IN FORCE CHEMICAL*",
+    "",
+    `*Товар:* ${escapeMarkdownV2(data.productName)}`,
+    `*Упаковка:* ${escapeMarkdownV2(data.packSize)}`,
+    `*Кількість:* ${escapeMarkdownV2(String(data.quantity))}`,
+    "",
+    `*Ім'я:* ${escapeMarkdownV2(data.name)}`,
+    `*Телефон:* ${escapeMarkdownV2(data.phone)}`,
+    `*Email:* ${escapeMarkdownV2(data.email)}`,
+    "",
+    timestampLine(),
+  ];
+
+  return lines.join("\n");
+}
+
+function formatQuestionMessage(data: ProductQuestionInput): string {
+  const lines = [
+    "❓ *Питання про товар — IN FORCE CHEMICAL*",
+    "",
+    `*Товар:* ${escapeMarkdownV2(data.productName)}`,
+    "",
+    `*Ім'я:* ${escapeMarkdownV2(data.name)}`,
+    `*Email:* ${escapeMarkdownV2(data.email)}`,
+    "",
+    `*Питання:*`,
+    escapeMarkdownV2(data.question),
+    "",
+    timestampLine(),
+  ];
 
   return lines.join("\n");
 }
@@ -33,11 +73,11 @@ export class TelegramNotifyError extends Error {
 }
 
 /**
- * Sends a formatted lead notification to the configured Telegram chat.
- * Throws TelegramNotifyError on missing config or a failed API call so the
- * caller can log/report without leaking bot credentials to the client.
+ * Sends a pre-formatted MarkdownV2 message to the configured Telegram chat.
+ * Throws TelegramNotifyError on missing config or a failed API call so
+ * callers can log/report without leaking bot credentials to the client.
  */
-export async function sendTelegramLead(data: ContactFormInput): Promise<void> {
+async function sendTelegramMessage(text: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
@@ -56,7 +96,7 @@ export async function sendTelegramLead(data: ContactFormInput): Promise<void> {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: chatId,
-        text: formatLeadMessage(data),
+        text,
         parse_mode: "MarkdownV2",
         disable_web_page_preview: true,
       }),
@@ -78,4 +118,16 @@ export async function sendTelegramLead(data: ContactFormInput): Promise<void> {
       `Telegram API responded with ${response.status}: ${details}`
     );
   }
+}
+
+export async function sendTelegramLead(data: ContactFormInput): Promise<void> {
+  await sendTelegramMessage(formatLeadMessage(data));
+}
+
+export async function sendProductOrder(data: ProductOrderInput): Promise<void> {
+  await sendTelegramMessage(formatOrderMessage(data));
+}
+
+export async function sendProductQuestion(data: ProductQuestionInput): Promise<void> {
+  await sendTelegramMessage(formatQuestionMessage(data));
 }

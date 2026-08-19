@@ -31,3 +31,59 @@ export const contactFormSchema = z.object({
 });
 
 export type ContactFormInput = z.infer<typeof contactFormSchema>;
+
+const phoneField = z
+  .string()
+  .trim()
+  .transform((v) => v.replace(/[\s\-()]/g, ""))
+  .refine((v) => PHONE_REGEX.test(v), {
+    message: "Введіть коректний номер телефону, напр. 0671234567",
+  });
+
+export const productOrderSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Вкажіть ім'я (мінімум 2 символи)")
+    .max(80, "Ім'я занадто довге"),
+  phone: phoneField,
+  email: z
+    .string()
+    .trim()
+    .email("Введіть коректний email")
+    .max(160, "Email занадто довгий"),
+  quantity: z.coerce
+    .number({ invalid_type_error: "Вкажіть кількість" })
+    .int("Кількість має бути цілим числом")
+    .min(1, "Кількість має бути не менше 1")
+    .max(10000, "Занадто велика кількість"),
+  packSize: z.string().trim().min(1, "Оберіть розмір упаковки").max(40),
+  productName: z.string().trim().min(1).max(160),
+  productSlug: z.string().trim().min(1).max(160),
+  company: z.string().optional().default(""),
+});
+
+export type ProductOrderInput = z.infer<typeof productOrderSchema>;
+
+export const productQuestionSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Вкажіть ім'я (мінімум 2 символи)")
+    .max(80, "Ім'я занадто довге"),
+  email: z
+    .string()
+    .trim()
+    .email("Введіть коректний email")
+    .max(160, "Email занадто довгий"),
+  question: z
+    .string()
+    .trim()
+    .min(3, "Питання занадто коротке")
+    .max(1000, "Питання занадто довге"),
+  productName: z.string().trim().min(1).max(160),
+  productSlug: z.string().trim().min(1).max(160),
+  company: z.string().optional().default(""),
+});
+
+export type ProductQuestionInput = z.infer<typeof productQuestionSchema>;

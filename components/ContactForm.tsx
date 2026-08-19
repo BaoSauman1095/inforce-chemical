@@ -92,14 +92,21 @@ export default function ContactForm() {
             className="mt-6 flex flex-col gap-3.5"
             noValidate
           >
-            {/* Honeypot field — hidden from real users, catches naive bots */}
+            {/*
+              Honeypot field — hidden from real users, catches naive bots.
+              Uses `display: none` rather than off-screen positioning:
+              autofill/password-manager extensions can still find and fill
+              absolutely-positioned "invisible" inputs, which silently makes
+              the form report fake success for a real visitor. `display: none`
+              is reliably skipped by autofill.
+            */}
             <input
               type="text"
               tabIndex={-1}
               autoComplete="off"
               value={form.company}
               onChange={(e) => update("company", e.target.value)}
-              className="absolute -left-[9999px] h-0 w-0 opacity-0"
+              className="hidden"
               aria-hidden="true"
             />
 

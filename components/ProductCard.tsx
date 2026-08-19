@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import ImagePlaceholder from "./ImagePlaceholder";
 import { formatPrice } from "@/lib/utils";
@@ -46,12 +47,12 @@ export default function ProductCard({ item }: { item: FlatCatalogItem }) {
           </p>
         )}
 
-        <a
-          href="#contacts"
+        <Link
+          href={`/products/${item.slug}`}
           className="mt-2.5 rounded-[9px] border border-brand px-3.5 py-2.5 text-center font-heading text-[13px] font-bold tracking-wide text-brand transition-colors hover:bg-brand hover:text-white"
         >
           Детальніше
-        </a>
+        </Link>
       </div>
     </motion.div>
   );

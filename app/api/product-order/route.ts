@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { contactFormSchema } from "@/lib/validation";
-import { sendTelegramLead, TelegramNotifyError } from "@/lib/telegram";
+import { productOrderSchema } from "@/lib/validation";
+import { sendProductOrder, TelegramNotifyError } from "@/lib/telegram";
 import { getClientIp, isRateLimited } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
 
   try {
-    if (isRateLimited(`contact:${ip}`)) {
+    if (isRateLimited(`order:${ip}`)) {
       return NextResponse.json(
         { ok: false, error: "Забагато запитів. Спробуйте за хвилину." },
         { status: 429 }
@@ -28,14 +28,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const parsed = contactFormSchema.parse(body);
+    const parsed = productOrderSchema.parse(body);
 
     // Honeypot triggered — silently report success to avoid tipping off bots.
     if (parsed.company) {
       return NextResponse.json({ ok: true });
     }
 
-    await sendTelegramLead(parsed);
+    await sendProductOrder(parsed);
 
     return NextResponse.json({ ok: true });
   } catch (err) {
@@ -52,18 +52,18 @@ export async function POST(req: NextRequest) {
     }
 
     if (err instanceof TelegramNotifyError) {
-      console.error("[send-notification] Telegram delivery failed:", err.message, err.cause);
+      console.error("[product-order] Telegram delivery failed:", err.message, err.cause);
       return NextResponse.json(
         {
           ok: false,
           error:
-            "Не вдалося надіслати заявку. Зателефонуйте нам напряму або спробуйте пізніше.",
+            "Не вдалося надіслати замовлення. Зателефонуйте нам напряму або спробуйте пізніше.",
         },
         { status: 502 }
       );
     }
 
-    console.error("[send-notification] Unexpected error:", err);
+    console.error("[product-order] Unexpected error:", err);
     return NextResponse.json(
       { ok: false, error: "Внутрішня помилка сервера." },
       { status: 500 }
