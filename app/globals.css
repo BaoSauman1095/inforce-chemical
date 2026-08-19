@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+/*
+ * Intentionally NOT using `html { scroll-behavior: smooth }` here: on a long
+ * page it makes every anchor jump animate for 1s+, and on some Chrome builds
+ * a wheel/trackpad scroll that starts while that animation is still running
+ * gets absorbed by it, so the page briefly stops responding to manual
+ * scrolling. Smooth in-page navigation is instead handled by
+ * components/SmoothScroll.tsx, which only animates actual clicks on
+ * `#anchor` links via scrollIntoView — regular wheel/trackpad/keyboard
+ * scrolling stays native and is never intercepted.
+ */
+
+body {
+  background: #0d0d0d;
+  color: #f2f0ef;
+}
+
+::selection {
+  background: #8b1a2b;
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Diagonal watermark stripes used behind the hero/full page */
+.watermark-row {
+  white-space: nowrap;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  font-family: var(--font-montserrat), sans-serif;
+}
