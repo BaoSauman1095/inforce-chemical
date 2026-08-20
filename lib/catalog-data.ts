@@ -434,7 +434,7 @@ export const CATALOG: Catalog = {
           slug: "mikrofol-kombi",
           name: "Мікрофол Комбі",
           brand: "Biolchim",
-          packs: [{ label: "1 кг", price: 453 }, { label: "10 кг", price: 453 }],
+          packs: [{ label: "1 кг", price: 453 }],
           unit: "кг",
           tagline: "Концентрований комплекс мікроелементів з високим вмістом магнію",
           description:
@@ -459,7 +459,7 @@ export const CATALOG: Catalog = {
           slug: "multybor-21",
           name: "Мультибор 21",
           brand: "Biolchim",
-          packs: [{ label: "1 кг", price: 218 }, { label: "10 кг", price: 218 }],
+          packs: [{ label: "10 кг", price: 218 }],
           unit: "кг",
           tagline: "Концентроване борне добриво для цвітіння й запилення",
           description:
