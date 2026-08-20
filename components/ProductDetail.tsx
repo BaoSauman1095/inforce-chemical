@@ -1,9 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Breadcrumbs from "./Breadcrumbs";
 import ProductGallery from "./ProductGallery";
 import ProductActions from "./ProductActions";
 import RelatedProducts from "./RelatedProducts";
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import type { FlatCatalogItem } from "@/lib/types";
 
 interface ProductDetailProps {
@@ -21,6 +24,9 @@ function Spec({ label, value }: { label: string; value: string }) {
 }
 
 export default function ProductDetail({ product, related }: ProductDetailProps) {
+  const [packIndex, setPackIndex] = useState(0);
+  const selectedPack = product.packs[packIndex];
+
   const specRows = [
     product.activeIngredient && { label: "Діюча речовина", value: product.activeIngredient },
     product.formulationType && { label: "Препаративна форма", value: product.formulationType },
@@ -61,21 +67,25 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
 
           {product.packs.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
-              {product.packs.map((pack) => (
-                <span
-                  key={pack}
-                  className="rounded-md bg-brand/[.08] px-3 py-1.5 text-[13px] font-semibold text-brand"
+              {product.packs.map((pack, i) => (
+                <button
+                  key={pack.label}
+                  type="button"
+                  onClick={() => setPackIndex(i)}
+                  className={cn(
+                    "rounded-md px-3 py-1.5 text-[13px] font-semibold transition-colors",
+                    i === packIndex ? "bg-brand text-white" : "bg-brand/[.08] text-brand hover:bg-brand/[.16]"
+                  )}
                 >
-                  {pack}
-                </span>
+                  {pack.label}
+                </button>
               ))}
             </div>
           )}
 
-          {product.price ? (
+          {selectedPack?.price ? (
             <p className="mt-4 font-heading text-2xl font-extrabold text-brand">
-              {product.packs.length > 1 ? "від " : ""}
-              {formatPrice(product.price)} грн/{product.unit}
+              {formatPrice(selectedPack.price)} грн/{product.unit}
             </p>
           ) : (
             <p className="mt-4 font-heading text-lg font-semibold text-[#8a8582]">Ціна за запитом</p>

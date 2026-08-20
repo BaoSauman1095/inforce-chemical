@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { SOCIALS } from "@/lib/constants";
 
 const LINKS = [
@@ -14,11 +15,14 @@ export default function Footer() {
     <footer className="border-t border-white/[.08] pb-24 md:pb-10">
       <div className="mx-auto flex max-w-[1240px] flex-wrap items-center gap-5 px-5 py-[30px] md:px-7">
         <div className="flex flex-col items-start gap-3">
-          <span className="flex items-center gap-2 font-heading text-base font-extrabold tracking-wide opacity-85">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-xs font-extrabold text-white">
-              IF
-            </span>
-            IN FORCE CHEMICAL
+          <span className="flex items-center rounded-lg bg-paper px-2.5 py-1.5 opacity-90">
+            <Image
+              src="/brand/logo-horizontal.jpg"
+              alt="IN FORCE CHEMICAL"
+              width={858}
+              height={248}
+              className="h-6 w-auto object-contain"
+            />
           </span>
           <p className="text-[13.5px] text-paper/45">
             © {year} IN FORCE CHEMICAL. Всі права захищені.

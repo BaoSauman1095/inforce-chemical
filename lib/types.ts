@@ -12,13 +12,19 @@ export interface DosageRow {
   timing: string;
 }
 
+export interface PackOption {
+  /** Displayed size label, e.g. "5 л" or "25 кг". */
+  label: string;
+  /** Per-unit price (грн) when this specific pack size is selected. */
+  price?: number;
+}
+
 export interface CatalogItem {
   /** Stable, URL-safe identifier — used as the /products/[slug] route param. */
   slug: string;
   name: string;
   brand: string;
-  packs: string[];
-  price?: number;
+  packs: PackOption[];
   unit?: string;
   /** Short bold subheading shown under the price on the detail page. */
   tagline?: string;

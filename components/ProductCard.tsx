@@ -1,12 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import ImagePlaceholder from "./ImagePlaceholder";
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import type { FlatCatalogItem } from "@/lib/types";
 
 export default function ProductCard({ item }: { item: FlatCatalogItem }) {
+  const [packIndex, setPackIndex] = useState(0);
+  const selectedPack = item.packs[packIndex];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -26,20 +30,27 @@ export default function ProductCard({ item }: { item: FlatCatalogItem }) {
         </p>
 
         <div className="mt-2.5 flex flex-wrap gap-[5px]">
-          {item.packs.map((pack) => (
-            <span
-              key={pack}
-              className="whitespace-nowrap rounded-md bg-brand/[.08] px-[9px] py-1 text-[11px] font-semibold text-brand"
+          {item.packs.map((pack, i) => (
+            <button
+              key={pack.label}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                setPackIndex(i);
+              }}
+              className={cn(
+                "whitespace-nowrap rounded-md px-[9px] py-1 text-[11px] font-semibold transition-colors",
+                i === packIndex ? "bg-brand text-white" : "bg-brand/[.08] text-brand hover:bg-brand/[.16]"
+              )}
             >
-              {pack}
-            </span>
+              {pack.label}
+            </button>
           ))}
         </div>
 
-        {item.price ? (
+        {selectedPack?.price ? (
           <p className="mt-3 font-heading text-[15px] font-bold text-brand">
-            {item.packs.length > 1 ? "від " : ""}
-            {formatPrice(item.price)} грн/{item.unit}
+            {formatPrice(selectedPack.price)} грн/{item.unit}
           </p>
         ) : (
           <p className="mt-3 font-heading text-[13.5px] font-semibold text-[#8a8582]">

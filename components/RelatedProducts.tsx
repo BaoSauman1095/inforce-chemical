@@ -28,10 +28,9 @@ export default function RelatedProducts({ items }: { items: FlatCatalogItem[] })
               <p className="mt-1.5 font-heading text-[14.5px] font-bold leading-tight text-[#141414]">
                 {item.name}
               </p>
-              {item.price ? (
+              {item.packs[0]?.price ? (
                 <p className="mt-2 font-heading text-[14px] font-bold text-brand">
-                  {item.packs.length > 1 ? "від " : ""}
-                  {formatPrice(item.price)} грн/{item.unit}
+                  {formatPrice(item.packs[0].price)} грн/{item.unit}
                 </p>
               ) : (
                 <p className="mt-2 font-heading text-[12.5px] font-semibold text-[#8a8582]">

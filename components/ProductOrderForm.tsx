@@ -15,7 +15,7 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
     email: "",
     phone: "",
     quantity: "1",
-    packSize: product.packs[0] ?? "",
+    packSize: product.packs[0]?.label ?? "",
     company: "", // honeypot — should always stay empty
   });
   const [status, setStatus] = useState<Status>("idle");
@@ -134,8 +134,8 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
           className="w-1/2 rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
         >
           {product.packs.map((pack) => (
-            <option key={pack} value={pack}>
-              {pack}
+            <option key={pack.label} value={pack.label}>
+              {pack.label}
             </option>
           ))}
         </select>

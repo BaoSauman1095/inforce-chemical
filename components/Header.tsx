@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { NAV_LINKS, PHONE_DISPLAY, PHONE_TEL } from "@/lib/constants";
 
@@ -13,11 +14,15 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-white/[.07] bg-ink/[.82] backdrop-blur-md">
       <div className="mx-auto flex max-w-[1240px] items-center gap-7 px-5 py-4 md:px-7">
         <a href="#top" className="flex flex-none items-center" onClick={closeMenu}>
-          <span className="flex h-9 items-center gap-2 font-heading text-lg font-extrabold tracking-wide">
-            <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand text-sm font-extrabold text-white">
-              IF
-            </span>
-            <span className="hidden sm:inline">IN FORCE CHEMICAL</span>
+          <span className="flex h-9 items-center rounded-lg bg-paper px-2.5 py-1.5">
+            <Image
+              src="/brand/logo-horizontal.jpg"
+              alt="IN FORCE CHEMICAL"
+              width={858}
+              height={248}
+              priority
+              className="h-6 w-auto object-contain"
+            />
           </span>
         </a>
 
@@ -37,7 +42,9 @@ export default function Header() {
           href={`tel:${PHONE_TEL}`}
           className="ml-auto hidden flex-none items-center gap-2 rounded-[10px] bg-brand px-[18px] py-[10px] font-heading text-sm font-semibold tracking-wide text-white shadow-cta transition-colors hover:bg-brand-hover md:ml-0 md:flex"
         >
-          <span className="h-[7px] w-[7px] rounded-full bg-white/85" />
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" className="flex-none">
+            <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.5c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z" />
+          </svg>
           {PHONE_DISPLAY}
         </a>
 
