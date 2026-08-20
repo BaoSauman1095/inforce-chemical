@@ -14,16 +14,14 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-white/[.07] bg-ink/[.82] backdrop-blur-md">
       <div className="mx-auto flex max-w-[1240px] items-center gap-7 px-5 py-4 md:px-7">
         <a href="#top" className="flex flex-none items-center" onClick={closeMenu}>
-          <span className="flex h-9 items-center rounded-lg bg-paper px-2.5 py-1.5">
-            <Image
-              src="/brand/logo-horizontal.jpg"
-              alt="IN FORCE CHEMICAL"
-              width={858}
-              height={248}
-              priority
-              className="h-6 w-auto object-contain"
-            />
-          </span>
+          <Image
+            src="/brand/logo-horizontal-dark.png"
+            alt="IN FORCE CHEMICAL"
+            width={858}
+            height={248}
+            priority
+            className="h-8 w-auto object-contain"
+          />
         </a>
 
         <nav className="ml-auto hidden gap-7 font-heading text-[13.5px] font-medium tracking-wide md:flex">
