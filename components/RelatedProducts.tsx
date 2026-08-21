@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ImagePlaceholder from "./ImagePlaceholder";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, isFlatPackPrice } from "@/lib/utils";
 import { productPhotoSrc } from "@/lib/product-images";
 import type { FlatCatalogItem } from "@/lib/types";
 
@@ -39,7 +39,8 @@ export default function RelatedProducts({ items }: { items: FlatCatalogItem[] })
               </p>
               {item.packs[0]?.price ? (
                 <p className="mt-2 font-heading text-[14px] font-bold text-brand">
-                  {formatPrice(item.packs[0].price)} грн/{item.unit}
+                  {formatPrice(item.packs[0].price)} грн
+                  {!isFlatPackPrice(item.packs[0].label, item.unit) && `/${item.unit}`}
                 </p>
               ) : (
                 <p className="mt-2 font-heading text-[12.5px] font-semibold text-[#8a8582]">

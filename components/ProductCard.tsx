@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import ImagePlaceholder from "./ImagePlaceholder";
-import { cn, formatPrice } from "@/lib/utils";
+import { cn, formatPrice, isFlatPackPrice } from "@/lib/utils";
 import { productPhotoSrc } from "@/lib/product-images";
 import type { FlatCatalogItem } from "@/lib/types";
 
@@ -59,7 +59,8 @@ export default function ProductCard({ item }: { item: FlatCatalogItem }) {
 
         {selectedPack?.price ? (
           <p className="mt-3 font-heading text-[15px] font-bold text-brand">
-            {formatPrice(selectedPack.price)} грн/{item.unit}
+            {formatPrice(selectedPack.price)} грн
+            {!isFlatPackPrice(selectedPack.label, item.unit) && `/${item.unit}`}
           </p>
         ) : (
           <p className="mt-3 font-heading text-[13.5px] font-semibold text-[#8a8582]">
