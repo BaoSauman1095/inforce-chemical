@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import ProductLeadCard from "./ProductLeadCard";
 import type { FlatCatalogItem } from "@/lib/types";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -84,9 +85,7 @@ export default function ProductQuestionForm({ product }: ProductQuestionFormProp
         aria-hidden="true"
       />
 
-      <p className="rounded-lg bg-brand/[.06] px-3.5 py-2.5 text-[13px] font-semibold text-[#141414]">
-        {product.name}
-      </p>
+      <ProductLeadCard name={product.name} brand={product.brand} slug={product.slug} />
 
       <input
         type="text"
