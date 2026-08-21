@@ -33,6 +33,9 @@ export const PRODUCT_PHOTO_SLUGS = new Set([
   "zhar-bt",
   "fomover-bt",
   "stiker-bt",
+  "miskorn-bt",
+  "propley-bt",
+  "forzats-bt",
 ]);
 
 export function productPhotoSrc(slug: string): string | null {
