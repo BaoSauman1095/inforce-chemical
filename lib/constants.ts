@@ -16,9 +16,9 @@ export const SOCIALS = {
 
 export const NAV_LINKS = [
   { href: "/", label: "Головна" },
-  { href: "#catalog", label: "Каталог продукції" },
-  { href: "#partners", label: "Партнери" },
-  { href: "#contacts", label: "Контакти" },
+  { href: "/#catalog", label: "Каталог продукції" },
+  { href: "/#partners", label: "Партнери" },
+  { href: "/#contacts", label: "Контакти" },
 ] as const;
 
 export const CULTURES = [

@@ -54,13 +54,18 @@ export default function SmoothScroll() {
     function onClick(e: MouseEvent) {
       if (e.defaultPrevented || e.button !== 0) return;
 
-      const anchor = (e.target as HTMLElement).closest('a[href^="#"]');
+      const anchor = (e.target as HTMLElement).closest('a[href^="#"], a[href^="/#"]');
       if (!(anchor instanceof HTMLAnchorElement)) return;
 
       const href = anchor.getAttribute("href");
-      if (!href || href.length < 2) return; // ignore bare "#"
+      if (!href) return;
+      // Nav links use "/#id" so they still work from other pages (browser
+      // navigates to "/" then jumps to the id); on this page that's the same
+      // in-page target as bare "#id", so strip the leading "/" to look it up.
+      const hash = href.startsWith("/") ? href.slice(1) : href;
+      if (hash.length < 2) return; // ignore bare "#"
 
-      const target = document.querySelector(href);
+      const target = document.querySelector(hash);
       if (!(target instanceof HTMLElement)) return;
 
       e.preventDefault();
@@ -68,7 +73,7 @@ export default function SmoothScroll() {
       const scrollMarginTop = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
       const targetY = target.getBoundingClientRect().top + window.scrollY - scrollMarginTop;
       animateScrollTo(Math.max(0, targetY));
-      window.history.pushState(null, "", href);
+      window.history.pushState(null, "", hash);
     }
 
     // Any real scroll input cancels our animation immediately so it can
