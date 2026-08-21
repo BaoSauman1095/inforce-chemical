@@ -123,6 +123,8 @@ export const PRODUCT_PHOTO_SLUGS = new Set([
   "sanmait",
   "sendai",
   "akaramik",
+  "matrika",
+  "mega-dikvat",
 ]);
 
 export function productPhotoSrc(slug: string): string | null {
