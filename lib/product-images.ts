@@ -118,6 +118,7 @@ export const PRODUCT_PHOTO_SLUGS = new Set([
   "tsukron-plus-himagro",
   "trystar-himagro",
   "matrika",
+  "mega-dikvat",
 ]);
 
 export function productPhotoSrc(slug: string): string | null {
