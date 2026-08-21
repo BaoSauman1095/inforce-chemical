@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import ImagePlaceholder from "./ImagePlaceholder";
 import { cn, formatPrice } from "@/lib/utils";
+import { productPhotoSrc } from "@/lib/product-images";
 import type { FlatCatalogItem } from "@/lib/types";
 
 export default function ProductCard({ item }: { item: FlatCatalogItem }) {
   const [packIndex, setPackIndex] = useState(0);
   const selectedPack = item.packs[packIndex];
+  const photoSrc = productPhotoSrc(item.slug);
 
   return (
     <motion.div
@@ -19,7 +22,13 @@ export default function ProductCard({ item }: { item: FlatCatalogItem }) {
       transition={{ duration: 0.25 }}
       className="flex flex-col overflow-hidden rounded-2xl bg-card shadow-panel"
     >
-      <ImagePlaceholder label={item.slotLabel} className="h-[150px]" />
+      {photoSrc ? (
+        <div className="relative h-[150px] bg-white">
+          <Image src={photoSrc} alt={item.name} fill sizes="(min-width: 1280px) 300px, 50vw" className="object-contain p-3" />
+        </div>
+      ) : (
+        <ImagePlaceholder label={item.slotLabel} className="h-[150px]" />
+      )}
 
       <div className="flex flex-1 flex-col px-[18px] pb-[18px] pt-4">
         <p className="text-[10px] font-semibold uppercase tracking-[.13em] text-brand">

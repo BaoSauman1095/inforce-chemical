@@ -1,6 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import ImagePlaceholder from "./ImagePlaceholder";
 import { formatPrice } from "@/lib/utils";
+import { productPhotoSrc } from "@/lib/product-images";
 import type { FlatCatalogItem } from "@/lib/types";
 
 export default function RelatedProducts({ items }: { items: FlatCatalogItem[] }) {
@@ -14,13 +16,21 @@ export default function RelatedProducts({ items }: { items: FlatCatalogItem[] })
       </div>
 
       <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((item) => (
+        {items.map((item) => {
+          const photoSrc = productPhotoSrc(item.slug);
+          return (
           <Link
             key={item.slug}
             href={`/products/${item.slug}`}
             className="flex flex-col overflow-hidden rounded-2xl bg-card shadow-panel transition-transform hover:-translate-y-0.5"
           >
-            <ImagePlaceholder label={`фото — ${item.name}`} className="h-[130px]" />
+            {photoSrc ? (
+              <div className="relative h-[130px] bg-white">
+                <Image src={photoSrc} alt={item.name} fill sizes="(min-width: 1024px) 280px, 50vw" className="object-contain p-3" />
+              </div>
+            ) : (
+              <ImagePlaceholder label={`фото — ${item.name}`} className="h-[130px]" />
+            )}
             <div className="flex flex-1 flex-col px-4 pb-4 pt-3.5">
               <p className="text-[10px] font-semibold uppercase tracking-[.13em] text-brand">
                 {item.brand}
@@ -39,7 +49,8 @@ export default function RelatedProducts({ items }: { items: FlatCatalogItem[] })
               )}
             </div>
           </Link>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
