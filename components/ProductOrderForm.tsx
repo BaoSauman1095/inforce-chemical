@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import ProductLeadCard from "./ProductLeadCard";
 import type { FlatCatalogItem } from "@/lib/types";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -12,7 +13,6 @@ interface ProductOrderFormProps {
 export default function ProductOrderForm({ product }: ProductOrderFormProps) {
   const [form, setForm] = useState({
     name: "",
-    email: "",
     phone: "",
     quantity: "1",
     packSize: product.packs[0]?.label ?? "",
@@ -86,9 +86,7 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
         aria-hidden="true"
       />
 
-      <p className="rounded-lg bg-brand/[.06] px-3.5 py-2.5 text-[13px] font-semibold text-[#141414]">
-        {product.name}
-      </p>
+      <ProductLeadCard name={product.name} brand={product.brand} slug={product.slug} />
 
       <input
         type="text"
@@ -97,14 +95,6 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
         placeholder="Ім'я"
         value={form.name}
         onChange={(e) => update("name", e.target.value)}
-        className="w-full rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
-      />
-      <input
-        type="email"
-        required
-        placeholder="Email"
-        value={form.email}
-        onChange={(e) => update("email", e.target.value)}
         className="w-full rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
       />
       <input

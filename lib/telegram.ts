@@ -39,7 +39,6 @@ function formatOrderMessage(data: ProductOrderInput): string {
     "",
     `*Ім'я:* ${escapeMarkdownV2(data.name)}`,
     `*Телефон:* ${escapeMarkdownV2(data.phone)}`,
-    `*Email:* ${escapeMarkdownV2(data.email)}`,
     "",
     timestampLine(),
   ];
@@ -54,7 +53,7 @@ function formatQuestionMessage(data: ProductQuestionInput): string {
     `*Товар:* ${escapeMarkdownV2(data.productName)}`,
     "",
     `*Ім'я:* ${escapeMarkdownV2(data.name)}`,
-    `*Email:* ${escapeMarkdownV2(data.email)}`,
+    `*Телефон:* ${escapeMarkdownV2(data.phone)}`,
     "",
     `*Питання:*`,
     escapeMarkdownV2(data.question),
