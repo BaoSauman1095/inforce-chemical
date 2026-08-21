@@ -14,18 +14,18 @@ export default function ProductGallery({ name, slug, images }: ProductGalleryPro
 
   if (photoSrc) {
     return (
-      <div className="relative h-[380px] w-full overflow-hidden rounded-2xl bg-white sm:h-[480px]">
+      <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-white">
         <Image
           src={photoSrc}
           alt={name}
           fill
           sizes="(min-width: 1024px) 560px, 100vw"
-          className="object-contain p-1"
+          className="object-contain"
           priority
         />
       </div>
     );
   }
 
-  return <ImagePlaceholder label={`фото — ${label}`} className="h-[380px] w-full rounded-2xl sm:h-[480px]" />;
+  return <ImagePlaceholder label={`фото — ${label}`} className="aspect-square w-full rounded-2xl" />;
 }
