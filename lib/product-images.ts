@@ -56,6 +56,7 @@ export const PRODUCT_PHOTO_SLUGS = new Set([
   "fermer",
   "flumet",
   "tsukron-plus-himagro",
+  "trystar-himagro",
 ]);
 
 export function productPhotoSrc(slug: string): string | null {
