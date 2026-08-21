@@ -37,6 +37,20 @@ export const PRODUCT_PHOTO_SLUGS = new Set([
   "miskorn-bt",
   "propley-bt",
   "forzats-bt",
+  "bredli",
+  "brodvei",
+  "meteor-himagro",
+  "snuker",
+  "tiofen-ekstra-himagro",
+  "nyustar",
+  "rancho",
+  "travers",
+  "nominal-ultra",
+  "tiaben-t",
+  "triolan",
+  "stoprost",
+  "prolif",
+  "fumifos",
 ]);
 
 export function productPhotoSrc(slug: string): string | null {
