@@ -5,6 +5,7 @@
  */
 export const PRODUCT_PHOTO_SLUGS = new Set([
   "baal-bt",
+  "bob-bt",
   "yevro-bt",
   "halop-bt",
   "kharvard",
