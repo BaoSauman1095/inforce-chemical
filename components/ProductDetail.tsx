@@ -7,6 +7,7 @@ import ProductGallery from "./ProductGallery";
 import ProductActions from "./ProductActions";
 import RelatedProducts from "./RelatedProducts";
 import { cn, formatPrice } from "@/lib/utils";
+import { cropIcon } from "@/lib/crop-icons";
 import type { FlatCatalogItem } from "@/lib/types";
 
 interface ProductDetailProps {
@@ -115,8 +116,9 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
                 {product.crops.map((crop) => (
                   <span
                     key={crop}
-                    className="rounded-full border border-[#e4e0dd] px-3.5 py-1.5 text-[13px] font-semibold text-[#141414]"
+                    className="flex items-center gap-1.5 rounded-full border border-[#e4e0dd] px-3.5 py-1.5 text-[13px] font-semibold text-[#141414]"
                   >
+                    <span aria-hidden="true">{cropIcon(crop)}</span>
                     {crop}
                   </span>
                 ))}
