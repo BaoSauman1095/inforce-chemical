@@ -172,7 +172,12 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
             <tbody>
               {product.dosage.map((row) => (
                 <tr key={row.crop} className="border-b border-black/5 last:border-0">
-                  <td className="py-3 pr-4 font-semibold text-[#141414]">{row.crop}</td>
+                  <td className="py-3 pr-4 font-semibold text-[#141414]">
+                    <span className="flex items-center gap-1.5">
+                      <span aria-hidden="true">{cropIcon(row.crop)}</span>
+                      {row.crop}
+                    </span>
+                  </td>
                   <td className="py-3 pr-4 text-[#5f5b58]">{row.spectrum}</td>
                   <td className="py-3 pr-4 font-semibold text-brand">{row.rate}</td>
                   <td className="py-3 text-[#5f5b58]">{row.timing}</td>
