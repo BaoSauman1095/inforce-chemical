@@ -19,9 +19,8 @@ export default function RelatedProducts({ items }: { items: FlatCatalogItem[] })
         {items.map((item) => {
           const photoSrc = productPhotoSrc(item.slug);
           return (
-          <Link
+          <div
             key={item.slug}
-            href={`/products/${item.slug}`}
             className="flex flex-col overflow-hidden rounded-2xl bg-card shadow-panel transition-transform hover:-translate-y-0.5"
           >
             {photoSrc ? (
@@ -47,8 +46,14 @@ export default function RelatedProducts({ items }: { items: FlatCatalogItem[] })
                   Ціна за запитом
                 </p>
               )}
+              <Link
+                href={`/products/${item.slug}`}
+                className="mt-2.5 rounded-[9px] border border-brand px-3.5 py-2.5 text-center font-heading text-[13px] font-bold tracking-wide text-brand transition-colors hover:bg-brand hover:text-white"
+              >
+                Детальніше
+              </Link>
             </div>
-          </Link>
+          </div>
           );
         })}
       </div>
