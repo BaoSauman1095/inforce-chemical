@@ -59,7 +59,7 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
       </Link>
 
       <div className="grid grid-cols-1 gap-8 rounded-[24px] bg-card p-6 shadow-panelLg sm:p-8 lg:grid-cols-2 lg:gap-10">
-        <ProductGallery name={product.name} images={product.images} />
+        <ProductGallery name={product.name} slug={product.slug} images={product.images} />
 
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[.15em] text-brand">{product.brand}</p>
