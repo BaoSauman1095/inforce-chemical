@@ -1,6 +1,6 @@
 # PROJECT STATUS — IN FORCE CHEMICAL (2026)
 
-Снімок стану проєкту для передачі/довідки станом на **21.08.2026, ~12:45**.
+Снімок стану проєкту для передачі/довідки станом на **21.08.2026, ~14:15**.
 Усі факти в цьому документі перевірені безпосередньо (`git log`, `gh pr list
 --state all`, вміст `lib/catalog-data.ts`/`lib/product-images.ts`, реальний
 деплой) — не переписані з чернетки чи з переказу користувача без перевірки.
@@ -135,9 +135,66 @@ PDF (файл >10МБ або зображення-каталог), качати 
 4. Виправлено препаративну форму: Апрув БТ → "Масляна дисперсія (МД)";
    Стікер БТ, Фомовер БТ → "Розчинний концентрат (РК)"
 
-## 3. Фото товарів Ocean Invest — 33 з 33 (100%)
+## 3. Фото товарів — 113 з 178 (63%)
 
-Усі товари Ocean Invest мають реальні фото. Механізм:
+Розбивка по брендах (перевірено перетином `PRODUCT_PHOTO_SLUGS` з
+`lib/catalog-data.ts`):
+
+| Бренд | Фото є | Усього товарів | Статус |
+|---|---|---|---|
+| Ocean Invest | 33 | 33 | ✅ 100% |
+| Himagro M | 34 | 35 | 🟡 не вистачає 1: **Мега Дикват** (Десиканти) — фото ще не завантажували |
+| Sumi Agro | 46 | 59 | 🟡 не вистачає 13: 6 у **Біостимуляторах** (Амалгерол Ессенс, Біфлай, Кайші Макс, Кінактив Інішіал, Нурспрей, Енцера — фото ще не завантажували) + 7 у Захисті рослин, які user **не знайшов** (Матріка, Бесткур, Казумін, Акарамік, Ніссоран, Санмайт, Сендай) |
+| Limagrain, Apsov, Farmsaat, Biolchim, Holland Farming | 0 | 51 | ⬜ фото не завантажувались у цій серії сесій |
+
+**Категорія "Захист рослин" (Himagro M + Sumi Agro) — повністю пройдена**, за
+винятком 7 позицій Sumi Agro, для яких user не знайшов фото ніде (перелічені
+вище) — їх свідомо лишили без фото, **не додавати навмання**.
+
+### 3.0 Механізм завантаження фото (відпрацьовано на цій серії сесій)
+
+1. User скидає сирі фото (jpg/png, довільні назви) у локальну теку
+   `product-photo/<бренд>/` у корені репо — **ця тека НЕ в git**
+   (`.gitignore` її не чіпає спеціально, вона просто ніколи не додається в
+   `git add`; лишається як робочий стейджинг для наступних партій фото).
+2. Claude зіставляє назви файлів зі слагами товарів у
+   `lib/catalog-data.ts` (за назвою товару/брендом/категорією зі списку,
+   який user озвучує в чаті).
+3. Конвертація в webp: **`sharp` у проєкті немає постійно** — ставиться
+   тимчасово (`npm install sharp --no-save`), конвертує
+   (`sharp(input).webp({quality:90}).toFile(output)`), одразу після —
+   `npm uninstall sharp`. `package.json`/lock не чіпаються. Скрипт
+   конвертації — тимчасовий файл у корені репо, видаляється одразу після
+   використання.
+4. Готові файли кладуться в `public/products/{slug}.webp`, слаг додається в
+   `PRODUCT_PHOTO_SLUGS` у `lib/product-images.ts`.
+5. Перевірка в dev-preview (`preview_start` → відкрити `/products/{slug}` →
+   `read_network_requests` на `.webp`, шукати `200 OK` на
+   `/_next/image?url=%2Fproducts%2F{slug}.webp`) — **перший `navigate` після
+   старту сервера часто "не встигає" і показує головну сторінку замість
+   товару (компіляція ще йде) — це не помилка, треба просто повторити
+   `navigate`**.
+6. Коміт → пуш → `gh pr create` → **чекати явного "мержи" від user**
+   (зображення/бінарні файли підпадають під правило "усе інше", не під
+   автономний мерж — розділ 6.1).
+
+⚠️ **Важливий нюанс мержу кількох PR з фото поспіль**: якщо кілька гілок з
+фото створювались одна за одною від того самого `main` (до мержу
+попередньої), усі вони незалежно дописують рядки в кінець одного й того ж
+масиву `PRODUCT_PHOTO_SLUGS` у `lib/product-images.ts` — **при мержі другого
+й третього PR виникає конфлікт** (обидві гілки міняють той самий рядок
+"перед `]);`"). Вирішується тривіально: `git checkout <гілка>` → `git merge
+origin/main` → в конфлікті лишити обидва набори слагів (просто об'єднати
+списки, прибрати маркери `<<<<<<<`/`=======`/`>>>>>>>`) → перевірити
+`grep '^  "' lib/product-images.ts | sort | uniq -d` (немає дублікатів) →
+закомітити → допушити → тоді `gh pr merge` проходить. Сталося саме так з
+PR #14 і #15 у цій серії (обидва довелось домержувати `main` вручну перед
+`gh pr merge`).
+
+### 3.1 Фото товарів Ocean Invest — 33 з 33 (100%)
+
+Механізм (історичний, ще до появи `product-photo/` стейджингу — фото були
+на диску вже готові):
 
 - Файли лежать у `public/products/{slug}.webp` (напр. `public/products/baal-bt.webp`)
 - `lib/product-images.ts` — реєстр `PRODUCT_PHOTO_SLUGS` (Set слагів, у
@@ -151,7 +208,7 @@ PDF (файл >10МБ або зображення-каталог), качати 
   `public/products/{slug}.webp`, додати `"slug"` у `PRODUCT_PHOTO_SLUGS` у
   `lib/product-images.ts` — більше нічого чіпати не треба
 
-### 3.1 Дизайн галереї (після кількох ітерацій фідбеку)
+### 3.2 Дизайн галереї (після кількох ітерацій фідбеку)
 
 - `ProductGallery.tsx` — квадратний блок (`aspect-square`), фото через
   `object-contain` без padding, **без кліку/зуму** (кнопку "Збільшити фото"
@@ -271,7 +328,7 @@ export PATH="$PATH:/c/Program Files/GitHub CLI"
 
 ### 6.2 Усі PR цієї серії сесій (перевірено `gh pr list --state all`)
 
-Усі 11 PR **змержені**, жодного відкритого не лишилось:
+Усі 15 PR **змержені**, жодного відкритого не лишилось:
 
 | # | Гілка | Що | Мержено |
 |---|---|---|---|
@@ -286,6 +343,10 @@ export PATH="$PATH:/c/Program Files/GitHub CLI"
 | 9 | trim-product-photo-margins | Обрізка білих/прозорих полів на фото | ✅ мержено, потім... |
 | 10 | revert-photo-trim | ...**відкочено** тим самим шляхом (PR), користувачу не сподобалось | ✅ явний "мержи" |
 | 11 | related-products-detail-button | Кнопка "Детальніше" на картках "Схожі товари" | ✅ явний "мержи" |
+| 12 | update-project-status-handoff | Оновлення цього файлу (передача акаунта) | ✅ (не питання мержу — служебний PR) |
+| 13 | himagro-herbicide-photos | 20/20 фото гербіцидів Himagro M | ✅ явний "мержи" (конфлікту не було — мержено першим) |
+| 14 | himagro-more-category-photos | 14 фото Himagro M (фунгіциди/інсектициди/протруйники/регулятори/ад'юванти/фумiганти) | ✅ явний "мержи" — **конфлікт у `lib/product-images.ts`** з #13, довелось домержувати `main` вручну перед `gh pr merge` (розділ 3.0) |
+| 15 | sumi-agro-defense-photos | 46 фото Sumi Agro (гербіциди/фунгіциди/інсектициди/протруйник/регулятор/ад'юванти) | ✅ явний "мержи" — **той самий конфлікт** із #13+#14, домержовано вручну |
 
 ## 7. GitHub репозиторій
 
@@ -293,7 +354,7 @@ https://github.com/BaoSauman1095/inforce-chemical
 
 ## 8. Vercel deployment
 
-https://inforce-chemical.vercel.app — автодеплой при пуші в `main`. Усі 11
+https://inforce-chemical.vercel.app — автодеплой при пуші в `main`. Усі 15
 PR вище вже в `main`, отже вже задеплоєні (з урахуванням звичайної затримки
 білда Vercel, ~1-2 хв).
 
@@ -311,8 +372,14 @@ PR вище вже в `main`, отже вже задеплоєні (з урах�
    згадані на старому сайті `ifchemical.com/distribution/seeds`, якого
    користувач підтвердив як реальний "старий" сайт компанії — новий
    Next.js проєкт його замінює)
-5. Фото товарів для решти брендів (зараз лише Ocean Invest має реальні
-   фото, 33/33) — коли з'являться фото, повторити патерн з розділу 3
+5. **Фото товарів** — категорія "Захист рослин" (Himagro M + Sumi Agro)
+   пройдена повністю, крім 7 позицій Sumi Agro без джерела (розділ 3).
+   Лишається завантажити фото для: 6 Sumi Agro у **Біостимуляторах**
+   (Амалгерол Ессенс, Біфлай, Кайші Макс, Кінактив Інішіал, Нурспрей,
+   Енцера), 1 Himagro M у **Десикантах** (Мега Дикват), і всі товари
+   **Limagrain, Apsov, Farmsaat, Biolchim, Holland Farming** (51 позиція,
+   фото ще не завантажувались) — коли з'являться фото, повторити патерн з
+   розділу 3.0
 6. Платежі (Stripe/PayPal) — наразі сайт лише приймає заявки в Telegram
 7. Адмін-панель для керування каталогом (зараз редагування — прямі правки
    `lib/catalog-data.ts`)
@@ -322,30 +389,35 @@ PR вище вже в `main`, отже вже задеплоєні (з урах�
 ## 10. Останній коміт (перевірено `git log`)
 
 ```
-8867983 Merge pull request #11 from BaoSauman1095/related-products-detail-button
-229442e Add "Детальніше" button to related-product cards
-0ab8304 Merge pull request #10 from BaoSauman1095/revert-photo-trim
-22b41f0 Revert "Merge pull request #9 from BaoSauman1095/trim-product-photo-margins"
-bf64a96 Merge pull request #9 from BaoSauman1095/trim-product-photo-margins
-f1cb545 Trim baked-in transparent margin from Ocean Invest product photos
-250dfd2 Merge pull request #8 from BaoSauman1095/product-gallery-polish
+97add82 Merge pull request #15 from BaoSauman1095/sumi-agro-defense-photos
+1e7d84e Merge main into sumi-agro-defense-photos, resolve product-images.ts conflict
+223e004 Merge pull request #14 from BaoSauman1095/himagro-more-category-photos
+fc83e42 Merge main into himagro-more-category-photos, resolve product-images.ts conflict
+1f6df1f Merge pull request #13 from BaoSauman1095/himagro-herbicide-photos
+c8c622e Add real photos for 46 Sumi Agro products across 6 categories
+2359fb2 Add real photos for 14 Himagro M products across 6 categories
 ```
 
-Гілка: `main`, робоче дерево чисте (`git status` — nothing to commit),
-синхронізовано з `origin/main`.
+Гілка: `main`, синхронізовано з `origin/main`. `git status` показує лише
+**один untracked запис — `product-photo/`** (локальна тека з сирими
+фото-вихідниками від user, розділ 3.0), це нормально, не помилка і не
+загублена робота, у git її свідомо не додають.
 
 ## 11. Важливі файли для перевірки
 
 - `lib/catalog-data.ts` — усі 178 товарів (джерело даних каталогу)
-- `lib/product-images.ts` — які товари мають реальне фото
+- `lib/product-images.ts` — які товари мають реальне фото (113/178,
+  розділ 3)
 - `lib/crop-icons.ts` — emoji для пілюль культур
 - `.env.local` — змінні середовища (не в git)
 - `package.json` — залежності (Next.js 14.2.35, React 18.3.1, Framer
-  Motion, Zod). **Примітка**: під час роботи з фото тимчасово ставився
-  `sharp` через `npm install sharp --no-save` для обрізки зображень —
-  видалено (`npm uninstall sharp`) після відкату, `package.json`/lock не
-  зачеплені
+  Motion, Zod). **Примітка**: `sharp` для конвертації фото ставиться й
+  видаляється тимчасово щоразу (`npm install sharp --no-save` →
+  конвертація → `npm uninstall sharp`, розділ 3.0) — `package.json`/lock
+  ніколи не лишаються зачепленими
 - `next.config.mjs` — конфіг Next.js (security-заголовки, images formats)
+- `product-photo/` — **НЕ в git**, локальний стейджинг сирих фото від
+  user перед конвертацією (розділ 3.0)
 
 ## 12. Контакти й облікові дані
 
