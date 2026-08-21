@@ -6,7 +6,7 @@ import Breadcrumbs from "./Breadcrumbs";
 import ProductGallery from "./ProductGallery";
 import ProductActions from "./ProductActions";
 import RelatedProducts from "./RelatedProducts";
-import { cn, formatPrice } from "@/lib/utils";
+import { cn, formatPrice, isFlatPackPrice } from "@/lib/utils";
 import { cropIcon } from "@/lib/crop-icons";
 import type { FlatCatalogItem } from "@/lib/types";
 
@@ -86,7 +86,8 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
 
           {selectedPack?.price ? (
             <p className="mt-4 font-heading text-2xl font-extrabold text-brand">
-              {formatPrice(selectedPack.price)} грн/{product.unit}
+              {formatPrice(selectedPack.price)} грн
+              {!isFlatPackPrice(selectedPack.label, product.unit) && `/${product.unit}`}
             </p>
           ) : (
             <p className="mt-4 font-heading text-lg font-semibold text-[#8a8582]">Ціна за запитом</p>

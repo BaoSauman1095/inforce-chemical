@@ -1757,7 +1757,7 @@ export const CATALOG: Catalog = {
           slug: "forzats-bt",
           name: "Форзац БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "500 мл", price: 2796 }, { label: "1 л", price: 2796 }],
+          packs: [{ label: "500 мл", price: 2796 }],
           unit: "л",
           tagline: "Концентрований гербіцид тріазолопіримідинів для зернових колосових",
           description:
