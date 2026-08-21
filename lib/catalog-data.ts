@@ -20,7 +20,7 @@ export const CATALOG: Catalog = {
           slug: "lg-50450",
           name: "ЛГ50450",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 150 000", price: 7293 }],
+          packs: [{ label: "п.о.", price: 7293 }],
           unit: "п.о.",
           tagline: "Нова генетика для стабільно високого раннього врожаю",
           description:
@@ -44,7 +44,7 @@ export const CATALOG: Catalog = {
           slug: "lg-50455-klp",
           name: "ЛГ50455 КЛП",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 150 000", price: 8262 }],
+          packs: [{ label: "п.о.", price: 8262 }],
           unit: "п.о.",
           tagline: "Найвищий урожай серед ранніх гібридів Clearfield Plus",
           description:
@@ -68,7 +68,7 @@ export const CATALOG: Catalog = {
           slug: "lg-50475",
           name: "ЛГ50475",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 150 000", price: 8007 }],
+          packs: [{ label: "п.о.", price: 8007 }],
           unit: "п.о.",
           tagline: "Високоолеїновий гібрид з найвищим урожаєм у групі НО",
           description:
@@ -92,7 +92,7 @@ export const CATALOG: Catalog = {
           slug: "lg-50479-sx",
           name: "ЛГ50479 SX",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 150 000", price: 8670 }],
+          packs: [{ label: "п.о.", price: 8670 }],
           unit: "п.о.",
           tagline: "Високоврожайний гібрид технології Express у своїй групі стиглості",
           description:
@@ -116,7 +116,7 @@ export const CATALOG: Catalog = {
           slug: "lg-50480",
           name: "ЛГ50480",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 150 000", price: 6987 }],
+          packs: [{ label: "п.о.", price: 6987 }],
           unit: "п.о.",
           tagline: "Низькорослий посухостійкий гібрид для півдня і сходу України",
           description:
@@ -140,7 +140,7 @@ export const CATALOG: Catalog = {
           slug: "lg-50550-klp",
           name: "ЛГ50550 КЛП",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 150 000", price: 8364 }],
+          packs: [{ label: "п.о.", price: 8364 }],
           unit: "п.о.",
           tagline: "Максимальна стабільність у групі стиглості на технології Clearfield Plus",
           description:
@@ -164,7 +164,7 @@ export const CATALOG: Catalog = {
           slug: "lg-50639-sx",
           name: "ЛГ50639 SX",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 150 000", price: 8619 }],
+          packs: [{ label: "п.о.", price: 8619 }],
           unit: "п.о.",
           tagline: "Високоврожайний гібрид Express Sun для степу й лісостепу",
           description:
@@ -188,7 +188,7 @@ export const CATALOG: Catalog = {
           slug: "lg-5555-klp",
           name: "ЛГ5555 КЛП",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 150 000", price: 7803 }],
+          packs: [{ label: "п.о.", price: 7803 }],
           unit: "п.о.",
           tagline: "Посухостійкий низькорослий гібрид Clearfield Plus для півдня України",
           description:
@@ -212,7 +212,7 @@ export const CATALOG: Catalog = {
           slug: "lg-59580",
           name: "ЛГ59580",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 150 000", price: 7956 }],
+          packs: [{ label: "п.о.", price: 7956 }],
           unit: "п.о.",
           tagline: "Гібрид Express для південних регіонів з високою стресостійкістю",
           description:
@@ -236,7 +236,7 @@ export const CATALOG: Catalog = {
           slug: "apsf32-cl",
           name: "АПСФ32",
           brand: "Apsov",
-          packs: [{ label: "п.о. 150 000", price: 4489 }],
+          packs: [{ label: "п.о.", price: 4489 }],
           unit: "п.о.",
           tagline: "Ранньо-середньостиглий гібрид Clearfield з високою олійністю",
           description:
@@ -260,7 +260,7 @@ export const CATALOG: Catalog = {
           slug: "iolen",
           name: "Йолен",
           brand: "Apsov",
-          packs: [{ label: "п.о. 150 000", price: 6503 }],
+          packs: [{ label: "п.о.", price: 6503 }],
           unit: "п.о.",
           tagline: "Високоолеїновий гібрид з високим кошиком та стійкістю до фомопсису",
           description:
@@ -284,7 +284,7 @@ export const CATALOG: Catalog = {
           slug: "ksilo-sulfo",
           name: "Ксіло",
           brand: "Apsov",
-          packs: [{ label: "п.о. 150 000", price: 5100 }],
+          packs: [{ label: "п.о.", price: 5100 }],
           unit: "п.о.",
           tagline: "Середньостиглий гібрид технології Сульфо з високим кошиком",
           description:
@@ -308,7 +308,7 @@ export const CATALOG: Catalog = {
           slug: "nemo-cl",
           name: "Немо",
           brand: "Apsov",
-          packs: [{ label: "п.о. 150 000", price: 5580 }],
+          packs: [{ label: "п.о.", price: 5580 }],
           unit: "п.о.",
           tagline: "Ранньо-середньостиглий гібрид Clearfield з високим кошиком",
           description:
@@ -338,7 +338,7 @@ export const CATALOG: Catalog = {
           slug: "adevei",
           name: "Адевей",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 2703 }],
+          packs: [{ label: "п.о.", price: 2703 }],
           unit: "п.о.",
           tagline: "Стабільно високий урожай на технології Пончо для різних умов вирощування",
           description:
@@ -362,7 +362,7 @@ export const CATALOG: Catalog = {
           slug: "vesli",
           name: "Веслі",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 2805 }],
+          packs: [{ label: "п.о.", price: 2805 }],
           unit: "п.о.",
           tagline: "Пластичний гібрид ФАО 250 з відмінним потенціалом урожайності",
           description:
@@ -386,7 +386,7 @@ export const CATALOG: Catalog = {
           slug: "dzhodi",
           name: "Джоді",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 2958 }],
+          packs: [{ label: "п.о.", price: 2958 }],
           unit: "п.о.",
           tagline: "Гібрид для якісного силосу з високим вмістом сухої речовини",
           description:
@@ -410,7 +410,7 @@ export const CATALOG: Catalog = {
           slug: "invitejshn",
           name: "Інвітейшн",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 4029 }],
+          packs: [{ label: "п.о.", price: 4029 }],
           unit: "п.о.",
           tagline: "Високоенергетичний силос для стабільного здоров'я худоби",
           description:
@@ -434,7 +434,7 @@ export const CATALOG: Catalog = {
           slug: "lg-30215",
           name: "ЛГ 30215",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 2703 }],
+          packs: [{ label: "п.о.", price: 2703 }],
           unit: "п.о.",
           tagline: "Високотолерантний до посухи гібрид ФАО 220 для класичних технологій",
           description:
@@ -458,7 +458,7 @@ export const CATALOG: Catalog = {
           slug: "lg-30308",
           name: "ЛГ 30308",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 3672 }],
+          packs: [{ label: "п.о.", price: 3672 }],
           unit: "п.о.",
           tagline: "Високорослий силосний гібрид ФАО 310 з високою перетравністю",
           description:
@@ -482,7 +482,7 @@ export const CATALOG: Catalog = {
           slug: "lg-30315",
           name: "ЛГ 30315",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 2805 }],
+          packs: [{ label: "п.о.", price: 2805 }],
           unit: "п.о.",
           tagline: "Високотолерантний до посухи гібрид ФАО 280 з швидкою вологовіддачею",
           description:
@@ -506,7 +506,7 @@ export const CATALOG: Catalog = {
           slug: "bone",
           name: "Боне",
           brand: "Farmsaat",
-          packs: [{ label: "п.о. 50 000", price: 3672 }],
+          packs: [{ label: "п.о.", price: 3672 }],
           unit: "п.о.",
           tagline: "Ранньостиглий універсальний гібрид з потужним стартом",
           description:
@@ -530,7 +530,7 @@ export const CATALOG: Catalog = {
           slug: "bots",
           name: "Ботс",
           brand: "Farmsaat",
-          packs: [{ label: "п.о. 50 000", price: 3723 }],
+          packs: [{ label: "п.о.", price: 3723 }],
           unit: "п.о.",
           tagline: "Найвищі показники врожайності в ранній групі стиглості",
           description:
@@ -554,7 +554,7 @@ export const CATALOG: Catalog = {
           slug: "william",
           name: "Вільям",
           brand: "Farmsaat",
-          packs: [{ label: "п.о. 50 000", price: 3774 }],
+          packs: [{ label: "п.о.", price: 3774 }],
           unit: "п.о.",
           tagline: "Ранньостиглий гібрид з гарантованим високим урожаєм",
           description:
@@ -578,7 +578,7 @@ export const CATALOG: Catalog = {
           slug: "yevrobos",
           name: "Євробос",
           brand: "Farmsaat",
-          packs: [{ label: "п.о. 50 000", price: 4029 }],
+          packs: [{ label: "п.о.", price: 4029 }],
           unit: "п.о.",
           tagline: "Потужний качан за будь-яких умов вирощування",
           description:
@@ -602,7 +602,7 @@ export const CATALOG: Catalog = {
           slug: "farmodena",
           name: "Фармодена",
           brand: "Farmsaat",
-          packs: [{ label: "п.о. 50 000", price: 3723 }],
+          packs: [{ label: "п.о.", price: 3723 }],
           unit: "п.о.",
           tagline: "Роками перевірений гібрид з високою врожайністю в Європі",
           description:
@@ -626,7 +626,7 @@ export const CATALOG: Catalog = {
           slug: "farmorits",
           name: "Фарморіц",
           brand: "Farmsaat",
-          packs: [{ label: "п.о. 50 000", price: 4029 }],
+          packs: [{ label: "п.о.", price: 4029 }],
           unit: "п.о.",
           tagline: "Лідер за площами посіву в Європі серед гібридів FS",
           description:
@@ -650,7 +650,7 @@ export const CATALOG: Catalog = {
           slug: "farmrock",
           name: "Фармрок",
           brand: "Farmsaat",
-          packs: [{ label: "п.о. 50 000", price: 3723 }],
+          packs: [{ label: "п.о.", price: 3723 }],
           unit: "п.о.",
           tagline: "Ранньостиглий гібрид з відмінною вологовіддачею та стійкістю до вилягання",
           description:
@@ -674,7 +674,7 @@ export const CATALOG: Catalog = {
           slug: "farmerfi",
           name: "Фармьорфі",
           brand: "Farmsaat",
-          packs: [{ label: "п.о. 50 000", price: 3825 }],
+          packs: [{ label: "п.о.", price: 3825 }],
           unit: "п.о.",
           tagline: "Високоврожайний пластичний гібрид з гармонійним достиганням",
           description:
@@ -698,7 +698,7 @@ export const CATALOG: Catalog = {
           slug: "farmuller",
           name: "Фармюллер",
           brand: "Farmsaat",
-          packs: [{ label: "п.о. 50 000", price: 4029 }],
+          packs: [{ label: "п.о.", price: 4029 }],
           unit: "п.о.",
           tagline: "Лідер серед гібридів FS на крупу в Польщі",
           description:
@@ -722,7 +722,7 @@ export const CATALOG: Catalog = {
           slug: "lg31240",
           name: "ЛГ 31240",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 3570 }],
+          packs: [{ label: "п.о.", price: 3570 }],
           unit: "п.о.",
           tagline: "Гібрид з високою енергією старту для Полісся і Лісостепу",
           description:
@@ -746,7 +746,7 @@ export const CATALOG: Catalog = {
           slug: "lg31252",
           name: "ЛГ 31252",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 3570 }],
+          packs: [{ label: "п.о.", price: 3570 }],
           unit: "п.о.",
           tagline: "Універсальний гібрид ФАО 260 для зерна, крупи й силосу",
           description:
@@ -770,7 +770,7 @@ export const CATALOG: Catalog = {
           slug: "lg31271",
           name: "ЛГ 31271",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 4029 }],
+          packs: [{ label: "п.о.", price: 4029 }],
           unit: "п.о.",
           tagline: "Високоенергетичний силосний гібрид ФАО 270 з оптимальним співвідношенням зерна",
           description:
@@ -794,7 +794,7 @@ export const CATALOG: Catalog = {
           slug: "lg31272",
           name: "ЛГ 31272",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 3417 }],
+          packs: [{ label: "п.о.", price: 3417 }],
           unit: "п.о.",
           tagline: "Один з найпопулярніших гібридів Limagrain у Європі",
           description:
@@ -818,7 +818,7 @@ export const CATALOG: Catalog = {
           slug: "lg31305",
           name: "ЛГ 31305",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 3825 }],
+          packs: [{ label: "п.о.", price: 3825 }],
           unit: "п.о.",
           tagline: "Високорентабельний гібрид ФАО 290 для повторних посівів",
           description:
@@ -842,7 +842,7 @@ export const CATALOG: Catalog = {
           slug: "lg-31330",
           name: "ЛГ 31330",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 3366 }],
+          packs: [{ label: "п.о.", price: 3366 }],
           unit: "п.о.",
           tagline: "Стабільний гібрид ФАО 320 з хорошим профілем стійкості до хвороб",
           description:
@@ -866,7 +866,7 @@ export const CATALOG: Catalog = {
           slug: "lg31350",
           name: "ЛГ 31350",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 4029 }],
+          packs: [{ label: "п.о.", price: 4029 }],
           unit: "п.о.",
           tagline: "Гібрид програми Danube з дуже доброю виповненістю качана",
           description:
@@ -890,7 +890,7 @@ export const CATALOG: Catalog = {
           slug: "lg31365",
           name: "ЛГ 31365",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 4182 }],
+          packs: [{ label: "п.о.", price: 4182 }],
           unit: "п.о.",
           tagline: "Новий гібрид ФАО 350 програми Danube з найвищою стабільністю",
           description:
@@ -914,7 +914,7 @@ export const CATALOG: Catalog = {
           slug: "lg31383",
           name: "ЛГ 31383",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 3264 }],
+          packs: [{ label: "п.о.", price: 3264 }],
           unit: "п.о.",
           tagline: "Гібрид ФАО 370 з вираженим stay-green для зерна й силосу",
           description:
@@ -938,7 +938,7 @@ export const CATALOG: Catalog = {
           slug: "midnait",
           name: "Міднайт",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 3315 }],
+          packs: [{ label: "п.о.", price: 3315 }],
           unit: "п.о.",
           tagline: "Пластичний і стабільний гібрид ФАО 240 для континентальних умов",
           description:
@@ -962,7 +962,7 @@ export const CATALOG: Catalog = {
           slug: "lg-31479",
           name: "ЛГ 31479",
           brand: "Limagrain",
-          packs: [{ label: "п.о. 50 000", price: 3927 }],
+          packs: [{ label: "п.о.", price: 3927 }],
           unit: "п.о.",
           tagline: "Силосний гібрид LGAN ФАО 440 з високою перетравністю DINAG",
           description:
