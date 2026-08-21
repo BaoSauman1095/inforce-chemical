@@ -117,6 +117,12 @@ export const PRODUCT_PHOTO_SLUGS = new Set([
   "flumet",
   "tsukron-plus-himagro",
   "trystar-himagro",
+  "kazumin",
+  "bestkur",
+  "nissoran",
+  "sanmait",
+  "sendai",
+  "akaramik",
   "matrika",
   "mega-dikvat",
 ]);
