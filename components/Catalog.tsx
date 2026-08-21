@@ -23,7 +23,10 @@ export default function Catalog() {
 
   const groups = CATALOG[tab];
 
-  const groupTitles = useMemo(() => groups.map((g) => g.title), [groups]);
+  const groupTitles = useMemo(
+    () => groups.filter((g) => g.items.length > 0).map((g) => g.title),
+    [groups]
+  );
 
   const brands = useMemo(() => {
     const set = new Set<string>();
