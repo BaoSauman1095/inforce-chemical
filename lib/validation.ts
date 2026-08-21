@@ -47,11 +47,6 @@ export const productOrderSchema = z.object({
     .min(2, "Вкажіть ім'я (мінімум 2 символи)")
     .max(80, "Ім'я занадто довге"),
   phone: phoneField,
-  email: z
-    .string()
-    .trim()
-    .email("Введіть коректний email")
-    .max(160, "Email занадто довгий"),
   quantity: z.coerce
     .number({ invalid_type_error: "Вкажіть кількість" })
     .int("Кількість має бути цілим числом")
@@ -71,11 +66,7 @@ export const productQuestionSchema = z.object({
     .trim()
     .min(2, "Вкажіть ім'я (мінімум 2 символи)")
     .max(80, "Ім'я занадто довге"),
-  email: z
-    .string()
-    .trim()
-    .email("Введіть коректний email")
-    .max(160, "Email занадто довгий"),
+  phone: phoneField,
   question: z
     .string()
     .trim()

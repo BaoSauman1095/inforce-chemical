@@ -12,7 +12,7 @@ interface ProductQuestionFormProps {
 export default function ProductQuestionForm({ product }: ProductQuestionFormProps) {
   const [form, setForm] = useState({
     name: "",
-    email: "",
+    phone: "",
     question: "",
     company: "", // honeypot — should always stay empty
   });
@@ -58,7 +58,7 @@ export default function ProductQuestionForm({ product }: ProductQuestionFormProp
       <div>
         <p className="font-heading text-[17px] font-bold text-brand">Дякуємо, питання надіслано</p>
         <p className="mt-2 text-sm leading-relaxed text-[#5f5b58]">
-          Наш агроном відповість вам на email найближчим часом.
+          Наш агроном зателефонує вам найближчим часом.
         </p>
       </div>
     );
@@ -98,11 +98,11 @@ export default function ProductQuestionForm({ product }: ProductQuestionFormProp
         className="w-full rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
       />
       <input
-        type="email"
+        type="tel"
         required
-        placeholder="Email"
-        value={form.email}
-        onChange={(e) => update("email", e.target.value)}
+        placeholder="Телефон, напр. 0671234567"
+        value={form.phone}
+        onChange={(e) => update("phone", e.target.value)}
         className="w-full rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
       />
       <textarea

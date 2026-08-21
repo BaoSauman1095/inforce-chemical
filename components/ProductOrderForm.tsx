@@ -12,7 +12,6 @@ interface ProductOrderFormProps {
 export default function ProductOrderForm({ product }: ProductOrderFormProps) {
   const [form, setForm] = useState({
     name: "",
-    email: "",
     phone: "",
     quantity: "1",
     packSize: product.packs[0]?.label ?? "",
@@ -97,14 +96,6 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
         placeholder="Ім'я"
         value={form.name}
         onChange={(e) => update("name", e.target.value)}
-        className="w-full rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
-      />
-      <input
-        type="email"
-        required
-        placeholder="Email"
-        value={form.email}
-        onChange={(e) => update("email", e.target.value)}
         className="w-full rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
       />
       <input

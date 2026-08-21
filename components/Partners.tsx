@@ -3,12 +3,12 @@
 import { motion } from "framer-motion";
 
 const PARTNERS = [
-  { name: "Limagrain", role: "Насіння · Франція" },
-  { name: "Ocean Invest", role: "Захист рослин · Україна" },
-  { name: "Biolchim", role: "Добрива · Італія" },
+  { name: "Limagrain", role: "Насіння" },
+  { name: "Ocean Invest", role: "Захист рослин" },
+  { name: "Biolchim", role: "Добрива" },
   { name: "Holland Farming", role: "Біостимулятори" },
-  { name: "Apsov", role: "Насіння сої · Італія" },
-  { name: "Farmsaat", role: "Кукурудза · Німеччина" },
+  { name: "Apsov", role: "Насіння" },
+  { name: "Farmsaat", role: "Насіння" },
   { name: "Himagro M", role: "Захист рослин" },
   { name: "Sumi Agro", role: "Захист рослин" },
 ];
