@@ -125,6 +125,22 @@ export const PRODUCT_PHOTO_SLUGS = new Set([
   "akaramik",
   "matrika",
   "mega-dikvat",
+  "hidrofert-13-40-13",
+  "hidrofert-3-11-38",
+  "hidrofert-18-18-18",
+  "hidrofert-20-20-20",
+  "hidrofert-15-5-30",
+  "mikrofol-kombi",
+  "multybor-21",
+  "mahnistart-np-zn",
+  "kropmaks",
+  "filloton",
+  "amalherol-essens",
+  "biflai",
+  "kaishi-maks",
+  "kinaktyv-inishial",
+  "nursprei",
+  "entsera",
 ]);
 
 export function productPhotoSrc(slug: string): string | null {
