@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { SOCIALS } from "@/lib/constants";
 
 const LINKS = [
@@ -15,13 +16,15 @@ export default function Footer() {
     <footer className="border-t border-white/[.08] pb-24 md:pb-10">
       <div className="mx-auto flex max-w-[1240px] flex-wrap items-center gap-5 px-5 py-[30px] md:px-7">
         <div className="flex flex-col items-start gap-3">
-          <Image
-            src="/brand/logo-horizontal-dark.png"
-            alt="IN FORCE CHEMICAL"
-            width={858}
-            height={248}
-            className="h-8 w-auto object-contain opacity-90"
-          />
+          <Link href="/" className="transition-opacity hover:opacity-100">
+            <Image
+              src="/brand/logo-horizontal-dark.png"
+              alt="IN FORCE CHEMICAL"
+              width={858}
+              height={248}
+              className="h-8 w-auto object-contain opacity-90"
+            />
+          </Link>
           <p className="text-[13.5px] text-paper/45">
             © {year} IN FORCE CHEMICAL. Всі права захищені.
           </p>
