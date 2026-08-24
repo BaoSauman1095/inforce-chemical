@@ -13,7 +13,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/[.07] bg-ink/[.82] backdrop-blur-md">
       <div className="mx-auto flex max-w-[1240px] items-center gap-7 px-5 py-4 md:px-7">
-        <a href="/#top" className="flex flex-none items-center" onClick={closeMenu}>
+        <a href="/" className="flex flex-none items-center" onClick={closeMenu}>
           <Image
             src="/brand/logo-horizontal-dark.png"
             alt="IN FORCE CHEMICAL"
