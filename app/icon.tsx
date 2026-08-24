@@ -4,26 +4,16 @@ export const runtime = "edge";
 export const size = { width: 64, height: 64 };
 export const contentType = "image/png";
 
+// Cropped from the brand mark (public/brand/logo-horizontal-dark.png) on a
+// white rounded square — the maroon "arrow/bars" icon, no wordmark.
+const ICON_DATA_URI =
+  "data:image/png;base64,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";
+
 export default function Icon() {
   return new ImageResponse(
     (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#8B1A2B",
-          borderRadius: 14,
-          color: "#fff",
-          fontSize: 30,
-          fontWeight: 800,
-          fontFamily: "sans-serif",
-        }}
-      >
-        IF
-      </div>
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={ICON_DATA_URI} width={size.width} height={size.height} alt="" />
     ),
     { ...size }
   );

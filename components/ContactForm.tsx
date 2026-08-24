@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Select from "./Select";
 import { CULTURES } from "@/lib/constants";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -127,18 +128,12 @@ export default function ContactForm() {
               onChange={(e) => update("phone", e.target.value)}
               className="w-full rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
             />
-            <select
+            <Select
               value={form.culture}
-              onChange={(e) => update("culture", e.target.value)}
-              className="w-full rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
-            >
-              <option value="">Культура — оберіть зі списку</option>
-              {CULTURES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+              onChange={(v) => update("culture", v)}
+              options={CULTURES.map((c) => ({ value: c, label: c }))}
+              placeholder="Культура — оберіть зі списку"
+            />
             <textarea
               rows={4}
               placeholder="Повідомлення"
