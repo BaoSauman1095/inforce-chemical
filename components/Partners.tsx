@@ -1,6 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
+
+import { partnerLogoSrc } from "@/lib/partner-logos";
 
 const PARTNERS = [
   { name: "Limagrain", role: "Насіння" },
@@ -43,6 +47,36 @@ const FEATURES = [
   },
 ];
 
+/**
+ * Логотип партнера з `public/partners/`. Поки файлу немає (або він не
+ * завантажився) — показуємо назву текстом, як було до появи логотипів.
+ */
+function PartnerLogo({ name }: { name: string }) {
+  const [failed, setFailed] = useState(false);
+  const src = partnerLogoSrc(name);
+
+  if (!src || failed) {
+    return (
+      <div className="grid h-16 w-full place-items-center font-heading text-lg font-extrabold tracking-wide text-brand">
+        {name}
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative h-16 w-full">
+      <Image
+        src={src}
+        alt={name}
+        fill
+        sizes="(min-width: 768px) 280px, 45vw"
+        className="object-contain px-2"
+        onError={() => setFailed(true)}
+      />
+    </div>
+  );
+}
+
 export default function Partners() {
   return (
     <section
@@ -66,9 +100,7 @@ export default function Partners() {
             key={b.name}
             className="flex flex-col items-center gap-4 bg-card px-[22px] py-[26px] text-center text-[#5f5b58] transition-colors hover:bg-white"
           >
-            <div className="grid h-16 w-full place-items-center font-heading text-lg font-extrabold tracking-wide text-brand">
-              {b.name}
-            </div>
+            <PartnerLogo name={b.name} />
             <div className="h-px w-8 bg-brand/[.28]" />
             <div>
               <p className="font-heading text-[14.5px] font-bold tracking-wide text-[#141414]">
