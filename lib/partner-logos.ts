@@ -5,12 +5,12 @@
  * партнера (ключ = `name` з PARTNERS у `components/Partners.tsx`).
  */
 export const PARTNER_LOGOS: Record<string, string> = {
-  Limagrain: "/partners/limagrain.png",
-  "Ocean Invest": "/partners/ocean-invest.png",
-  Biolchim: "/partners/biolchim.png",
-  Apsov: "/partners/apsov.png",
-  Farmsaat: "/partners/farmsaat.png",
-  "Himagro M": "/partners/himagro.png",
+  Limagrain: "/partners/limagrain.webp",
+  "Ocean Invest": "/partners/ocean-invest.webp",
+  Biolchim: "/partners/biolchim.webp",
+  Apsov: "/partners/apsov.webp",
+  Farmsaat: "/partners/farmsaat.webp",
+  "Himagro M": "/partners/himagro.webp",
 };
 
 export function partnerLogoSrc(name: string): string | null {
