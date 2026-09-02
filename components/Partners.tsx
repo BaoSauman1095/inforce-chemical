@@ -70,7 +70,7 @@ function PartnerLogo({ name }: { name: string }) {
         alt={name}
         fill
         sizes="(min-width: 768px) 280px, 45vw"
-        className="object-contain"
+        className="object-contain px-2"
         onError={() => setFailed(true)}
       />
     </div>
