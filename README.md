@@ -116,15 +116,28 @@ in-memory rate-limit (5 запитів/хв з IP) — достатньо для
 
 ## Заміна зображень-заглушок
 
-Фото товарів і логотипи партнерів зараз — плейсхолдери
-(`components/ImagePlaceholder.tsx`, діагональні смуги з підписом), бо
-оригінальних фото/логотипів партнерів не було в вихідних матеріалах.
-Щоб підключити реальні:
+Фото товарів без реального знімка — плейсхолдери
+(`components/ImagePlaceholder.tsx`, діагональні смуги з підписом).
+Щоб підключити фото товару: покладіть файл у `public/products/{slug}.webp`
+і додайте slug у `PRODUCT_PHOTO_SLUGS` (`lib/product-images.ts`).
 
-1. Покладіть файли в `public/products/...`, `public/partners/...`.
-2. У `components/ProductCard.tsx` і `components/Partners.tsx` замініть
-   `<ImagePlaceholder .../>` на `<Image src="/products/xxx.jpg" fill .../>`
-   з `next/image` (вже налаштований `next.config.mjs`, підтримує AVIF/WebP).
+**Логотипи партнерів** — `public/partners/`, зіставлення «назва партнера →
+файл» у `lib/partner-logos.ts`. `components/Partners.tsx` рендерить логотип
+через `next/image`, а якщо файлу немає (або він не завантажився) — показує
+назву партнера текстом, як було раніше. Очікувані файли:
+
+| Партнер       | Файл                            |
+| ------------- | ------------------------------- |
+| Limagrain     | `public/partners/limagrain.png` |
+| Ocean Invest  | `public/partners/ocean-invest.png` |
+| Biolchim      | `public/partners/biolchim.png`  |
+| Apsov         | `public/partners/apsov.png`     |
+| Farmsaat      | `public/partners/farmsaat.png`  |
+| Himagro M     | `public/partners/himagro.png`   |
+
+Картки партнерів мають майже білий фон (`#fdfcfc`, білий на hover), тож
+логотипи на прозорому або білому тлі виглядають коректно; висота слота —
+64 px, вписується через `object-contain`.
 
 ## SEO
 
