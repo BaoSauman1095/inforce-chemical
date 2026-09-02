@@ -128,12 +128,12 @@ in-memory rate-limit (5 запитів/хв з IP) — достатньо для
 
 | Партнер       | Файл                            |
 | ------------- | ------------------------------- |
-| Limagrain     | `public/partners/limagrain.png` |
-| Ocean Invest  | `public/partners/ocean-invest.png` |
-| Biolchim      | `public/partners/biolchim.png`  |
-| Apsov         | `public/partners/apsov.png`     |
-| Farmsaat      | `public/partners/farmsaat.png`  |
-| Himagro M     | `public/partners/himagro.png`   |
+| Limagrain     | `public/partners/limagrain.webp` |
+| Ocean Invest  | `public/partners/ocean-invest.webp` |
+| Biolchim      | `public/partners/biolchim.webp`  |
+| Apsov         | `public/partners/apsov.webp`     |
+| Farmsaat      | `public/partners/farmsaat.webp`  |
+| Himagro M     | `public/partners/himagro.webp`   |
 
 Holland Farming і Sumi Agro поки без логотипів — їхні картки лишаються
 текстовими. Щоб додати: покладіть файл у `public/partners/` і впишіть його
