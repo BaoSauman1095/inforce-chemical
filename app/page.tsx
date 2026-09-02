@@ -2,7 +2,8 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import WatermarkBackground from "@/components/WatermarkBackground";
 import Catalog from "@/components/Catalog";
-import CaseStudies from "@/components/CaseStudies";
+// Тимчасово прихований блок "Наші результати в полі"
+// import CaseStudies from "@/components/CaseStudies";
 import Partners from "@/components/Partners";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
@@ -18,7 +19,8 @@ export default function HomePage() {
         <Header />
         <Hero />
         <Catalog />
-        <CaseStudies />
+        {/* Тимчасово прихований блок "Наші результати в полі" */}
+        {/* <CaseStudies /> */}
         <Partners />
         <ContactSection />
         <Footer />
