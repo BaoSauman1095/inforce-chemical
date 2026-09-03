@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 import { partnerLogoSrc } from "@/lib/partner-logos";
+import { CATALOG_BRANDS } from "@/lib/products";
 
 const PARTNERS = [
   { name: "Limagrain", role: "Насіння" },
@@ -78,6 +80,8 @@ function PartnerLogo({ name }: { name: string }) {
 }
 
 export default function Partners() {
+  const router = useRouter();
+
   return (
     <section
       id="partners"
@@ -95,21 +99,47 @@ export default function Partners() {
       </p>
 
       <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[18px] border border-white/[.09] bg-white/[.09] md:grid-cols-4">
-        {PARTNERS.map((b) => (
-          <div
-            key={b.name}
-            className="flex flex-col items-center gap-4 bg-card px-[22px] py-[26px] text-center text-[#5f5b58] transition-colors hover:bg-white"
-          >
-            <PartnerLogo name={b.name} />
-            <div className="h-px w-8 bg-brand/[.28]" />
-            <div>
-              <p className="font-heading text-[14.5px] font-bold tracking-wide text-[#141414]">
-                {b.name}
-              </p>
-              <p className="mt-1 text-xs text-[#8a8582]">{b.role}</p>
+        {PARTNERS.map((b) => {
+          const inCatalog = CATALOG_BRANDS.has(b.name);
+          const body = (
+            <>
+              <PartnerLogo name={b.name} />
+              <div className="h-px w-8 bg-brand/[.28]" />
+              <div>
+                <p className="font-heading text-[14.5px] font-bold tracking-wide text-[#141414]">
+                  {b.name}
+                </p>
+                <p className="mt-1 text-xs text-[#8a8582]">{b.role}</p>
+                {inCatalog && (
+                  <p className="mt-2 text-[11.5px] font-semibold text-brand opacity-0 transition-opacity group-hover:opacity-100">
+                    Дивитись товари →
+                  </p>
+                )}
+              </div>
+            </>
+          );
+
+          const cardClass =
+            "group flex flex-col items-center gap-4 bg-card px-[22px] py-[26px] text-center text-[#5f5b58] transition-colors hover:bg-white";
+
+          // Бренди без товарів у каталозі лишаються просто плиткою — інакше
+          // клік вів би у фільтр, який нічого не показує.
+          return inCatalog ? (
+            <button
+              key={b.name}
+              type="button"
+              onClick={() => router.push(`/?brand=${encodeURIComponent(b.name)}#catalog`)}
+              aria-label={`Показати товари бренду ${b.name} в каталозі`}
+              className={cardClass}
+            >
+              {body}
+            </button>
+          ) : (
+            <div key={b.name} className={cardClass}>
+              {body}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">

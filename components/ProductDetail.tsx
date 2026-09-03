@@ -88,6 +88,9 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
             <p className="mt-4 font-heading text-2xl font-extrabold text-brand">
               {formatPrice(selectedPack.price)} грн
               {!isFlatPackPrice(selectedPack.label, product.unit) && `/${product.unit}`}
+              <span className="ml-2 align-middle font-sans text-[13px] font-medium text-[#8a8582]">
+                з ПДВ
+              </span>
             </p>
           ) : (
             <p className="mt-4 font-heading text-lg font-semibold text-[#8a8582]">Ціна за запитом</p>

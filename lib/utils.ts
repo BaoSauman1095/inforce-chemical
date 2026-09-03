@@ -52,3 +52,18 @@ export function packTotalPrice(
 
   return pack.price * Number(amount[1].replace(",", "."));
 }
+
+/**
+ * Телефон у міжнародному форматі +380XXXXXXXXX.
+ *
+ * Потрібен для повідомлень у Telegram: клієнти лінкують номери саме в
+ * такому вигляді, тож менеджер може подзвонити одним дотиком, а не
+ * переписувати номер руками. Схема введення вже нормалізована zod-ом
+ * (без пробілів і дефісів), тут лишається звести до +380.
+ */
+export function formatPhoneIntl(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length === 12 && digits.startsWith("380")) return `+${digits}`;
+  if (digits.length === 10 && digits.startsWith("0")) return `+38${digits}`;
+  return phone;
+}

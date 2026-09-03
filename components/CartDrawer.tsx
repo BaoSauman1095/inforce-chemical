@@ -147,6 +147,9 @@ export default function CartDrawer() {
                   <div className="mb-4 flex items-baseline justify-between">
                     <span className="font-heading text-[15px] font-bold text-[#141414]">
                       Разом
+                      <span className="ml-1.5 font-sans text-[12px] font-medium text-[#8a8582]">
+                        з ПДВ
+                      </span>
                     </span>
                     <span className="font-heading text-xl font-extrabold text-brand">
                       {total > 0 ? `${formatPrice(total)} грн` : "за запитом"}

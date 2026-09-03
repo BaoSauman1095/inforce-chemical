@@ -1,16 +1,18 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import ProductCard from "./ProductCard";
 import { CATALOG, CATALOG_TABS } from "@/lib/catalog-data";
+import { findTabForBrand } from "@/lib/products";
 import { cn } from "@/lib/utils";
 import type { CatalogTab, FlatCatalogItem } from "@/lib/types";
 import { useOnClickOutside } from "@/lib/useOnClickOutside";
 
 const PAGE_SIZE = 12;
 
-export default function Catalog() {
+function CatalogInner() {
   const [tab, setTab] = useState<CatalogTab>("seeds");
   const [brand, setBrand] = useState("all");
   const [group, setGroup] = useState("all");
@@ -20,6 +22,24 @@ export default function Catalog() {
 
   const menuRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(menuRef, () => setBrandMenuOpen(false));
+
+  // Клік по логотипу партнера веде на /?brand=<бренд>#catalog — звідси
+  // підхоплюємо бренд, перемикаємось на його вкладку й прокручуємось сюди.
+  const searchParams = useSearchParams();
+  const brandParam = searchParams.get("brand");
+
+  useEffect(() => {
+    if (!brandParam) return;
+    const target = findTabForBrand(brandParam);
+    if (!target) return;
+
+    setTab(target);
+    setBrand(brandParam);
+    setGroup("all");
+    setQuery("");
+    setVisible(PAGE_SIZE);
+    document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
+  }, [brandParam]);
 
   const groups = CATALOG[tab];
 
@@ -67,9 +87,16 @@ export default function Catalog() {
     setVisible(PAGE_SIZE);
   }
 
-  function setFilter(patch: Partial<{ brand: string; group: string }>) {
-    if (patch.brand !== undefined) setBrand(patch.brand);
-    if (patch.group !== undefined) setGroup(patch.group);
+  function selectBrand(next: string) {
+    setBrand(next);
+    // Плитки «Усі категорії» більше немає: повернення до всіх позицій вкладки
+    // виконує саме фільтр брендів, тож він скидає й вибрану категорію.
+    setGroup("all");
+    setVisible(PAGE_SIZE);
+  }
+
+  function selectGroup(next: string) {
+    setGroup(next);
     setVisible(PAGE_SIZE);
   }
 
@@ -92,12 +119,11 @@ export default function Catalog() {
         <span className="h-px flex-1 bg-white/[.12]" />
       </div>
       <p className="-mt-2 mb-6 max-w-[660px] text-base leading-relaxed text-paper/[.62]">
-        Понад 300 позицій у наявності. Однакові препарати зібрані в одну
-        позицію — фасування вказано поруч.
+        Понад 300 позицій у наявності.
       </p>
 
       <div className="mb-5 flex flex-wrap items-center gap-3.5">
-        <div className="inline-flex flex-wrap gap-1.5 rounded-2xl border border-white/[.08] bg-white/5 p-1.5">
+        <div className="inline-flex flex-wrap gap-1.5 rounded-2xl border border-brand/30 bg-brand/[.07] p-1.5 shadow-[0_0_0_1px_rgba(139,26,43,.12)]">
           {CATALOG_TABS.map((t) => {
             const active = tab === t.key;
             return (
@@ -106,10 +132,15 @@ export default function Catalog() {
                 type="button"
                 onClick={() => selectTab(t.key)}
                 className={cn(
-                  "rounded-xl px-[22px] py-2.5 font-heading text-sm font-semibold tracking-wide transition-colors",
-                  active ? "bg-brand text-white" : "text-paper/[.66] hover:text-paper"
+                  "flex items-center gap-2 rounded-xl px-[18px] py-2.5 font-heading text-sm font-semibold tracking-wide transition-colors",
+                  active
+                    ? "bg-brand text-white shadow-cta"
+                    : "text-paper/[.72] hover:bg-white/5 hover:text-paper"
                 )}
               >
+                <span aria-hidden="true" className="text-base leading-none">
+                  {t.icon}
+                </span>
                 {t.label}
               </button>
             );
@@ -153,7 +184,7 @@ export default function Catalog() {
                       key={b}
                       type="button"
                       onClick={() => {
-                        setFilter({ brand: b });
+                        selectBrand(b);
                         setBrandMenuOpen(false);
                       }}
                       className={cn(
@@ -172,14 +203,14 @@ export default function Catalog() {
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2.5">
-        {["all", ...groupTitles].map((g) => {
+        {groupTitles.map((g) => {
           const active = group === g;
           const gr = groups.find((x) => x.title === g);
           return (
             <button
               key={g}
               type="button"
-              onClick={() => setFilter({ group: g })}
+              onClick={() => selectGroup(g)}
               className={cn(
                 "flex items-center gap-2 rounded-full border py-2.5 pl-4 pr-5 font-heading text-[13.5px] font-bold tracking-wide transition-colors",
                 active
@@ -187,12 +218,14 @@ export default function Catalog() {
                   : "border-paper/50 bg-card text-[#141414] hover:border-paper"
               )}
             >
-              <span className="text-base">{g === "all" ? "▦" : gr?.icon ?? "•"}</span>
-              {g === "all" ? "Усі категорії" : g}
+              <span className="text-base">{gr?.icon ?? "•"}</span>
+              {g}
             </button>
           );
         })}
       </div>
+
+      <p className="mb-3 text-[13px] text-paper/45">Ціни вказано з ПДВ.</p>
 
       <div
         key={`${tab}-${group}-${brand}-${query}`}
@@ -230,5 +263,18 @@ export default function Catalog() {
         </div>
       )}
     </section>
+  );
+}
+
+/**
+ * useSearchParams (фільтр «/?brand=…» з блоку партнерів) вимагає межі
+ * Suspense на статичних сторінках. Тримаємо її тут, а не в кожній сторінці,
+ * що рендерить каталог — інакше про неї легко забути.
+ */
+export default function Catalog() {
+  return (
+    <Suspense>
+      <CatalogInner />
+    </Suspense>
   );
 }

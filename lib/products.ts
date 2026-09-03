@@ -1,5 +1,5 @@
 import { CATALOG, CATALOG_TABS } from "./catalog-data";
-import type { FlatCatalogItem } from "./types";
+import type { CatalogTab, FlatCatalogItem } from "./types";
 import { packTotalPrice } from "./utils";
 
 /** Every catalog item flattened into a single list, indexed by slug for /products/[slug]. */
@@ -72,3 +72,20 @@ export function resolveOrderItems(
     ];
   });
 }
+
+/**
+ * Вкладка каталогу, де є товари цього бренду, або null. Потрібна, щоб клік
+ * по логотипу партнера відкривав каталог одразу на потрібній вкладці —
+ * бренди не перетинаються між вкладками, крім Sumi Agro (тоді береться
+ * перша вкладка, де він є).
+ */
+export function findTabForBrand(brand: string): CatalogTab | null {
+  for (const { key } of CATALOG_TABS) {
+    const has = CATALOG[key].some((g) => g.items.some((i) => i.brand === brand));
+    if (has) return key;
+  }
+  return null;
+}
+
+/** Бренди, які реально є в каталозі — щоб не робити клікабельним логотип без товарів. */
+export const CATALOG_BRANDS = new Set(ALL_PRODUCTS.map((p) => p.brand));
