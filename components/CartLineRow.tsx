@@ -62,7 +62,7 @@ export default function CartLineRow({
               type="button"
               onClick={() => onQuantity(line.quantity - 1)}
               aria-label="Зменшити кількість"
-              className="grid h-8 w-8 place-items-center text-[#5f5b58] transition-colors hover:text-brand"
+              className="tap-44 grid h-8 w-8 place-items-center text-[#5f5b58] transition-colors hover:text-brand"
             >
               −
             </button>
@@ -73,7 +73,7 @@ export default function CartLineRow({
               type="button"
               onClick={() => onQuantity(line.quantity + 1)}
               aria-label="Збільшити кількість"
-              className="grid h-8 w-8 place-items-center text-[#5f5b58] transition-colors hover:text-brand"
+              className="tap-44 grid h-8 w-8 place-items-center text-[#5f5b58] transition-colors hover:text-brand"
             >
               +
             </button>
@@ -89,7 +89,7 @@ export default function CartLineRow({
         type="button"
         onClick={onRemove}
         aria-label={`Прибрати ${line.product.name} з кошика`}
-        className="h-8 w-8 flex-none text-[#b9b4b0] transition-colors hover:text-red-600"
+        className="tap-44 h-8 w-8 flex-none text-[#b9b4b0] transition-colors hover:text-red-600"
       >
         <svg
           width="15"
