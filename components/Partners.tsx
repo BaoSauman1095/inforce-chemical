@@ -110,8 +110,10 @@ export default function Partners() {
                   {b.name}
                 </p>
                 <p className="mt-1 text-xs text-[#8a8582]">{b.role}</p>
+                {/* Підказка тільки там, де є наведення: на телефоні вона б
+                    ніколи не з'явилась, але тримала б порожнє місце в картці. */}
                 {inCatalog && (
-                  <p className="mt-2 text-[11.5px] font-semibold text-brand opacity-0 transition-opacity group-hover:opacity-100">
+                  <p className="mt-2 hidden text-[11.5px] font-semibold text-brand opacity-0 transition-opacity group-hover:opacity-100 sm:block">
                     Дивитись товари →
                   </p>
                 )}

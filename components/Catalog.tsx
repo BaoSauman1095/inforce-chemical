@@ -123,7 +123,9 @@ function CatalogInner() {
       </p>
 
       <div className="mb-5 flex flex-wrap items-center gap-3.5">
-        <div className="inline-flex flex-wrap gap-1.5 rounded-2xl border border-brand/30 bg-brand/[.07] p-1.5 shadow-[0_0_0_1px_rgba(139,26,43,.12)]">
+        {/* На телефоні — три рівні колонки на всю ширину: три вкладки з
+            іконками інакше переносяться 2+1 і третя висить сама. */}
+        <div className="grid w-full grid-cols-3 gap-1.5 rounded-2xl border border-brand/30 bg-brand/[.07] p-1.5 shadow-[0_0_0_1px_rgba(139,26,43,.12)] sm:inline-flex sm:w-auto">
           {CATALOG_TABS.map((t) => {
             const active = tab === t.key;
             return (
@@ -132,7 +134,7 @@ function CatalogInner() {
                 type="button"
                 onClick={() => selectTab(t.key)}
                 className={cn(
-                  "flex items-center gap-2 rounded-xl px-[18px] py-2.5 font-heading text-sm font-semibold tracking-wide transition-colors",
+                  "flex items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 py-2.5 font-heading text-[13.5px] font-semibold tracking-wide transition-colors sm:gap-2 sm:px-[18px] sm:text-sm",
                   active
                     ? "bg-brand text-white shadow-cta"
                     : "text-paper/[.72] hover:bg-white/5 hover:text-paper"
@@ -141,7 +143,8 @@ function CatalogInner() {
                 <span aria-hidden="true" className="text-base leading-none">
                   {t.icon}
                 </span>
-                {t.label}
+                <span className="sm:hidden">{t.shortLabel ?? t.label}</span>
+                <span className="hidden sm:inline">{t.label}</span>
               </button>
             );
           })}
