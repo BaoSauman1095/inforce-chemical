@@ -1,19 +1,17 @@
 "use client";
 
-import { useCart } from "./CartProvider";
 import { useLeadForm } from "@/lib/useLeadForm";
-import {
-  FormError,
-  FormSuccess,
-  Honeypot,
-  NamePhoneFields,
-  SubmitButton,
-} from "./form";
+import { FormError, Honeypot, NamePhoneFields, SubmitButton } from "./form";
+import type { CartLine } from "./CartProvider";
+
+interface CartCheckoutFormProps {
+  lines: CartLine[];
+  /** Замовлення прийнято сервером — далі кошик чистить і дякує панель. */
+  onOrdered: () => void;
+}
 
 /** Оформлення замовлення: ім'я, телефон і кнопка — решту уточнює менеджер. */
-export default function CartCheckoutForm() {
-  const { lines, clear } = useCart();
-
+export default function CartCheckoutForm({ lines, onOrdered }: CartCheckoutFormProps) {
   const { values, update, status, error, handleSubmit } = useLeadForm({
     endpoint: "/api/cart-order",
     initialValues: { name: "", phone: "", company: "" },
@@ -26,19 +24,10 @@ export default function CartCheckoutForm() {
         quantity: l.quantity,
       })),
     }),
-    // Кошик чистимо лише після підтвердженої відправки, щоб при помилці
-    // мережі позиції не зникли разом із замовленням.
-    onSuccess: clear,
+    // Подяку показує панель: якщо малювати її тут, то очищення кошика
+    // розмонтує форму разом із повідомленням, і людина його не побачить.
+    onSuccess: onOrdered,
   });
-
-  if (status === "success") {
-    return (
-      <FormSuccess title="Дякуємо, замовлення прийнято">
-        Менеджер зв&apos;яжеться з вами найближчим часом для підтвердження
-        замовлення та умов доставки.
-      </FormSuccess>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3.5" noValidate>
@@ -53,8 +42,13 @@ export default function CartCheckoutForm() {
       {error && <FormError>{error}</FormError>}
 
       <SubmitButton loading={status === "loading"} disabled={lines.length === 0}>
-        Оформити замовлення
+        Надіслати замовлення
       </SubmitButton>
+
+      <p className="text-center text-xs leading-relaxed text-[#8a8582]">
+        Менеджер зателефонує для підтвердження — оплата й доставка обговорюються
+        по телефону.
+      </p>
     </form>
   );
 }
