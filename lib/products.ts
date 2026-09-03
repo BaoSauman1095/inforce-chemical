@@ -1,5 +1,6 @@
 import { CATALOG, CATALOG_TABS } from "./catalog-data";
 import type { FlatCatalogItem } from "./types";
+import { packTotalPrice } from "./utils";
 
 /** Every catalog item flattened into a single list, indexed by slug for /products/[slug]. */
 export const ALL_PRODUCTS: FlatCatalogItem[] = CATALOG_TABS.flatMap(({ key: tab }) =>
@@ -31,4 +32,43 @@ export function getRelatedProducts(product: FlatCatalogItem, limit = 4): FlatCat
   );
 
   return [...sameGroup, ...sameTab].slice(0, limit);
+}
+
+export interface ResolvedOrderLine {
+  name: string;
+  brand: string;
+  packLabel: string;
+  quantity: number;
+  /** Сума за одну упаковку, або null для позицій «ціна за запитом». */
+  unitPrice: number | null;
+  /** unitPrice × quantity, або null. */
+  total: number | null;
+}
+
+/**
+ * Перетворює позиції з запиту на рядки замовлення, беручи назви та ціни з
+ * каталогу — клієнт надсилає лише slug, упаковку й кількість, тож підмінити
+ * ціну в запиті неможливо. Невідомі slug чи упаковки просто відкидаються.
+ */
+export function resolveOrderItems(
+  items: Array<{ slug: string; packLabel: string; quantity: number }>
+): ResolvedOrderLine[] {
+  return items.flatMap((item) => {
+    const product = getProductBySlug(item.slug);
+    if (!product) return [];
+    const pack = product.packs.find((p) => p.label === item.packLabel);
+    if (!pack) return [];
+
+    const unitPrice = packTotalPrice(pack, product.unit);
+    return [
+      {
+        name: product.name,
+        brand: product.brand,
+        packLabel: pack.label,
+        quantity: item.quantity,
+        unitPrice,
+        total: unitPrice === null ? null : unitPrice * item.quantity,
+      },
+    ];
+  });
 }

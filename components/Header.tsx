@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
+import CartButton from "./CartButton";
 import { NAV_LINKS, PHONE_DISPLAY, PHONE_TEL } from "@/lib/constants";
 
 export default function Header() {
@@ -36,39 +37,43 @@ export default function Header() {
           ))}
         </nav>
 
-        <a
-          href={`tel:${PHONE_TEL}`}
-          className="ml-auto hidden flex-none items-center gap-2 rounded-[10px] bg-brand px-[18px] py-[10px] font-heading text-sm font-semibold tracking-wide text-white shadow-cta transition-colors hover:bg-brand-hover md:ml-0 md:flex"
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" className="flex-none">
-            <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.5c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z" />
-          </svg>
-          {PHONE_DISPLAY}
-        </a>
+        <div className="ml-auto flex flex-none items-center gap-2.5">
+          <CartButton />
 
-        <button
-          type="button"
-          aria-label={open ? "Закрити меню" : "Відкрити меню"}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="ml-auto grid h-10 w-10 flex-none place-items-center rounded-lg border border-white/15 text-paper md:hidden"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
+          <a
+            href={`tel:${PHONE_TEL}`}
+            className="hidden flex-none items-center gap-2 rounded-[10px] bg-brand px-[18px] py-[10px] font-heading text-sm font-semibold tracking-wide text-white shadow-cta transition-colors hover:bg-brand-hover md:flex"
           >
-            {open ? (
-              <path d="M6 6l12 12M18 6L6 18" />
-            ) : (
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            )}
-          </svg>
-        </button>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" className="flex-none">
+              <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.5c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z" />
+            </svg>
+            {PHONE_DISPLAY}
+          </a>
+
+          <button
+            type="button"
+            aria-label={open ? "Закрити меню" : "Відкрити меню"}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+            className="grid h-10 w-10 flex-none place-items-center rounded-lg border border-white/15 text-paper md:hidden"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              {open ? (
+                <path d="M6 6l12 12M18 6L6 18" />
+              ) : (
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>

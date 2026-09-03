@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { productOrderSchema } from "@/lib/validation";
-import { sendProductOrder, TelegramNotifyError } from "@/lib/telegram";
+import { cartOrderSchema } from "@/lib/validation";
+import { resolveOrderItems } from "@/lib/products";
+import { sendCartOrder, TelegramNotifyError } from "@/lib/telegram";
 import { getClientIp, isRateLimited } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -28,14 +29,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const parsed = productOrderSchema.parse(body);
+    const parsed = cartOrderSchema.parse(body);
 
-    // Honeypot triggered — silently report success to avoid tipping off bots.
+    // Ханіпот спрацював — вдаємо успіх, щоб не підказувати ботам про перевірку.
     if (parsed.company) {
       return NextResponse.json({ ok: true });
     }
 
-    await sendProductOrder(parsed);
+    // Назви й ціни беремо з каталогу, а не з запиту.
+    const lines = resolveOrderItems(parsed.items);
+    if (lines.length === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "Товарів із замовлення більше немає в каталозі. Оновіть сторінку.",
+        },
+        { status: 422 }
+      );
+    }
+
+    await sendCartOrder(parsed, lines);
 
     return NextResponse.json({ ok: true });
   } catch (err) {
@@ -52,7 +65,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (err instanceof TelegramNotifyError) {
-      console.error("[product-order] Telegram delivery failed:", err.message, err.cause);
+      console.error("[cart-order] Telegram delivery failed:", err.message, err.cause);
       return NextResponse.json(
         {
           ok: false,
@@ -63,7 +76,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.error("[product-order] Unexpected error:", err);
+    console.error("[cart-order] Unexpected error:", err);
     return NextResponse.json(
       { ok: false, error: "Внутрішня помилка сервера." },
       { status: 500 }

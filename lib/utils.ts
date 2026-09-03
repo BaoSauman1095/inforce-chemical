@@ -20,8 +20,35 @@ export function isFlatPackPrice(packLabel: string, unit?: string): boolean {
   if (!unit) return false;
   const trimmed = packLabel.trim();
   if (trimmed === unit) return true;
-  const match = trimmed.match(/(г|гр|мл)\s*$/i);
+  // Перед суб-одиницею має бути цифра або пробіл, інакше "кг" читалося як
+  // "г" і пачка "25 кг" вважалася грамовою — ціна показувалась як сума за
+  // пачку замість ставки за кілограм.
+  const match = trimmed.match(/(?:^|[\s\d])(г|гр|мл)\s*$/i);
   if (!match) return false;
   const token = match[1].toLowerCase();
   return (unit === "кг" && (token === "г" || token === "гр")) || (unit === "л" && token === "мл");
+}
+
+/**
+ * Ціна за одну упаковку, у гривнях, або null якщо її не визначити.
+ *
+ * У каталозі `pack.price` — це або готова сума за упаковку (коли
+ * `isFlatPackPrice`: "п.о.", "500 г", "500 мл"), або ставка за одиницю
+ * (грн/кг, грн/л). У другому випадку мітка завжди має вигляд "<число> <од>",
+ * тож сума за упаковку — це число з мітки, помножене на ставку.
+ *
+ * Повертає null для позицій без ціни («за запитом») і для міток, з яких
+ * кількість не читається — краще не показати суму, ніж показати вигадану.
+ */
+export function packTotalPrice(
+  pack: { label: string; price?: number },
+  unit?: string
+): number | null {
+  if (typeof pack.price !== "number") return null;
+  if (isFlatPackPrice(pack.label, unit)) return pack.price;
+
+  const amount = pack.label.trim().match(/^([\d]+(?:[.,]\d+)?)/);
+  if (!amount) return null;
+
+  return pack.price * Number(amount[1].replace(",", "."));
 }

@@ -40,25 +40,33 @@ const phoneField = z
     message: "Введіть коректний номер телефону, напр. 0671234567",
   });
 
-export const productOrderSchema = z.object({
+export const cartOrderSchema = z.object({
   name: z
     .string()
     .trim()
     .min(2, "Вкажіть ім'я (мінімум 2 символи)")
     .max(80, "Ім'я занадто довге"),
   phone: phoneField,
-  quantity: z.coerce
-    .number({ invalid_type_error: "Вкажіть кількість" })
-    .int("Кількість має бути цілим числом")
-    .min(1, "Кількість має бути не менше 1")
-    .max(10000, "Занадто велика кількість"),
-  packSize: z.string().trim().min(1, "Оберіть розмір упаковки").max(40),
-  productName: z.string().trim().min(1).max(160),
-  productSlug: z.string().trim().min(1).max(160),
+  // Клієнт надсилає лише посилання на позицію — назву, упаковку й ціну
+  // сервер бере з каталогу сам, щоб їх не можна було підмінити в запиті.
+  items: z
+    .array(
+      z.object({
+        slug: z.string().trim().min(1).max(160),
+        packLabel: z.string().trim().min(1).max(40),
+        quantity: z.coerce
+          .number({ invalid_type_error: "Вкажіть кількість" })
+          .int("Кількість має бути цілим числом")
+          .min(1, "Кількість має бути не менше 1")
+          .max(10000, "Занадто велика кількість"),
+      })
+    )
+    .min(1, "Кошик порожній")
+    .max(100, "Занадто багато позицій у замовленні"),
   company: z.string().optional().default(""),
 });
 
-export type ProductOrderInput = z.infer<typeof productOrderSchema>;
+export type CartOrderInput = z.infer<typeof cartOrderSchema>;
 
 export const productQuestionSchema = z.object({
   name: z
