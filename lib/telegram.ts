@@ -1,6 +1,6 @@
 import type { ContactFormInput, CartOrderInput, ProductQuestionInput } from "./validation";
 import type { ResolvedOrderLine } from "./products";
-import { formatPrice } from "./utils";
+import { formatPrice, formatPhoneIntl } from "./utils";
 
 /** Escapes characters that are special in Telegram's MarkdownV2 parse mode. */
 function escapeMarkdownV2(value: string): string {
@@ -16,7 +16,7 @@ function formatLeadMessage(data: ContactFormInput): string {
     "🌾 *Нова заявка з сайту IN FORCE CHEMICAL*",
     "",
     `*Ім'я:* ${escapeMarkdownV2(data.name)}`,
-    `*Телефон:* ${escapeMarkdownV2(data.phone)}`,
+    `*Телефон:* ${escapeMarkdownV2(formatPhoneIntl(data.phone))}`,
   ];
 
   if (data.culture) {
@@ -39,7 +39,7 @@ function formatOrderMessage(
     "🛒 *Нове замовлення — IN FORCE CHEMICAL*",
     "",
     `*Ім'я:* ${escapeMarkdownV2(data.name)}`,
-    `*Телефон:* ${escapeMarkdownV2(data.phone)}`,
+    `*Телефон:* ${escapeMarkdownV2(formatPhoneIntl(data.phone))}`,
     "",
     `*Позицій:* ${lines.length}`,
     "",
@@ -81,7 +81,7 @@ function formatQuestionMessage(data: ProductQuestionInput): string {
     `*Товар:* ${escapeMarkdownV2(data.productName)}`,
     "",
     `*Ім'я:* ${escapeMarkdownV2(data.name)}`,
-    `*Телефон:* ${escapeMarkdownV2(data.phone)}`,
+    `*Телефон:* ${escapeMarkdownV2(formatPhoneIntl(data.phone))}`,
     "",
     `*Питання:*`,
     escapeMarkdownV2(data.question),
