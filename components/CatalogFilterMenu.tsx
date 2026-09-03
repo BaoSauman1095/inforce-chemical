@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useOnClickOutside } from "@/lib/useOnClickOutside";
@@ -20,6 +20,12 @@ interface Props {
   open: boolean;
   /** Меню відкриваються по черзі, тому станом володіє каталог. */
   onToggle: (next: boolean) => void;
+  /**
+   * До якого краю кнопки притискати меню. Ряд фільтрів на телефоні вужчий за
+   * два меню, тож ліве тримаємо зліва, а праве — справа: інакше одне з них
+   * вилазить за екран.
+   */
+  align?: "left" | "right";
 }
 
 /**
@@ -34,9 +40,22 @@ export default function CatalogFilterMenu({
   onChange,
   open,
   onToggle,
+  align = "left",
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(ref, () => onToggle(false));
+
+  // На невисоких екранах меню відкривається нижче краю вікна — підтягуємо
+  // сторінку рівно настільки, щоб воно вмістилося цілком.
+  useEffect(() => {
+    if (!open) return;
+    const id = window.setTimeout(
+      () => menuRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }),
+      160
+    );
+    return () => window.clearTimeout(id);
+  }, [open]);
 
   const selected = options.find((o) => o.value === value);
 
@@ -61,13 +80,17 @@ export default function CatalogFilterMenu({
       <AnimatePresence>
         {open && (
           <motion.div
+            ref={menuRef}
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.15 }}
             // z-45 — вище за нижню кнопку дзвінка (z-40), яка інакше накриває
             // останні пункти меню на телефоні, але нижче за липку шапку (z-50).
-            className="absolute left-0 top-[calc(100%+8px)] z-[45] max-h-[280px] min-w-[220px] overflow-y-auto rounded-xl bg-card p-1.5 shadow-panelLg"
+            className={cn(
+              "absolute top-[calc(100%+8px)] z-[45] max-h-[280px] min-w-[220px] overflow-y-auto rounded-xl bg-card p-1.5 shadow-panelLg",
+              align === "right" ? "right-0" : "left-0"
+            )}
           >
             {[{ value: "all", label: allLabel } as FilterOption, ...options].map((o) => (
               <button
