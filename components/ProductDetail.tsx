@@ -74,7 +74,7 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
                   type="button"
                   onClick={() => setPackIndex(i)}
                   className={cn(
-                    "rounded-md px-3 py-1.5 text-[13px] font-semibold transition-colors",
+                    "tap-44 rounded-md px-3 py-1.5 text-[13px] font-semibold transition-colors",
                     i === packIndex ? "bg-brand text-white" : "bg-brand/[.08] text-brand hover:bg-brand/[.16]"
                   )}
                 >

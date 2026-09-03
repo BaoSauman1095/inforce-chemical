@@ -66,7 +66,7 @@ export default function ProductCard({ item }: { item: FlatCatalogItem }) {
                 setPackIndex(i);
               }}
               className={cn(
-                "whitespace-nowrap rounded-md px-[9px] py-1 text-[11px] font-semibold transition-colors",
+                "tap-44 whitespace-nowrap rounded-md px-[9px] py-1 text-[11px] font-semibold transition-colors",
                 i === packIndex ? "bg-brand text-white" : "bg-brand/[.08] text-brand hover:bg-brand/[.16]"
               )}
             >
