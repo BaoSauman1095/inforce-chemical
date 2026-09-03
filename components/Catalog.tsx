@@ -230,6 +230,7 @@ function CatalogInner() {
             onChange={selectCrop}
             open={openMenu === "crop"}
             onToggle={(next) => setOpenMenu(next ? "crop" : null)}
+            align="right"
           />
         )}
 
