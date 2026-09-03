@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "./CartProvider";
 
 /** Іконка кошика в шапці з лічильником позицій. */
@@ -30,11 +31,22 @@ export default function CartButton({ className = "" }: { className?: string }) {
 
       {/* До читання localStorage лічильника немає — інакше на сервері й
           клієнті вийде різна розмітка і React вилає гідратацію. */}
-      {ready && count > 0 && (
-        <span className="absolute -right-1.5 -top-1.5 grid h-[19px] min-w-[19px] place-items-center rounded-full bg-brand px-1 font-heading text-[11px] font-bold text-white">
-          {count > 99 ? "99+" : count}
-        </span>
-      )}
+      <AnimatePresence>
+        {ready && count > 0 && (
+          <motion.span
+            // key на count — бейдж «підстрибує» на кожній зміні, тож видно,
+            // що товар долетів, навіть коли кошик закритий.
+            key={count}
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: [1.35, 1], opacity: 1 }}
+            exit={{ scale: 0.5, opacity: 0 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+            className="absolute -right-1.5 -top-1.5 grid h-[19px] min-w-[19px] place-items-center rounded-full bg-brand px-1 font-heading text-[11px] font-bold text-white"
+          >
+            {count > 99 ? "99+" : count}
+          </motion.span>
+        )}
+      </AnimatePresence>
     </button>
   );
 }

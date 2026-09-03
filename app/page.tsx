@@ -12,7 +12,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 
 export default function HomePage() {
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative">
       <SmoothScroll />
       <WatermarkBackground />
       <div className="relative z-10">
