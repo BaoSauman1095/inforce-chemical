@@ -96,6 +96,11 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
             <p className="mt-4 font-heading text-lg font-semibold text-[#8a8582]">Ціна за запитом</p>
           )}
 
+          {/* Купівля одразу під ціною. На телефоні колонка йде одним стовпцем,
+              і коли кнопка стояла після опису, характеристик і переваг, до неї
+              треба було прокрутити ще два екрани. */}
+          <ProductActions product={product} packLabel={selectedPack?.label} />
+
           {product.tagline && (
             <p className="mt-4 font-heading text-[17px] font-bold text-[#141414]">{product.tagline}</p>
           )}
@@ -145,8 +150,6 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
               </ul>
             </div>
           )}
-
-          <ProductActions product={product} packLabel={selectedPack?.label} />
         </div>
       </div>
 
