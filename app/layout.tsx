@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { PHONE_DISPLAY, PHONE_TEL, SITE_NAME, SITE_URL, SOCIALS } from "@/lib/constants";
+import CartProvider from "@/components/CartProvider";
+import CartDrawer from "@/components/CartDrawer";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -139,7 +141,10 @@ export default function RootLayout({
         <OrganizationJsonLd />
       </head>
       <body className="font-sans antialiased">
-        {children}
+        <CartProvider>
+          {children}
+          <CartDrawer />
+        </CartProvider>
         <p className="sr-only">
           Телефон для замовлень: {PHONE_DISPLAY}
         </p>

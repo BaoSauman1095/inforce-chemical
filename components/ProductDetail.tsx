@@ -143,7 +143,7 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
             </div>
           )}
 
-          <ProductActions product={product} />
+          <ProductActions product={product} packLabel={selectedPack?.label} />
         </div>
       </div>
 

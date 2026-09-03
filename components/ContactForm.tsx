@@ -1,55 +1,23 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Select from "./Select";
+import { useLeadForm } from "@/lib/useLeadForm";
+import {
+  FormError,
+  FormTextarea,
+  Honeypot,
+  NamePhoneFields,
+  SubmitButton,
+} from "./form";
 import { CULTURES } from "@/lib/constants";
 
-type Status = "idle" | "loading" | "success" | "error";
-
-const initialForm = {
-  name: "",
-  phone: "",
-  culture: "",
-  message: "",
-  company: "", // honeypot — should always stay empty
-};
-
 export default function ContactForm() {
-  const [form, setForm] = useState(initialForm);
-  const [status, setStatus] = useState<Status>("idle");
-  const [error, setError] = useState<string | null>(null);
-
-  function update<K extends keyof typeof initialForm>(key: K, value: string) {
-    setForm((f) => ({ ...f, [key]: value }));
-  }
-
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("loading");
-    setError(null);
-
-    try {
-      const res = await fetch("/api/send-notification", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-
-      if (!res.ok || !data.ok) {
-        setStatus("error");
-        setError(data.error ?? "Не вдалося надіслати заявку. Спробуйте ще раз.");
-        return;
-      }
-
-      setStatus("success");
-      setForm(initialForm);
-    } catch {
-      setStatus("error");
-      setError("Проблема зі з'єднанням. Перевірте інтернет і спробуйте ще раз.");
-    }
-  }
+  const { values, update, status, error, handleSubmit, reset } = useLeadForm({
+    endpoint: "/api/send-notification",
+    initialValues: { name: "", phone: "", culture: "", message: "", company: "" },
+    fallbackError: "Не вдалося надіслати заявку. Спробуйте ще раз.",
+  });
 
   return (
     <div className="rounded-[18px] bg-card px-[30px] pb-[34px] pt-8 shadow-panelLg">
@@ -77,7 +45,7 @@ export default function ContactForm() {
             </p>
             <button
               type="button"
-              onClick={() => setStatus("idle")}
+              onClick={reset}
               className="mt-4 text-sm font-semibold text-brand underline underline-offset-2"
             >
               Надіслати ще одну заявку
@@ -93,93 +61,31 @@ export default function ContactForm() {
             className="mt-6 flex flex-col gap-3.5"
             noValidate
           >
-            {/*
-              Honeypot field — hidden from real users, catches naive bots.
-              Uses `display: none` rather than off-screen positioning:
-              autofill/password-manager extensions can still find and fill
-              absolutely-positioned "invisible" inputs, which silently makes
-              the form report fake success for a real visitor. `display: none`
-              is reliably skipped by autofill.
-            */}
-            <input
-              type="text"
-              tabIndex={-1}
-              autoComplete="off"
-              value={form.company}
-              onChange={(e) => update("company", e.target.value)}
-              className="hidden"
-              aria-hidden="true"
+            <Honeypot value={values.company} onChange={(v) => update("company", v)} />
+
+            <NamePhoneFields
+              name={values.name}
+              phone={values.phone}
+              onChange={(field, v) => update(field, v)}
             />
 
-            <input
-              type="text"
-              required
-              minLength={2}
-              placeholder="Ім'я"
-              value={form.name}
-              onChange={(e) => update("name", e.target.value)}
-              className="w-full rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
-            />
-            <input
-              type="tel"
-              required
-              placeholder="Телефон, напр. 0671234567"
-              value={form.phone}
-              onChange={(e) => update("phone", e.target.value)}
-              className="w-full rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
-            />
             <Select
-              value={form.culture}
+              value={values.culture}
               onChange={(v) => update("culture", v)}
               options={CULTURES.map((c) => ({ value: c, label: c }))}
               placeholder="Культура — оберіть зі списку"
             />
-            <textarea
+
+            <FormTextarea
               rows={4}
               placeholder="Повідомлення"
-              value={form.message}
+              value={values.message}
               onChange={(e) => update("message", e.target.value)}
-              className="w-full resize-y rounded-[11px] border border-[#dcd8d5] bg-white px-4 py-3.5 text-[15px] text-[#141414] outline-none focus:border-brand"
             />
 
-            {error && (
-              <p className="rounded-lg bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-700">
-                {error}
-              </p>
-            )}
+            {error && <FormError>{error}</FormError>}
 
-            <button
-              type="submit"
-              disabled={status === "loading"}
-              className="flex items-center justify-center gap-2 rounded-[11px] bg-brand px-6 py-4 font-heading text-[15px] font-bold tracking-wide text-white shadow-cta transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {status === "loading" ? (
-                <>
-                  <svg
-                    className="h-4 w-4 animate-spin"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                    />
-                  </svg>
-                  Надсилаємо…
-                </>
-              ) : (
-                "Надіслати"
-              )}
-            </button>
+            <SubmitButton loading={status === "loading"}>Надіслати</SubmitButton>
           </motion.form>
         )}
       </AnimatePresence>

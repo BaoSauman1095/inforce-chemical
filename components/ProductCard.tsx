@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import ImagePlaceholder from "./ImagePlaceholder";
+import AddToCartButton from "./AddToCartButton";
 import { cn, formatPrice, isFlatPackPrice } from "@/lib/utils";
 import { productPhotoSrc } from "@/lib/product-images";
 import type { FlatCatalogItem } from "@/lib/types";
@@ -68,12 +69,19 @@ export default function ProductCard({ item }: { item: FlatCatalogItem }) {
           </p>
         )}
 
-        <Link
-          href={`/products/${item.slug}`}
-          className="mt-2.5 rounded-[9px] border border-brand px-3.5 py-2.5 text-center font-heading text-[13px] font-bold tracking-wide text-brand transition-colors hover:bg-brand hover:text-white"
-        >
-          Детальніше
-        </Link>
+        <div className="mt-2.5 flex flex-col gap-2">
+          <AddToCartButton
+            product={item}
+            packLabel={selectedPack?.label}
+            variant="compact"
+          />
+          <Link
+            href={`/products/${item.slug}`}
+            className="rounded-[9px] border border-brand px-3.5 py-2.5 text-center font-heading text-[13px] font-bold tracking-wide text-brand transition-colors hover:bg-brand hover:text-white"
+          >
+            Детальніше
+          </Link>
+        </div>
       </div>
     </motion.div>
   );

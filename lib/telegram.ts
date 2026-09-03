@@ -1,4 +1,6 @@
-import type { ContactFormInput, ProductOrderInput, ProductQuestionInput } from "./validation";
+import type { ContactFormInput, CartOrderInput, ProductQuestionInput } from "./validation";
+import type { ResolvedOrderLine } from "./products";
+import { formatPrice } from "./utils";
 
 /** Escapes characters that are special in Telegram's MarkdownV2 parse mode. */
 function escapeMarkdownV2(value: string): string {
@@ -29,21 +31,47 @@ function formatLeadMessage(data: ContactFormInput): string {
   return lines.join("\n");
 }
 
-function formatOrderMessage(data: ProductOrderInput): string {
-  const lines = [
-    "🛒 *Нове замовлення товару — IN FORCE CHEMICAL*",
-    "",
-    `*Товар:* ${escapeMarkdownV2(data.productName)}`,
-    `*Упаковка:* ${escapeMarkdownV2(data.packSize)}`,
-    `*Кількість:* ${escapeMarkdownV2(String(data.quantity))}`,
+function formatOrderMessage(
+  data: CartOrderInput,
+  lines: ResolvedOrderLine[]
+): string {
+  const message = [
+    "🛒 *Нове замовлення — IN FORCE CHEMICAL*",
     "",
     `*Ім'я:* ${escapeMarkdownV2(data.name)}`,
     `*Телефон:* ${escapeMarkdownV2(data.phone)}`,
     "",
-    timestampLine(),
+    `*Позицій:* ${lines.length}`,
+    "",
   ];
 
-  return lines.join("\n");
+  lines.forEach((line, i) => {
+    const priced =
+      line.total === null
+        ? "ціна за запитом"
+        : `${formatPrice(line.total)} грн`;
+    message.push(
+      `${i + 1}\\. *${escapeMarkdownV2(line.name)}* \\(${escapeMarkdownV2(line.brand)}\\)`,
+      `   ${escapeMarkdownV2(line.packLabel)} × ${line.quantity} — ${escapeMarkdownV2(priced)}`
+    );
+  });
+
+  const total = lines.reduce((sum, l) => sum + (l.total ?? 0), 0);
+  const hasUnpriced = lines.some((l) => l.total === null);
+
+  message.push("");
+  if (total > 0) {
+    message.push(
+      `*Разом:* ${escapeMarkdownV2(`${formatPrice(total)} грн`)}` +
+        (hasUnpriced ? escapeMarkdownV2(" (без позицій за запитом)") : "")
+    );
+  } else {
+    message.push(escapeMarkdownV2("Усі позиції — ціна за запитом"));
+  }
+
+  message.push("", timestampLine());
+
+  return message.join("\n");
 }
 
 function formatQuestionMessage(data: ProductQuestionInput): string {
@@ -123,8 +151,11 @@ export async function sendTelegramLead(data: ContactFormInput): Promise<void> {
   await sendTelegramMessage(formatLeadMessage(data));
 }
 
-export async function sendProductOrder(data: ProductOrderInput): Promise<void> {
-  await sendTelegramMessage(formatOrderMessage(data));
+export async function sendCartOrder(
+  data: CartOrderInput,
+  lines: ResolvedOrderLine[]
+): Promise<void> {
+  await sendTelegramMessage(formatOrderMessage(data, lines));
 }
 
 export async function sendProductQuestion(data: ProductQuestionInput): Promise<void> {
