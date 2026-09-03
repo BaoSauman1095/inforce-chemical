@@ -4670,8 +4670,14 @@ export const CATALOG: Catalog = {
   ],
 };
 
-export const CATALOG_TABS: { key: keyof Catalog; label: string; icon: string }[] = [
+export const CATALOG_TABS: {
+  key: keyof Catalog;
+  label: string;
+  /** Коротка назва для вузьких екранів, щоб три вкладки лишались в один рядок. */
+  shortLabel?: string;
+  icon: string;
+}[] = [
   { key: "seeds", label: "Насіння", icon: "🌱" },
   { key: "fert", label: "Добрива", icon: "💧" },
-  { key: "prot", label: "Захист рослин", icon: "🛡️" },
+  { key: "prot", label: "Захист рослин", shortLabel: "ЗЗР", icon: "🛡️" },
 ];
