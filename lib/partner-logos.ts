@@ -11,6 +11,8 @@ export const PARTNER_LOGOS: Record<string, string> = {
   Apsov: "/partners/apsov.webp",
   Farmsaat: "/partners/farmsaat.webp",
   "Himagro M": "/partners/himagro.webp",
+  "Holland Farming": "/partners/holland-farming.webp",
+  "Sumi Agro": "/partners/sumi-agro.webp",
 };
 
 export function partnerLogoSrc(name: string): string | null {
