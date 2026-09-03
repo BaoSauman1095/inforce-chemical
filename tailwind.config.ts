@@ -17,6 +17,9 @@ const config: Config = {
           hover: "#a01f33",
           light: "#e08a99",
         },
+        // Підтвердження «додано в кошик» — має читатись як інший стан,
+        // а не як ще одна фірмова кнопка.
+        success: "#2f7d4f",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
