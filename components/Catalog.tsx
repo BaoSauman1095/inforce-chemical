@@ -1,27 +1,25 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
 import ProductCard from "./ProductCard";
+import CatalogFilterMenu from "./CatalogFilterMenu";
 import { CATALOG, CATALOG_TABS } from "@/lib/catalog-data";
+import { CROP_FILTERS, itemCropSources, matchesCrop } from "@/lib/crops";
 import { findTabForBrand } from "@/lib/products";
 import { cn } from "@/lib/utils";
 import type { CatalogTab, FlatCatalogItem } from "@/lib/types";
-import { useOnClickOutside } from "@/lib/useOnClickOutside";
 
 const PAGE_SIZE = 12;
 
 function CatalogInner() {
   const [tab, setTab] = useState<CatalogTab>("seeds");
   const [brand, setBrand] = useState("all");
+  const [crop, setCrop] = useState("all");
   const [group, setGroup] = useState("all");
   const [query, setQuery] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
-  const [brandMenuOpen, setBrandMenuOpen] = useState(false);
-
-  const menuRef = useRef<HTMLDivElement>(null);
-  useOnClickOutside(menuRef, () => setBrandMenuOpen(false));
+  const [openMenu, setOpenMenu] = useState<"brand" | "crop" | null>(null);
 
   // Клік по логотипу партнера веде на /?brand=<бренд>#catalog — звідси
   // підхоплюємо бренд, перемикаємось на його вкладку й прокручуємось сюди.
@@ -43,16 +41,42 @@ function CatalogInner() {
 
   const groups = CATALOG[tab];
 
-  const groupTitles = useMemo(
-    () => groups.filter((g) => g.items.length > 0).map((g) => g.title),
-    [groups]
-  );
-
   const brands = useMemo(() => {
     const set = new Set<string>();
     groups.forEach((g) => g.items.forEach((it) => set.add(it.brand)));
     return Array.from(set);
   }, [groups]);
+
+  // На вкладці «Насіння» культура — це і є категорія (Соняшник, Кукурудза),
+  // тож окремий фільтр там лише дублював би плитки. Показуємо його для
+  // добрив і ЗЗР, де культура не пов'язана з категорією препарату.
+  const cropsEnabled = tab !== "seeds";
+
+  // Лишаємо в списку тільки ті культури, для яких на вкладці є позиції —
+  // щоб вибір не приводив у порожній каталог.
+  const cropOptions = useMemo(() => {
+    if (!cropsEnabled) return [];
+    return CROP_FILTERS.filter((c) =>
+      groups.some((g) => g.items.some((it) => matchesCrop(itemCropSources(it, g.title), c)))
+    ).map((c) => ({ value: c.key, label: c.label, icon: c.icon }));
+  }, [groups, cropsEnabled]);
+
+  const activeCrop =
+    cropsEnabled && crop !== "all" ? CROP_FILTERS.find((c) => c.key === crop) : undefined;
+
+  // Категорії ховаємо разом із культурою: «Фуміганти» для соняшнику — це
+  // порожній результат, тож плитки, що нікуди не ведуть, краще не показувати.
+  const groupTitles = useMemo(
+    () =>
+      groups
+        .filter((g) =>
+          g.items.some(
+            (it) => !activeCrop || matchesCrop(itemCropSources(it, g.title), activeCrop)
+          )
+        )
+        .map((g) => g.title),
+    [groups, activeCrop]
+  );
 
   const allItems: FlatCatalogItem[] = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -62,6 +86,7 @@ function CatalogInner() {
       if (group !== "all" && g.title !== group) return;
       g.items.forEach((it) => {
         if (brand !== "all" && it.brand !== brand) return;
+        if (activeCrop && !matchesCrop(itemCropSources(it, g.title), activeCrop)) return;
         if (q && !`${it.name} ${it.brand}`.toLowerCase().includes(q)) return;
         out.push({
           ...it,
@@ -74,7 +99,7 @@ function CatalogInner() {
     });
 
     return out;
-  }, [groups, group, brand, query, tab]);
+  }, [groups, group, brand, activeCrop, query, tab]);
 
   const items = allItems.slice(0, visible);
   const hasMore = allItems.length > items.length;
@@ -85,6 +110,27 @@ function CatalogInner() {
     setGroup("all");
     setQuery("");
     setVisible(PAGE_SIZE);
+    // Культуру навмисно не скидаємо: бренди й категорії в кожній вкладці свої,
+    // а культура та сама, тож господарство, що вирощує соняшник, перемикається
+    // з добрив на ЗЗР і не набирає фільтр заново.
+  }
+
+  function selectCrop(next: string) {
+    setCrop(next);
+    setVisible(PAGE_SIZE);
+
+    // Обрана категорія може не мати позицій для нової культури — тоді її
+    // плитка зникне, а фільтр лишиться й покаже порожній каталог.
+    const target = CROP_FILTERS.find((c) => c.key === next);
+    const stillHasItems =
+      group === "all" ||
+      !target ||
+      groups.some(
+        (g) =>
+          g.title === group &&
+          g.items.some((it) => matchesCrop(itemCropSources(it, g.title), target))
+      );
+    if (!stillHasItems) setGroup("all");
   }
 
   function selectBrand(next: string) {
@@ -102,6 +148,7 @@ function CatalogInner() {
 
   function resetFilters() {
     setBrand("all");
+    setCrop("all");
     setGroup("all");
     setQuery("");
     setVisible(PAGE_SIZE);
@@ -163,64 +210,28 @@ function CatalogInner() {
         </div>
       </div>
 
-      {/* Бренди й категорії — один ряд фільтрів. Бренди першими: саме вони
-          повертають до всіх позицій вкладки. */}
+      {/* Бренди, культура й категорії — один ряд фільтрів. Випадні списки
+          першими: саме вони повертають до всіх позицій вкладки. */}
       <div className="mb-4 flex flex-wrap items-center gap-2.5">
-        <div className="relative flex-none" ref={menuRef}>
-          <button
-            type="button"
-            onClick={() => setBrandMenuOpen((v) => !v)}
-            aria-expanded={brandMenuOpen}
-            className={cn(
-              "flex items-center gap-2.5 whitespace-nowrap rounded-full border-2 py-2.5 pl-5 pr-4 font-heading text-[13.5px] font-bold tracking-wide transition-colors",
-              brand === "all"
-                ? "border-brand bg-brand/[.14] text-paper hover:bg-brand/[.24]"
-                : "border-brand bg-brand text-white shadow-cta"
-            )}
-          >
-            {brand === "all" ? "Всі бренди" : brand}
-            <span
-              className={cn(
-                "text-[10px] transition-transform",
-                brandMenuOpen && "rotate-180"
-              )}
-            >
-              ▾
-            </span>
-          </button>
+        <CatalogFilterMenu
+          allLabel="Всі бренди"
+          options={brands.map((b) => ({ value: b, label: b }))}
+          value={brand}
+          onChange={selectBrand}
+          open={openMenu === "brand"}
+          onToggle={(next) => setOpenMenu(next ? "brand" : null)}
+        />
 
-          <AnimatePresence>
-            {brandMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.15 }}
-                className="absolute left-0 top-[calc(100%+8px)] z-30 max-h-[280px] min-w-[220px] overflow-y-auto rounded-xl bg-card p-1.5 shadow-panelLg"
-              >
-                {["all", ...brands].map((b) => {
-                  const active = brand === b;
-                  return (
-                    <button
-                      key={b}
-                      type="button"
-                      onClick={() => {
-                        selectBrand(b);
-                        setBrandMenuOpen(false);
-                      }}
-                      className={cn(
-                        "block w-full rounded-lg px-3.5 py-2.5 text-left text-[13.5px] font-semibold transition-colors",
-                        active ? "bg-brand text-white" : "text-[#141414] hover:bg-[#f3eff0]"
-                      )}
-                    >
-                      {b === "all" ? "Всі бренди" : b}
-                    </button>
-                  );
-                })}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        {cropsEnabled && (
+          <CatalogFilterMenu
+            allLabel="Всі культури"
+            options={cropOptions}
+            value={crop}
+            onChange={selectCrop}
+            open={openMenu === "crop"}
+            onToggle={(next) => setOpenMenu(next ? "crop" : null)}
+          />
+        )}
 
         <span className="hidden h-7 w-px flex-none bg-white/15 sm:block" />
 
@@ -247,7 +258,7 @@ function CatalogInner() {
       </div>
 
       <div
-        key={`${tab}-${group}-${brand}-${query}`}
+        key={`${tab}-${group}-${brand}-${crop}-${query}`}
         className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         {items.map((item) => (
