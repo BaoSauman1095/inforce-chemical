@@ -23,13 +23,30 @@ export default function ProductCard({ item }: { item: FlatCatalogItem }) {
       transition={{ duration: 0.25 }}
       className="flex flex-col overflow-hidden rounded-2xl bg-card shadow-panel"
     >
-      {photoSrc ? (
-        <div className="relative h-[150px] bg-white">
-          <Image src={photoSrc} alt={item.name} fill sizes="(min-width: 1280px) 300px, 50vw" className="object-contain p-3" />
-        </div>
-      ) : (
-        <ImagePlaceholder label={item.slotLabel} className="h-[150px]" />
-      )}
+      {/* Фото веде туди ж, куди «Детальніше»: у каталозі його першим чіпають
+          пальцем, а мовчазна картинка не давала нічого. */}
+      <Link
+        href={`/products/${item.slug}`}
+        aria-label={`${item.name} — детальніше`}
+        className="group block overflow-hidden"
+      >
+        {photoSrc ? (
+          <div className="relative h-[150px] bg-white">
+            <Image
+              src={photoSrc}
+              alt={item.name}
+              fill
+              sizes="(min-width: 1280px) 300px, 50vw"
+              className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
+        ) : (
+          <ImagePlaceholder
+            label={item.slotLabel}
+            className="h-[150px] transition-transform duration-300 group-hover:scale-105"
+          />
+        )}
+      </Link>
 
       <div className="flex flex-1 flex-col px-[18px] pb-[18px] pt-4">
         <p className="text-[10px] font-semibold uppercase tracking-[.13em] text-brand">
