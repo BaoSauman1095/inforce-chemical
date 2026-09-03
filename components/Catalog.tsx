@@ -246,8 +246,6 @@ function CatalogInner() {
         })}
       </div>
 
-      <p className="mb-3 text-[13px] text-paper/45">Ціни вказано з ПДВ.</p>
-
       <div
         key={`${tab}-${group}-${brand}-${query}`}
         className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
