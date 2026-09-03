@@ -134,10 +134,11 @@ in-memory rate-limit (5 запитів/хв з IP) — достатньо для
 | Apsov         | `public/partners/apsov.webp`     |
 | Farmsaat      | `public/partners/farmsaat.webp`  |
 | Himagro M     | `public/partners/himagro.webp`   |
+| Holland Farming | `public/partners/holland-farming.webp` |
+| Sumi Agro     | `public/partners/sumi-agro.webp` |
 
-Holland Farming і Sumi Agro поки без логотипів — їхні картки лишаються
-текстовими. Щоб додати: покладіть файл у `public/partners/` і впишіть його
-в `PARTNER_LOGOS`.
+Щоб додати логотип новому партнеру: покладіть файл у `public/partners/`
+і впишіть його в `PARTNER_LOGOS`.
 
 Картки партнерів мають майже білий фон (`#fdfcfc`, білий на hover), тому
 у наявних логотипів білий фон вирізано в прозорість (заливкою від країв,
