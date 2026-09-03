@@ -40,7 +40,9 @@ export default function CartDrawer() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
           onClick={close}
-          className="fixed inset-0 z-[70] flex justify-end bg-black/70"
+          // h-[100dvh], а не inset-0: на iOS Safari fixed-блок розтягується на
+          // «великий» вьюпорт, і кнопка оформлення ховається під панеллю браузера
+          className="fixed inset-x-0 top-0 z-[70] flex h-[100dvh] justify-end bg-black/70"
         >
           <motion.aside
             initial={{ x: "100%" }}
@@ -55,6 +57,11 @@ export default function CartDrawer() {
             <div className="flex flex-none items-center justify-between border-b border-black/[.06] px-6 py-5">
               <h2 className="font-heading text-[17px] font-bold text-[#141414]">
                 Кошик
+                {lines.length > 0 && (
+                  <span className="ml-2 font-sans text-[13px] font-medium text-[#8a8582]">
+                    {lines.length} поз.
+                  </span>
+                )}
               </h2>
               <button
                 type="button"
