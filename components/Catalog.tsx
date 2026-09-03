@@ -122,53 +122,71 @@ function CatalogInner() {
         Понад 300 позицій у наявності.
       </p>
 
-      <div className="mb-5 flex flex-wrap items-center gap-3.5">
-        {/* На телефоні — три рівні колонки на всю ширину: три вкладки з
-            іконками інакше переносяться 2+1 і третя висить сама. */}
-        <div className="grid w-full grid-cols-3 gap-1.5 rounded-2xl border border-brand/30 bg-brand/[.07] p-1.5 shadow-[0_0_0_1px_rgba(139,26,43,.12)] sm:inline-flex sm:w-auto">
-          {CATALOG_TABS.map((t) => {
-            const active = tab === t.key;
-            return (
-              <button
-                key={t.key}
-                type="button"
-                onClick={() => selectTab(t.key)}
-                className={cn(
-                  "flex items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 py-2.5 font-heading text-[13.5px] font-semibold tracking-wide transition-colors sm:gap-2 sm:px-[18px] sm:text-sm",
-                  active
-                    ? "bg-brand text-white shadow-cta"
-                    : "text-paper/[.72] hover:bg-white/5 hover:text-paper"
-                )}
-              >
-                <span aria-hidden="true" className="text-base leading-none">
-                  {t.icon}
-                </span>
-                <span className="sm:hidden">{t.shortLabel ?? t.label}</span>
-                <span className="hidden sm:inline">{t.label}</span>
-              </button>
-            );
-          })}
+      {/* Вкладки й пошук — один виділений блок: це головний вибір на сторінці. */}
+      <div className="mb-4 rounded-[22px] border border-brand/40 bg-brand/[.10] p-2.5 shadow-[0_0_0_1px_rgba(139,26,43,.14),0_18px_40px_-24px_rgba(139,26,43,.8)]">
+        <div className="flex flex-col gap-2.5 lg:flex-row lg:items-stretch">
+          <div className="grid grid-cols-3 gap-2 lg:flex lg:flex-none">
+            {CATALOG_TABS.map((t) => {
+              const active = tab === t.key;
+              return (
+                <button
+                  key={t.key}
+                  type="button"
+                  onClick={() => selectTab(t.key)}
+                  className={cn(
+                    "flex flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-3.5 font-heading text-[13px] font-bold leading-tight tracking-wide transition-colors sm:px-6 sm:text-[15px] lg:min-w-[126px]",
+                    active
+                      ? "bg-brand text-white shadow-cta"
+                      : "bg-white/[.06] text-paper/[.75] hover:bg-white/[.12] hover:text-paper"
+                  )}
+                >
+                  <span aria-hidden="true" className="text-[26px] leading-none sm:text-[30px]">
+                    {t.icon}
+                  </span>
+                  <span className="sm:hidden">{t.shortLabel ?? t.label}</span>
+                  <span className="hidden text-center sm:inline">{t.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setVisible(PAGE_SIZE);
+            }}
+            placeholder="Пошук по назві або бренду"
+            className="w-full flex-1 rounded-2xl border border-white/[.12] bg-ink/60 px-[18px] py-4 text-[15px] text-paper outline-none transition-colors placeholder:text-paper/40 focus:border-brand/70"
+          />
         </div>
+      </div>
 
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setVisible(PAGE_SIZE);
-          }}
-          placeholder="Пошук по назві або бренду"
-          className="min-w-[220px] flex-1 rounded-xl border border-white/[.14] bg-white/[.04] px-[18px] py-3.5 text-[15px] text-paper outline-none placeholder:text-paper/40 focus:border-brand"
-        />
-
+      {/* Бренди й категорії — один ряд фільтрів. Бренди першими: саме вони
+          повертають до всіх позицій вкладки. */}
+      <div className="mb-4 flex flex-wrap items-center gap-2.5">
         <div className="relative flex-none" ref={menuRef}>
           <button
             type="button"
             onClick={() => setBrandMenuOpen((v) => !v)}
-            className="flex items-center gap-2.5 whitespace-nowrap rounded-xl border border-white/[.14] bg-white/[.04] px-4 py-3.5 font-heading text-sm font-semibold text-paper"
+            aria-expanded={brandMenuOpen}
+            className={cn(
+              "flex items-center gap-2.5 whitespace-nowrap rounded-full border-2 py-2.5 pl-5 pr-4 font-heading text-[13.5px] font-bold tracking-wide transition-colors",
+              brand === "all"
+                ? "border-brand bg-brand/[.14] text-paper hover:bg-brand/[.24]"
+                : "border-brand bg-brand text-white shadow-cta"
+            )}
           >
             {brand === "all" ? "Всі бренди" : brand}
-            <span className="text-[11px] text-paper/50">▾</span>
+            <span
+              className={cn(
+                "text-[10px] transition-transform",
+                brandMenuOpen && "rotate-180"
+              )}
+            >
+              ▾
+            </span>
           </button>
 
           <AnimatePresence>
@@ -178,7 +196,7 @@ function CatalogInner() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 top-[calc(100%+8px)] z-30 max-h-[280px] min-w-[220px] overflow-y-auto rounded-xl bg-card p-1.5 shadow-panelLg"
+                className="absolute left-0 top-[calc(100%+8px)] z-30 max-h-[280px] min-w-[220px] overflow-y-auto rounded-xl bg-card p-1.5 shadow-panelLg"
               >
                 {["all", ...brands].map((b) => {
                   const active = brand === b;
@@ -203,9 +221,9 @@ function CatalogInner() {
             )}
           </AnimatePresence>
         </div>
-      </div>
 
-      <div className="mb-4 flex flex-wrap gap-2.5">
+        <span className="hidden h-7 w-px flex-none bg-white/15 sm:block" />
+
         {groupTitles.map((g) => {
           const active = group === g;
           const gr = groups.find((x) => x.title === g);
