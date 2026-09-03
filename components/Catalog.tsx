@@ -19,7 +19,7 @@ function CatalogInner() {
   const [group, setGroup] = useState("all");
   const [query, setQuery] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
-  const [openMenu, setOpenMenu] = useState<"brand" | "crop" | null>(null);
+  const [openMenu, setOpenMenu] = useState<"brand" | "crop" | "group" | null>(null);
 
   // Клік по логотипу партнера веде на /?brand=<бренд>#catalog — звідси
   // підхоплюємо бренд, перемикаємось на його вкладку й прокручуємось сюди.
@@ -76,6 +76,16 @@ function CatalogInner() {
         )
         .map((g) => g.title),
     [groups, activeCrop]
+  );
+
+  const groupOptions = useMemo(
+    () =>
+      groupTitles.map((title) => ({
+        value: title,
+        label: title,
+        icon: groups.find((g) => g.title === title)?.icon,
+      })),
+    [groupTitles, groups]
   );
 
   const allItems: FlatCatalogItem[] = useMemo(() => {
@@ -135,9 +145,6 @@ function CatalogInner() {
 
   function selectBrand(next: string) {
     setBrand(next);
-    // Плитки «Усі категорії» більше немає: повернення до всіх позицій вкладки
-    // виконує саме фільтр брендів, тож він скидає й вибрану категорію.
-    setGroup("all");
     setVisible(PAGE_SIZE);
   }
 
@@ -210,8 +217,8 @@ function CatalogInner() {
         </div>
       </div>
 
-      {/* Бренди, культура й категорії — один ряд фільтрів. Випадні списки
-          першими: саме вони повертають до всіх позицій вкладки. */}
+      {/* Три випадні списки замість плиток: вісім категорій ЗЗР займали на
+          телефоні п'ять рядів — екран фільтрів до першої картки товару. */}
       <div className="mb-4 flex flex-wrap items-center gap-2.5">
         <CatalogFilterMenu
           allLabel="Всі бренди"
@@ -234,28 +241,14 @@ function CatalogInner() {
           />
         )}
 
-        <span className="hidden h-7 w-px flex-none bg-white/15 sm:block" />
-
-        {groupTitles.map((g) => {
-          const active = group === g;
-          const gr = groups.find((x) => x.title === g);
-          return (
-            <button
-              key={g}
-              type="button"
-              onClick={() => selectGroup(g)}
-              className={cn(
-                "flex items-center gap-2 rounded-full border py-2.5 pl-4 pr-5 font-heading text-[13.5px] font-bold tracking-wide transition-colors",
-                active
-                  ? "border-brand bg-brand text-white"
-                  : "border-paper/50 bg-card text-[#141414] hover:border-paper"
-              )}
-            >
-              <span className="text-base">{gr?.icon ?? "•"}</span>
-              {g}
-            </button>
-          );
-        })}
+        <CatalogFilterMenu
+          allLabel="Всі категорії"
+          options={groupOptions}
+          value={group}
+          onChange={selectGroup}
+          open={openMenu === "group"}
+          onToggle={(next) => setOpenMenu(next ? "group" : null)}
+        />
       </div>
 
       <div
