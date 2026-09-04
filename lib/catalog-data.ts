@@ -10,7 +10,7 @@ import type { Catalog } from "./types";
  * `slug` — стабільний ідентифікатор товару, використовується в URL
  * /products/[slug].
  */
-export const CATALOG: Catalog = {
+const CATALOG_SOURCE: Catalog = {
   seeds: [
     {
       title: "Соняшник",
@@ -1678,6 +1678,7 @@ export const CATALOG: Catalog = {
           slug: "propley-bt",
           name: "Проплей БТ",
           brand: "Ocean Invest",
+          hidden: true,
           packs: [{ label: "20 л", price: 328 }],
           unit: "л",
           tagline: "Ґрунтовий гербіцид проти злакових бур'янів",
@@ -1730,7 +1731,7 @@ export const CATALOG: Catalog = {
           slug: "tizegold-bt",
           name: "Тізеголд БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "10 л", price: 302 }],
+          packs: [{ label: "20 л", price: 309 }],
           unit: "л",
           tagline: "Ґрунтовий гербіцид подвійної дії для кукурудзи",
           description:
@@ -1835,6 +1836,7 @@ export const CATALOG: Catalog = {
           slug: "gersotyl",
           name: "Герсотил",
           brand: "Himagro M",
+          hidden: true,
           packs: [{ label: "0,5 кг", price: 1339 }],
           unit: "кг",
           tagline: "Післясходовий гербіцид для зернових і соняшнику Express",
@@ -2333,6 +2335,7 @@ export const CATALOG: Catalog = {
           slug: "astrel-maks",
           name: "Астрел Макс",
           brand: "Sumi Agro",
+          hidden: true,
           packs: [{ label: "20 л", price: 594 }],
           unit: "л",
           tagline: "Селективний гербіцид з пролонгованою дією для кукурудзи та соняшнику",
@@ -2488,6 +2491,7 @@ export const CATALOG: Catalog = {
           slug: "otter-forte",
           name: "Оттер Форте",
           brand: "Sumi Agro",
+          hidden: true,
           packs: [{ label: "20 л", price: 379 }],
           unit: "л",
           tagline: "Надійний ґрунтовий гербіцид для кукурудзи, соняшнику та сої",
@@ -2942,7 +2946,7 @@ export const CATALOG: Catalog = {
           slug: "sole-bt",
           name: "Солє БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "0,5 кг", price: 722 }, { label: "3 кг", price: 739 }],
+          packs: [{ label: "3 кг", price: 739 }],
           unit: "кг",
           tagline: "Контактно-системний фунгіцид проти фітофторозу картоплі",
           description:
@@ -3076,6 +3080,7 @@ export const CATALOG: Catalog = {
           slug: "tiofen-ekstra-himagro",
           name: "Тіофен Екстра",
           brand: "Himagro M",
+          hidden: true,
           packs: [{ label: "1 кг", price: 578 }, { label: "10 кг", price: 527 }],
           unit: "кг",
           tagline: "Двокомпонентний фунгіцид з синергією проти борошнистої роси, іржі та плямистостей",
@@ -3103,7 +3108,7 @@ export const CATALOG: Catalog = {
           slug: "artemiks",
           name: "Артемікс",
           brand: "Sumi Agro",
-          packs: [{ label: "500 мл", price: 695 }, { label: "10 л", price: 640 }],
+          packs: [{ label: "10 л", price: 640 }],
           unit: "л",
           tagline: "Єдиний в Україні фунгіцид на основі двох форм міді",
           description:
@@ -3338,6 +3343,7 @@ export const CATALOG: Catalog = {
           slug: "mildikat-25",
           name: "Мілдікат 25",
           brand: "Sumi Agro",
+          hidden: true,
           packs: [{ label: "500 мл", price: 671 }, { label: "10 л", price: 594 }],
           unit: "л",
           tagline: "Фунгіцид для захисту столового та технічного винограду від мілдью",
@@ -3848,6 +3854,7 @@ export const CATALOG: Catalog = {
           slug: "applaud",
           name: "Апплауд",
           brand: "Sumi Agro",
+          hidden: true,
           packs: [{ label: "1 л", price: 2135 }],
           unit: "л",
           tagline: "Регулятор синтезу хітину для овочів закритого ґрунту та яблуні",
@@ -4313,7 +4320,7 @@ export const CATALOG: Catalog = {
           slug: "zhar-bt",
           name: "Жар БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "20 л", price: 182 }],
+          packs: [{ label: "20 л", price: 140 }],
           unit: "л",
           tagline: "Швидкий контактний десикант без обмежень на висів наступних культур",
           description:
@@ -4458,7 +4465,7 @@ export const CATALOG: Catalog = {
           slug: "fomover-bt",
           name: "Фомовер БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "1 л", price: 546 }],
+          packs: [{ label: "1 л", price: 558 }],
           unit: "л",
           tagline: "Концентрований суперзмочувач для проблемних поверхонь листя",
           description:
@@ -4669,6 +4676,20 @@ export const CATALOG: Catalog = {
     },
   ],
 };
+
+/**
+ * Публічний каталог — CATALOG_SOURCE без товарів, тимчасово знятих із продажу
+ * (`hidden: true`). Групи, що спорожніли через це, теж прибираються, інакше
+ * на вкладці лишалась би пуста плитка категорії.
+ */
+export const CATALOG: Catalog = Object.fromEntries(
+  Object.entries(CATALOG_SOURCE).map(([tab, groups]) => [
+    tab,
+    groups
+      .map((group) => ({ ...group, items: group.items.filter((item) => !item.hidden) }))
+      .filter((group) => group.items.length > 0),
+  ])
+) as Catalog;
 
 export const CATALOG_TABS: {
   key: keyof Catalog;
