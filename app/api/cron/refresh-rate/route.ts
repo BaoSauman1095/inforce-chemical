@@ -2,7 +2,7 @@ import {
   applyChanges,
   detectJump,
   extractBakedRates,
-  fetchRatesFromPrivat24,
+  fetchRatesFromMonobank,
   validateRates,
 } from "@/lib/rateRefresh";
 import { sendRateRefreshNotification } from "@/lib/telegram";
@@ -20,12 +20,12 @@ const FILE_PATH = "lib/catalog-data.ts";
  * підтвердження»). Викликається виключно Vercel Cron (див. `vercel.json`),
  * підтверджує це заголовком Authorization за CRON_SECRET.
  *
- * Курс береться з публічного API ПриватБанку (безготівковий курс,
- * coursid=11, без ключа) — kurs.com.ua/mezhbank блокує запити з Vercel
- * навіть зі звичайними браузерними заголовками (403 незмінно), а
- * безкоштовного агрегованого міжбанківського індексу не існує (це й є
- * платний продукт kurs.com.ua). Безготівковий курс Приватбанку — найближчий
- * перевірений безкоштовний відповідник (див. lib/rateRefresh.ts).
+ * Курс береться з публічного API Monobank (без ключа) — kurs.com.ua/mezhbank
+ * блокує запити з Vercel навіть зі звичайними браузерними заголовками (403
+ * незмінно), а безкоштовного агрегованого міжбанківського індексу не існує
+ * (це й є платний продукт kurs.com.ua). З перевірених безкоштовних
+ * відповідників (Monobank, безготівковий курс ПриватБанку) власник обрав
+ * Monobank (див. lib/rateRefresh.ts).
  *
  * Сайт статично рендерить ціни під час збірки — тут немає окремого сховища
  * "поточного курсу", яке читалось би при кожному показі сторінки. Замість
@@ -60,7 +60,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const rates = await fetchRatesFromPrivat24();
+    const rates = await fetchRatesFromMonobank();
     validateRates(rates);
 
     const ghHeaders = {
@@ -100,7 +100,7 @@ export async function GET(request: Request) {
         body: JSON.stringify({
           message:
             `Автооновлення курсу: USD ${rates.USD}, EUR ${rates.EUR} (${changes.length} поз.)\n\n` +
-            `Щоденний крон, без ручного підтвердження — ПриватБанк, безготівковий курс продажу.`,
+            `Щоденний крон, без ручного підтвердження — Monobank, курс продажу.`,
           content: Buffer.from(next, "utf-8").toString("base64"),
           sha: file.sha,
           branch: REPO_BRANCH,

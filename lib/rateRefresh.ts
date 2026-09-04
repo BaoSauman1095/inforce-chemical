@@ -9,8 +9,8 @@
  * для решти каталогу курс постачальника й далі рахується вручну з прайсу.
  * Нова ціна: `indicativePrice × курс × 1.2` (20% ПДВ), округлено до гривні.
  *
- * Курс береться з публічного API ПриватБанку (безготівковий, coursid=11) —
- * див. fetchRatesFromPrivat24 нижче, чому не kurs.com.ua.
+ * Курс береться з публічного API Monobank — див. fetchRatesFromMonobank
+ * нижче, чому не kurs.com.ua.
  */
 
 const VAT = 1.2;
@@ -31,43 +31,46 @@ export interface Change {
 }
 
 /**
- * Джерело курсу — публічний API ПриватБанку, безготівковий курс
- * (coursid=11), без ключа. Не kurs.com.ua: сторінку /mezhbank Vercel не
- * міг прочитати навіть зі звичайними браузерними заголовками (403 і з
- * ботовим User-Agent, і з Chrome-подібним — отже, блокування не за
- * заголовками, а, найімовірніше, за діапазоном IP серверних функцій).
- * Агрегованого міжбанківського індексу без ключа взагалі не існує — це й
- * є платний продукт kurs.com.ua. Безготівковий курс Приватбанку — найближчий
- * з перевірених безкоштовних відповідників (звірено вручну проти
- * kurs.com.ua/mezhbank: розбіжність ~0.5–1%, у межах типового денного
- * розкиду), і це вже готовий JSON-ендпоінт, а не HTML-сторінка зі
- * скрапінгом — набагато менше шансів на анти-бот блокування.
+ * Джерело курсу — публічний API Monobank, без ключа. Не kurs.com.ua:
+ * сторінку /mezhbank Vercel не міг прочитати навіть зі звичайними
+ * браузерними заголовками (403 і з ботовим User-Agent, і з
+ * Chrome-подібним — отже, блокування не за заголовками, а, найімовірніше,
+ * за діапазоном IP серверних функцій). Агрегованого міжбанківського
+ * індексу без ключа взагалі не існує — це й є платний продукт
+ * kurs.com.ua. З двох перевірених безкоштовних відповідників (Monobank,
+ * безготівковий курс ПриватБанку) власник обрав саме Monobank. Курс
+ * продажу (rateSell) — вищий з двох чисел пари, той самий принцип, за
+ * яким раніше брали «Продаж» на kurs.com.ua.
  */
-const PRIVAT_CASHLESS_URL = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=11";
+const MONOBANK_RATES_URL = "https://api.monobank.ua/bank/currency";
+const CCY_UAH = 980;
+const CCY_USD = 840;
+const CCY_EUR = 978;
 
-interface PrivatRateEntry {
-  ccy: string;
-  base_ccy: string;
-  buy: string;
-  sale: string;
+interface MonobankRateEntry {
+  currencyCodeA: number;
+  currencyCodeB: number;
+  rateSell?: number;
+  rateBuy?: number;
+  rateCross?: number;
 }
 
-export async function fetchRatesFromPrivat24(): Promise<Rates> {
-  const res = await fetch(PRIVAT_CASHLESS_URL, { cache: "no-store" });
+export async function fetchRatesFromMonobank(): Promise<Rates> {
+  const res = await fetch(MONOBANK_RATES_URL, { cache: "no-store" });
   if (!res.ok) {
-    throw new Error(`api.privatbank.ua відповів ${res.status} ${res.statusText}`);
+    throw new Error(`api.monobank.ua відповів ${res.status} ${res.statusText}`);
   }
-  const entries = (await res.json()) as PrivatRateEntry[];
+  const entries = (await res.json()) as MonobankRateEntry[];
   const found: Partial<Rates> = {};
   for (const entry of entries) {
-    if (entry.base_ccy !== "UAH") continue;
-    if (entry.ccy === "USD") found.USD = Number(entry.sale);
-    else if (entry.ccy === "EUR") found.EUR = Number(entry.sale);
+    if (entry.currencyCodeB !== CCY_UAH || entry.rateSell === undefined) continue;
+    if (entry.currencyCodeA === CCY_USD) found.USD = entry.rateSell;
+    else if (entry.currencyCodeA === CCY_EUR) found.EUR = entry.rateSell;
   }
   if (found.USD === undefined || found.EUR === undefined) {
     throw new Error(
-      "Не вдалось знайти курс USD/EUR у відповіді api.privatbank.ua — формат відрізняється від " +
-        "очікуваного (див. fetchRatesFromPrivat24 у lib/rateRefresh.ts)."
+      "Не вдалось знайти курс USD/EUR у відповіді api.monobank.ua — формат відрізняється від " +
+        "очікуваного (див. fetchRatesFromMonobank у lib/rateRefresh.ts)."
     );
   }
   return { USD: found.USD, EUR: found.EUR };
