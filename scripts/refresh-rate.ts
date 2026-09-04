@@ -3,11 +3,10 @@
  * lib/rateRefresh.ts (використовується і тут, і в крон-роуті
  * app/api/cron/refresh-rate/route.ts для щоденного автозапуску).
  *
- * Джерело курсу:
- *   - за замовчуванням: kurs.com.ua API, /api/summary_info?source=mezhbank
- *     (потрібен KURS_API_KEY — див. README «Оновлення курсу валют»);
- *   - або вручну прапорцями --usd / --eur, коли ключа ще немає — взяти
- *     значення з колонки «Продаж» на https://kurs.com.ua/mezhbank.
+ * Курс береться з публічної сторінки https://kurs.com.ua/mezhbank (без
+ * ключа) — колонка «Продаж», курс, за яким компанія фактично купує валюту,
+ * щоб розрахуватися з постачальником. Або вручну прапорцями --usd / --eur,
+ * якщо сторінку з якоїсь причини не видно.
  *
  * Запуск:
  *   npm run refresh-rate                       — показати, що зміниться
@@ -16,7 +15,7 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { applyChanges, fetchRatesFromKurs, type Rates } from "../lib/rateRefresh";
+import { applyChanges, fetchRatesFromMezhbank, type Rates } from "../lib/rateRefresh";
 
 const CATALOG_PATH = join(__dirname, "..", "lib", "catalog-data.ts");
 
@@ -33,19 +32,10 @@ function parseArgs(argv: string[]) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
-  let rates: Rates;
-  if (args.usd !== undefined && args.eur !== undefined) {
-    rates = { USD: args.usd, EUR: args.eur };
-  } else {
-    const key = process.env.KURS_API_KEY;
-    if (!key) {
-      throw new Error(
-        "Немає KURS_API_KEY. Отримайте ключ через форму заявки на kurs.com.ua " +
-          "(див. README) або передайте курс вручну: --usd 44.629 --eur 51.810"
-      );
-    }
-    rates = await fetchRatesFromKurs(key);
-  }
+  const rates: Rates =
+    args.usd !== undefined && args.eur !== undefined
+      ? { USD: args.usd, EUR: args.eur }
+      : await fetchRatesFromMezhbank();
 
   console.log(`Курс (ask): USD ${rates.USD}, EUR ${rates.EUR}\n`);
 

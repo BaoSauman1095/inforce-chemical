@@ -27,65 +27,82 @@ export interface Change {
   newPrice: number;
 }
 
+const RATE_NUM_RE = /(\d{2,3}[.,]\d{1,3})/g;
+
+function stripTags(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ");
+}
+
 /**
- * Точну форму JSON-відповіді summary_info не перевірено наживо (немає
- * ключа на момент написання) — документація описує лише поля, не вкладеність.
- * Тому шукаємо bid/ask рекурсивно по всьому дереву відповіді, а не за
- * жорстким шляхом: знаходимо об'єкт з полем `ask`, чий найближчий
- * ідентифікатор (поле `translit`/`currency`/`code`, або ключ, під яким
- * об'єкт лежить у батьківському об'єкті) — "usd" чи "eur".
+ * Публічна сторінка kurs.com.ua/mezhbank, без ключа — платний API там же
+ * не використовується навмисно (власник вирішив: «ключа не буде», раз на
+ * добу достатньо просто зчитати таблицю). Розмітку сторінки наживо не
+ * перевірено, тож парсер тримається не за HTML-теги (вони можуть
+ * відрізнятись), а за сам текст: бере перше входження "USD"/"EUR" (це
+ * рядок таблиці курсів, не згадка валюти десь іще на сторінці) і в
+ * найближчому шматку тексту шукає числа у форматі "44,629" — курс завжди
+ * в межах 20–100 грн, тоді як сусідні дельти на кшталт "▼-0,052" менші
+ * за 1 і відсіюються цим же діапазоном. Порядок колонок на сторінці —
+ * Купівля/Продаж/Середній, тож друге знайдене число — курс продажу (ask).
  *
- * Якщо це не спрацює на реальній відповіді — і скрипт, і крон-роут
- * виводять сиру відповідь у лог, і функцію треба буде підправити під
- * фактичну форму.
+ * Якщо розмітка сторінки виявиться іншою — перший реальний запуск або
+ * поверне помилку (не знайшло двох чисел), або число вилетить за межі
+ * адекватності (validateRates) і оновлення не застосується. Обидва
+ * випадки дають повідомлення в Telegram, а не тиху хибну ціну.
  */
-export function extractAskRates(data: unknown): Partial<Rates> {
+export function extractMezhbankRates(html: string): Partial<Rates> {
+  const text = stripTags(html);
   const found: Partial<Rates> = {};
 
-  function visit(node: unknown, keyHint?: string) {
-    if (!node || typeof node !== "object") return;
-
-    if (!Array.isArray(node)) {
-      const obj = node as Record<string, unknown>;
-      const ask = obj.ask;
-      if (typeof ask === "number") {
-        const idRaw = [obj.translit, obj.currency, obj.code, keyHint].find(
-          (v) => typeof v === "string"
-        ) as string | undefined;
-        const id = idRaw?.toLowerCase();
-        if (id === "usd" && found.USD === undefined) found.USD = ask;
-        if (id === "eur" && found.EUR === undefined) found.EUR = ask;
-      }
-      for (const [k, v] of Object.entries(obj)) visit(v, k);
-    } else {
-      for (const item of node) visit(item, keyHint);
-    }
+  for (const cur of ["USD", "EUR"] as const) {
+    const idx = text.indexOf(cur);
+    if (idx === -1) continue;
+    const window = text.slice(idx, idx + 200);
+    const nums = [...window.matchAll(RATE_NUM_RE)]
+      .map((m) => Number(m[1].replace(",", ".")))
+      .filter((n) => n >= 20 && n <= 100);
+    if (nums.length >= 2) found[cur] = nums[1];
   }
 
-  visit(data);
   return found;
 }
 
-/** Курс продажу (ask) міжбанку — курс, за яким компанія купує валюту, щоб розрахуватися з постачальником. */
-export async function fetchRatesFromKurs(apiKey: string): Promise<Rates> {
-  const url = `https://kurs.com.ua/api/summary_info?key=${encodeURIComponent(apiKey)}&city=all&currencies=usd,eur&source=mezhbank&format=json`;
-  const res = await fetch(url);
+export async function fetchRatesFromMezhbank(): Promise<Rates> {
+  const res = await fetch("https://kurs.com.ua/mezhbank", {
+    headers: { "User-Agent": "Mozilla/5.0 (compatible; InForceChemicalRateBot/1.0)" },
+    cache: "no-store",
+  });
   if (!res.ok) {
-    throw new Error(`kurs.com.ua відповів ${res.status} ${res.statusText}`);
+    throw new Error(`kurs.com.ua/mezhbank відповів ${res.status} ${res.statusText}`);
   }
-  const data = await res.json();
-  if (data && typeof data === "object" && (data as { status?: unknown }).status === false) {
-    throw new Error(`kurs.com.ua: ${(data as { error?: string }).error ?? "невідома помилка"}`);
-  }
-
-  const rates = extractAskRates(data);
+  const html = await res.text();
+  const rates = extractMezhbankRates(html);
   if (rates.USD === undefined || rates.EUR === undefined) {
     throw new Error(
-      "Не вдалось знайти курс USD/EUR у відповіді kurs.com.ua — форма відповіді відрізняється від " +
-        `очікуваної (див. extractAskRates у lib/rateRefresh.ts). Сира відповідь: ${JSON.stringify(data)}`
+      "Не вдалось знайти курс USD/EUR на сторінці kurs.com.ua/mezhbank — розмітка відрізняється від " +
+        "очікуваної (див. extractMezhbankRates у lib/rateRefresh.ts)."
     );
   }
   return { USD: rates.USD, EUR: rates.EUR };
+}
+
+const SANE_MIN = 20;
+const SANE_MAX = 100;
+export const JUMP_WARN_PERCENT = 5;
+
+/** Захист саме від сміття з парсера (0, NaN, випадково підхоплена дельта) — не від реального руху курсу. */
+export function validateRates(rates: Rates): void {
+  for (const [cur, v] of Object.entries(rates) as [string, number][]) {
+    if (!Number.isFinite(v) || v < SANE_MIN || v > SANE_MAX) {
+      throw new Error(
+        `Курс ${cur} = ${v} поза межами адекватності [${SANE_MIN}; ${SANE_MAX}] — це схоже на помилку ` +
+          "парсингу сторінки, а не на реальний курс. Оновлення скасовано."
+      );
+    }
+  }
 }
 
 // Іменовані групи вимагають ES2018+, а спільний tsconfig проєкту тримає
@@ -93,6 +110,43 @@ export async function fetchRatesFromKurs(apiKey: string): Promise<Rates> {
 const PACK_RE = /slug: "([^"]+)"[\s\S]*?name: "([^"]+)"[\s\S]*?packs: \[([^\n]*?)\],\n/g;
 const ENTRY_RE =
   /label: "([^"]*)", price: ([0-9.]+), currency: "(USD|EUR)", indicativePrice: ([0-9.]+)/g;
+
+/** Курс, що вже застосований у файлі — перший USD- і перший EUR-пакет, зворотним рахунком. Для порівняння «стрибнуло чи ні». */
+export function extractBakedRates(src: string): Partial<Rates> {
+  const found: Partial<Rates> = {};
+  ENTRY_RE.lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = ENTRY_RE.exec(src))) {
+    const [, , price, currency, indic] = m;
+    const cur = currency as "USD" | "EUR";
+    if (found[cur] === undefined) {
+      found[cur] = Number(price) / (Number(indic) * VAT);
+    }
+    if (found.USD !== undefined && found.EUR !== undefined) break;
+  }
+  return found;
+}
+
+/**
+ * Курс може стрибнути на реальну ринкову величину — це не блокує оновлення
+ * (власник свідомо хоче відштовхуватись від фактичного курсу), лише
+ * позначається в Telegram-повідомленні, щоб людина побачила й за потреби
+ * перевірила вручну.
+ */
+export function detectJump(current: Rates, previous: Partial<Rates>): string | undefined {
+  const notes: string[] = [];
+  for (const cur of ["USD", "EUR"] as const) {
+    const prev = previous[cur];
+    if (prev === undefined) continue;
+    const pct = (Math.abs(current[cur] - prev) / prev) * 100;
+    if (pct >= JUMP_WARN_PERCENT) {
+      notes.push(`${cur} ${prev.toFixed(3)} → ${current[cur]} (${pct.toFixed(1)}%)`);
+    }
+  }
+  return notes.length
+    ? `Курс змінився більш ніж на ${JUMP_WARN_PERCENT}% за добу: ${notes.join("; ")}`
+    : undefined;
+}
 
 export function computeChanges(src: string, rates: Rates): Change[] {
   const changes: Change[] = [];
