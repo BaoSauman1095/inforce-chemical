@@ -43,6 +43,8 @@ export interface CatalogItem {
   crops?: string[];
   dosage?: DosageRow[];
   advantages?: string[];
+  /** Тимчасово знято з продажу (немає в чинному прайсі) — прибирається з каталогу й /products/[slug] нижче, дані лишаються для швидкого повернення. */
+  hidden?: boolean;
 }
 
 export interface CatalogGroup {
