@@ -1049,7 +1049,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "hidrofert-18-18-18",
           name: "Гідроферт 18.18.18",
           brand: "Biolchim",
-          packs: [{ label: "25 кг", price: 146, currency: "EUR", indicativePrice: 2.32 }],
+          packs: [{ label: "25 кг", price: 145, currency: "EUR", indicativePrice: 2.32 }],
           unit: "кг",
           tagline: "Збалансоване NPK-добриво для активного вегетативного росту",
           description:
@@ -1130,7 +1130,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "mikrofol-kombi",
           name: "Мікрофол Комбі",
           brand: "Biolchim",
-          packs: [{ label: "1 кг", price: 559, currency: "EUR", indicativePrice: 8.89 }],
+          packs: [{ label: "1 кг", price: 558, currency: "EUR", indicativePrice: 8.89 }],
           unit: "кг",
           tagline: "Концентрований комплекс мікроелементів з високим вмістом магнію",
           description:
@@ -1155,7 +1155,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "multybor-21",
           name: "Мультибор 21",
           brand: "Biolchim",
-          packs: [{ label: "10 кг", price: 269, currency: "EUR", indicativePrice: 4.28 }],
+          packs: [{ label: "10 кг", price: 268, currency: "EUR", indicativePrice: 4.28 }],
           unit: "кг",
           tagline: "Концентроване борне добриво для цвітіння й запилення",
           description:
@@ -1210,7 +1210,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kropmaks",
           name: "Кропмакс",
           brand: "Holland Farming",
-          packs: [{ label: "1 л", price: 1167, currency: "EUR", indicativePrice: 18.57 }, { label: "5 л", price: 1134, currency: "EUR", indicativePrice: 18.05 }, { label: "20 л", price: 1086, currency: "EUR", indicativePrice: 17.28 }],
+          packs: [{ label: "1 л", price: 1165, currency: "EUR", indicativePrice: 18.57 }, { label: "5 л", price: 1132, currency: "EUR", indicativePrice: 18.05 }, { label: "20 л", price: 1084, currency: "EUR", indicativePrice: 17.28 }],
           unit: "л",
           tagline: "Ультраконцентрований біостимулятор з амінокислотами та фітогормонами",
           description:
@@ -1234,7 +1234,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "filloton",
           name: "Філлотон",
           brand: "Biolchim",
-          packs: [{ label: "1 л", price: 392, currency: "EUR", indicativePrice: 6.24 }, { label: "5 л", price: 392, currency: "EUR", indicativePrice: 6.24 }, { label: "20 л", price: 392, currency: "EUR", indicativePrice: 6.24 }],
+          packs: [{ label: "1 л", price: 391, currency: "EUR", indicativePrice: 6.24 }, { label: "5 л", price: 391, currency: "EUR", indicativePrice: 6.24 }, { label: "20 л", price: 391, currency: "EUR", indicativePrice: 6.24 }],
           unit: "л",
           tagline: "Біостимулятор для відновлення рослини після стресу",
           description:
@@ -1315,7 +1315,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kaishi-maks",
           name: "Кайші Макс",
           brand: "Sumi Agro",
-          packs: [{ label: "2,5 кг", price: 1279, currency: "USD", indicativePrice: 23.76 }],
+          packs: [{ label: "2,5 кг", price: 1278, currency: "USD", indicativePrice: 23.76 }],
           unit: "кг",
           tagline: "Повний спектр амінокислот — джерело енергії для синтезу білків і росту",
           description:
@@ -1397,7 +1397,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "entsera",
           name: "Енцера",
           brand: "Sumi Agro",
-          packs: [{ label: "50 гр", price: 90548, currency: "USD", indicativePrice: 1682.68 }, { label: "200 гр", price: 89462, currency: "USD", indicativePrice: 1662.5 }],
+          packs: [{ label: "50 гр", price: 90523, currency: "USD", indicativePrice: 1682.68 }, { label: "200 гр", price: 89438, currency: "USD", indicativePrice: 1662.5 }],
           unit: "кг",
           tagline: "Азотфіксувальний біопрепарат на основі ендофітних бактерій",
           description:
@@ -1434,7 +1434,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "baal-bt",
           name: "Баал БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "1 л", price: 379, currency: "USD", indicativePrice: 7.04 }, { label: "5 л", price: 262, currency: "USD", indicativePrice: 4.86 }],
+          packs: [{ label: "1 л", price: 379, currency: "USD", indicativePrice: 7.04 }, { label: "5 л", price: 261, currency: "USD", indicativePrice: 4.86 }],
           unit: "л",
           tagline: "Комбінований гербіцид проти широкого спектра дводольних бур'янів",
           description:
@@ -1570,7 +1570,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "markiz-bt",
           name: "Маркіз БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "500 г", price: 1473, currency: "USD", indicativePrice: 27.37 }],
+          packs: [{ label: "500 г", price: 1472, currency: "USD", indicativePrice: 27.37 }],
           unit: "кг",
           tagline: "Гербіцид сульфонілсечовин для зернових колосових",
           description:
@@ -1758,7 +1758,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "forzats-bt",
           name: "Форзац БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "500 мл", price: 3419, currency: "USD", indicativePrice: 63.54 }],
+          packs: [{ label: "500 мл", price: 3418, currency: "USD", indicativePrice: 63.54 }],
           unit: "л",
           tagline: "Концентрований гербіцид тріазолопіримідинів для зернових колосових",
           description:
@@ -1809,7 +1809,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "avangard",
           name: "Авангард",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 720, currency: "USD", indicativePrice: 13.38 }, { label: "10 л", price: 673, currency: "USD", indicativePrice: 12.51 }, { label: "20 л", price: 652, currency: "USD", indicativePrice: 12.11 }],
+          packs: [{ label: "1 л", price: 720, currency: "USD", indicativePrice: 13.38 }, { label: "10 л", price: 673, currency: "USD", indicativePrice: 12.51 }, { label: "20 л", price: 651, currency: "USD", indicativePrice: 12.11 }],
           unit: "л",
           tagline: "Ґрунтовий гербіцид суцільного контролю злакових бур'янів без обмежень у сівозміні",
           description:
@@ -1863,7 +1863,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "horyzont",
           name: "Горизонт",
           brand: "Himagro M",
-          packs: [{ label: "5 л", price: 537, currency: "USD", indicativePrice: 9.97 }, { label: "10 л", price: 510, currency: "USD", indicativePrice: 9.47 }, { label: "20 л", price: 483, currency: "USD", indicativePrice: 8.97 }],
+          packs: [{ label: "5 л", price: 536, currency: "USD", indicativePrice: 9.97 }, { label: "10 л", price: 509, currency: "USD", indicativePrice: 9.47 }, { label: "20 л", price: 483, currency: "USD", indicativePrice: 8.97 }],
           unit: "л",
           tagline: "Триплексний гербіцид для буряків з дробним внесенням",
           description:
@@ -1914,7 +1914,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "etaforon",
           name: "Етафорон",
           brand: "Himagro M",
-          packs: [{ label: "0,25 кг", price: 9651, currency: "USD", indicativePrice: 179.35 }],
+          packs: [{ label: "0,25 кг", price: 9649, currency: "USD", indicativePrice: 179.35 }],
           unit: "кг",
           tagline: "Унікальний гербіцид для контролю хрестоцвітих бур'янів у ріпаку",
           description:
@@ -1940,7 +1940,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "zlakodyn",
           name: "Злакодин",
           brand: "Himagro M",
-          packs: [{ label: "0,133 кг", price: 16378, currency: "USD", indicativePrice: 304.35 }, { label: "0,2 кг", price: 15793, currency: "USD", indicativePrice: 293.48 }],
+          packs: [{ label: "0,133 кг", price: 16373, currency: "USD", indicativePrice: 304.35 }, { label: "0,2 кг", price: 15788, currency: "USD", indicativePrice: 293.48 }],
           unit: "кг",
           tagline: "Гербіцид проти пирію, стоколосу та падалиці ячменю в озимій пшениці",
           description:
@@ -1965,7 +1965,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "klinkorn",
           name: "Клінкорн",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 569, currency: "USD", indicativePrice: 10.57 }, { label: "10 л", price: 537, currency: "USD", indicativePrice: 9.97 }],
+          packs: [{ label: "1 л", price: 569, currency: "USD", indicativePrice: 10.57 }, { label: "10 л", price: 536, currency: "USD", indicativePrice: 9.97 }],
           unit: "л",
           tagline: "Двокомпонентний гербіцид для кукурудзи проти злакових і дводольних бур'янів",
           description:
@@ -2017,7 +2017,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "luazyt",
           name: "Луазит",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 679, currency: "USD", indicativePrice: 12.62 }, { label: "5 л", price: 651, currency: "USD", indicativePrice: 12.1 }, { label: "10 л", price: 636, currency: "USD", indicativePrice: 11.81 }, { label: "20 л", price: 624, currency: "USD", indicativePrice: 11.59 }],
+          packs: [{ label: "1 л", price: 679, currency: "USD", indicativePrice: 12.62 }, { label: "5 л", price: 651, currency: "USD", indicativePrice: 12.1 }, { label: "10 л", price: 635, currency: "USD", indicativePrice: 11.81 }, { label: "20 л", price: 624, currency: "USD", indicativePrice: 11.59 }],
           unit: "л",
           tagline: "Протизлаковий гербіцид м'якої дії на культуру, незалежно від фази",
           description:
@@ -2043,7 +2043,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "optymum",
           name: "Оптимум",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 654, currency: "USD", indicativePrice: 12.15 }, { label: "5 л", price: 622, currency: "USD", indicativePrice: 11.55 }, { label: "10 л", price: 601, currency: "USD", indicativePrice: 11.17 }, { label: "20 л", price: 589, currency: "USD", indicativePrice: 10.94 }],
+          packs: [{ label: "1 л", price: 654, currency: "USD", indicativePrice: 12.15 }, { label: "5 л", price: 621, currency: "USD", indicativePrice: 11.55 }, { label: "10 л", price: 601, currency: "USD", indicativePrice: 11.17 }, { label: "20 л", price: 589, currency: "USD", indicativePrice: 10.94 }],
           unit: "л",
           tagline: "Гормональний гербіцид проти дводольних бур'янів, стійких до 2,4-Д і МЦПА",
           description:
@@ -2069,7 +2069,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "ohorodnyk",
           name: "Огородник",
           brand: "Himagro M",
-          packs: [{ label: "0,5 кг", price: 1072, currency: "USD", indicativePrice: 19.92 }, { label: "1 кг", price: 1019, currency: "USD", indicativePrice: 18.93 }],
+          packs: [{ label: "0,5 кг", price: 1072, currency: "USD", indicativePrice: 19.92 }, { label: "1 кг", price: 1018, currency: "USD", indicativePrice: 18.93 }],
           unit: "кг",
           tagline: "Ґрунтовий і післясходовий гербіцид для картоплі й томатів",
           description:
@@ -2096,7 +2096,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "orion",
           name: "Оріон",
           brand: "Himagro M",
-          packs: [{ label: "0,25 кг", price: 4691, currency: "USD", indicativePrice: 87.17 }],
+          packs: [{ label: "0,25 кг", price: 4690, currency: "USD", indicativePrice: 87.17 }],
           unit: "кг",
           tagline: "Гербіцид проти дводольних бур'янів, стійких до 2,4-Д, у зернових, кукурудзі й сої",
           description:
@@ -2148,7 +2148,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "total-himagro",
           name: "Тотал",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 297, currency: "USD", indicativePrice: 5.51 }, { label: "5 л", price: 268, currency: "USD", indicativePrice: 4.98 }, { label: "10 л", price: 217, currency: "USD", indicativePrice: 4.03 }, { label: "20 л", price: 193, currency: "USD", indicativePrice: 3.59 }],
+          packs: [{ label: "1 л", price: 296, currency: "USD", indicativePrice: 5.51 }, { label: "5 л", price: 268, currency: "USD", indicativePrice: 4.98 }, { label: "10 л", price: 217, currency: "USD", indicativePrice: 4.03 }, { label: "20 л", price: 193, currency: "USD", indicativePrice: 3.59 }],
           unit: "л",
           tagline: "Гербіцид суцільної дії для знищення бур'янів і десикації",
           description:
@@ -2229,7 +2229,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "trystar-himagro",
           name: "Тристар",
           brand: "Himagro M",
-          packs: [{ label: "0,35 кг", price: 1180, currency: "USD", indicativePrice: 21.92 }],
+          packs: [{ label: "0,35 кг", price: 1179, currency: "USD", indicativePrice: 21.92 }],
           unit: "кг",
           tagline: "Трикомпонентний гербіцид максимально широкого спектра дводольних бур'янів",
           description:
@@ -2281,7 +2281,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "flumet",
           name: "Флумет",
           brand: "Himagro M",
-          packs: [{ label: "0,5 кг", price: 8043, currency: "USD", indicativePrice: 149.46 }],
+          packs: [{ label: "0,5 кг", price: 8041, currency: "USD", indicativePrice: 149.46 }],
           unit: "кг",
           tagline: "Гербіцид для зернових і сої з низькими нормами витрати",
           description:
@@ -2308,7 +2308,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "tsukron-plus-himagro",
           name: "Цукрон +",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 1272, currency: "USD", indicativePrice: 23.63 }, { label: "5 л", price: 1040, currency: "USD", indicativePrice: 19.32 }, { label: "20 л", price: 1005, currency: "USD", indicativePrice: 18.67 }],
+          packs: [{ label: "1 л", price: 1271, currency: "USD", indicativePrice: 23.63 }, { label: "5 л", price: 1039, currency: "USD", indicativePrice: 19.32 }, { label: "20 л", price: 1004, currency: "USD", indicativePrice: 18.67 }],
           unit: "л",
           tagline: "Гербіцид проти осотів і падалиці соняшнику в буряках, ріпаку й кукурудзі",
           description:
@@ -2387,7 +2387,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "dikaflor-440",
           name: "Дікафлор 440",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 1338, currency: "USD", indicativePrice: 24.86 }],
+          packs: [{ label: "5 л", price: 1337, currency: "USD", indicativePrice: 24.86 }],
           unit: "л",
           tagline: "Системний страховий гербіцид проти дводольних бур'янів у кукурудзі та зернових",
           description:
@@ -2439,7 +2439,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kleverdym-grand",
           name: "Клевердим Гранд",
           brand: "Sumi Agro",
-          packs: [{ label: "10 л", price: 1505, currency: "USD", indicativePrice: 27.96 }],
+          packs: [{ label: "10 л", price: 1504, currency: "USD", indicativePrice: 27.96 }],
           unit: "л",
           tagline: "Золотий стандарт серед клетодимів — протизлаковий гербіцид",
           description:
@@ -2518,7 +2518,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "pledzh-50",
           name: "Пледж 50",
           brand: "Sumi Agro",
-          packs: [{ label: "400 гр", price: 6514, currency: "USD", indicativePrice: 121.06 }],
+          packs: [{ label: "400 гр", price: 6513, currency: "USD", indicativePrice: 121.06 }],
           unit: "кг",
           tagline: "Універсальний гербіцид для сої, пшениці та кукурудзи від дводольних бур'янів",
           description:
@@ -2648,7 +2648,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "khikaru",
           name: "Хікару",
           brand: "Sumi Agro",
-          packs: [{ label: "500 гр", price: 3474, currency: "USD", indicativePrice: 64.56 }],
+          packs: [{ label: "500 гр", price: 3473, currency: "USD", indicativePrice: 64.56 }],
           unit: "кг",
           tagline: "Гнучкий гербіцид для соняшнику (технологія Express) та зернових",
           description:
@@ -2726,7 +2726,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "infanta",
           name: "Інфанта",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 4094, currency: "USD", indicativePrice: 76.08 }],
+          packs: [{ label: "1 л", price: 4093, currency: "USD", indicativePrice: 76.08 }],
           unit: "л",
           tagline: "Гербіцид проти перерослих бур'янів та падалиці, стійкої до сульфонілсечовин",
           description:
@@ -2946,7 +2946,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "sole-bt",
           name: "Солє БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "3 кг", price: 737, currency: "USD", indicativePrice: 13.69 }],
+          packs: [{ label: "3 кг", price: 736, currency: "USD", indicativePrice: 13.69 }],
           unit: "кг",
           tagline: "Контактно-системний фунгіцид проти фітофторозу картоплі",
           description:
@@ -2973,7 +2973,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "bredli",
           name: "Бредлі",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 2635, currency: "USD", indicativePrice: 48.96 }, { label: "5 л", price: 2578, currency: "USD", indicativePrice: 47.91 }, { label: "10 л", price: 2523, currency: "USD", indicativePrice: 46.88 }],
+          packs: [{ label: "1 л", price: 2634, currency: "USD", indicativePrice: 48.96 }, { label: "5 л", price: 2577, currency: "USD", indicativePrice: 47.91 }, { label: "10 л", price: 2522, currency: "USD", indicativePrice: 46.88 }],
           unit: "л",
           tagline: "Системний фунгіцид проти сірої та білої гнилі у профілактичному й антирезистентному захисті",
           description:
@@ -3000,7 +3000,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "brodvei",
           name: "Бродвей",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 807, currency: "USD", indicativePrice: 15.0 }, { label: "5 л", price: 795, currency: "USD", indicativePrice: 14.78 }, { label: "20 л", price: 764, currency: "USD", indicativePrice: 14.19 }],
+          packs: [{ label: "1 л", price: 807, currency: "USD", indicativePrice: 15.0 }, { label: "5 л", price: 795, currency: "USD", indicativePrice: 14.78 }, { label: "20 л", price: 763, currency: "USD", indicativePrice: 14.19 }],
           unit: "л",
           tagline: "Стробілуриновий фунгіцид найширшого спектра дії",
           description:
@@ -3054,7 +3054,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "snuker",
           name: "Снукер",
           brand: "Himagro M",
-          packs: [{ label: "5 л", price: 1236, currency: "USD", indicativePrice: 22.96 }, { label: "10 л", price: 1180, currency: "USD", indicativePrice: 21.92 }, { label: "20 л", price: 1126, currency: "USD", indicativePrice: 20.92 }],
+          packs: [{ label: "5 л", price: 1235, currency: "USD", indicativePrice: 22.96 }, { label: "10 л", price: 1179, currency: "USD", indicativePrice: 21.92 }, { label: "20 л", price: 1125, currency: "USD", indicativePrice: 20.92 }],
           unit: "л",
           tagline: "Триазольний фунгіцид з рістрегулюючим ефектом для ріпаку й пшениці",
           description:
@@ -3186,7 +3186,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "ikarus-turbo-430",
           name: "Ікарус Турбо 430",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 814, currency: "USD", indicativePrice: 15.12 }],
+          packs: [{ label: "5 л", price: 813, currency: "USD", indicativePrice: 15.12 }],
           unit: "л",
           tagline: "Ефективна формуляція тебуконазолу для покращеного захисту",
           description:
@@ -3238,7 +3238,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "karmelis",
           name: "Кармеліс",
           brand: "Sumi Agro",
-          packs: [{ label: "10 л", price: 1303, currency: "USD", indicativePrice: 24.21 }],
+          packs: [{ label: "10 л", price: 1302, currency: "USD", indicativePrice: 24.21 }],
           unit: "л",
           tagline: "Сучасний двокомпонентний фунгіцид для польових культур",
           description:
@@ -3264,7 +3264,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "medyan-ekstra-350",
           name: "Медян Екстра 350",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 733, currency: "USD", indicativePrice: 13.63 }, { label: "5 л", price: 666, currency: "USD", indicativePrice: 12.37 }],
+          packs: [{ label: "1 л", price: 733, currency: "USD", indicativePrice: 13.63 }, { label: "5 л", price: 665, currency: "USD", indicativePrice: 12.37 }],
           unit: "л",
           tagline: "Високоефективний контактний фунгіцид проти грибкових і бактеріальних хвороб",
           description:
@@ -3318,7 +3318,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "migiva",
           name: "Мігіва",
           brand: "Sumi Agro",
-          packs: [{ label: "500 мл", price: 19671, currency: "USD", indicativePrice: 365.56 }],
+          packs: [{ label: "500 мл", price: 19666, currency: "USD", indicativePrice: 365.56 }],
           unit: "л",
           tagline: "Інноваційна японська молекула для захисту яблуні від комплексу хвороб",
           description:
@@ -3369,7 +3369,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "nautil",
           name: "Наутіл",
           brand: "Sumi Agro",
-          packs: [{ label: "5 кг", price: 559, currency: "USD", indicativePrice: 10.38 }],
+          packs: [{ label: "5 кг", price: 558, currency: "USD", indicativePrice: 10.38 }],
           unit: "кг",
           tagline: "Сучасний фунгіцид для овочів і винограду від комплексу хвороб",
           description:
@@ -3395,7 +3395,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "parad",
           name: "Парад",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 12733, currency: "USD", indicativePrice: 236.62 }],
+          packs: [{ label: "1 л", price: 12729, currency: "USD", indicativePrice: 236.62 }],
           unit: "л",
           tagline: "Потужний японський SDHI-фунгіцид проти склеротиніозу та сірої гнилі",
           description:
@@ -3421,7 +3421,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "ranman-top",
           name: "Ранман ТОП",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 3490, currency: "USD", indicativePrice: 64.86 }],
+          packs: [{ label: "1 л", price: 3489, currency: "USD", indicativePrice: 64.86 }],
           unit: "л",
           tagline: "Прогресивний фунгіцид для захисту овочів в екстремальних умовах",
           description:
@@ -3498,7 +3498,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "yutaka",
           name: "Ютака",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 1254, currency: "USD", indicativePrice: 23.3 }],
+          packs: [{ label: "5 л", price: 1253, currency: "USD", indicativePrice: 23.3 }],
           unit: "л",
           tagline: "Новий трикомпонентний фунгіцид для інтенсивного захисту",
           description:
@@ -3550,7 +3550,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "bestkur",
           name: "Бесткур",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 2552, currency: "USD", indicativePrice: 47.42 }],
+          packs: [{ label: "1 л", price: 2551, currency: "USD", indicativePrice: 47.42 }],
           unit: "л",
           tagline: "Унікальний біологічний фунгіцид проти сірої гнилі",
           description:
@@ -3577,7 +3577,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kazumin",
           name: "Казумін",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 1357, currency: "USD", indicativePrice: 25.22 }, { label: "5 л", price: 4497, currency: "USD", indicativePrice: 83.57 }],
+          packs: [{ label: "1 л", price: 1357, currency: "USD", indicativePrice: 25.22 }, { label: "5 л", price: 4496, currency: "USD", indicativePrice: 83.57 }],
           unit: "л",
           tagline: "Біологічний бактерицид і фунгіцид лікувальної дії проти бактеріального опіку",
           description:
@@ -3692,7 +3692,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "klesso-bt",
           name: "Клессо БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "1 л", price: 1568, currency: "USD", indicativePrice: 29.13 }, { label: "5 л", price: 1568, currency: "USD", indicativePrice: 29.13 }],
+          packs: [{ label: "1 л", price: 1567, currency: "USD", indicativePrice: 29.13 }, { label: "5 л", price: 1567, currency: "USD", indicativePrice: 29.13 }],
           unit: "л",
           tagline: "Спеціалізований акарицид проти павутинного кліща на сої",
           description:
@@ -3745,7 +3745,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "straik-bt",
           name: "Страйк БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "1 л", price: 432, currency: "USD", indicativePrice: 8.02 }, { label: "5 л", price: 333, currency: "USD", indicativePrice: 6.18 }],
+          packs: [{ label: "1 л", price: 431, currency: "USD", indicativePrice: 8.02 }, { label: "5 л", price: 332, currency: "USD", indicativePrice: 6.18 }],
           unit: "л",
           tagline: "Комбінований інсектицид неонікотиноїд + піретроїд",
           description:
@@ -3801,7 +3801,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "akaramik",
           name: "Акарамік",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 2203, currency: "USD", indicativePrice: 40.93 }],
+          packs: [{ label: "1 л", price: 2202, currency: "USD", indicativePrice: 40.93 }],
           unit: "л",
           tagline: "Контроль кліщів та попелиць з трансламінарною дією",
           description:
@@ -3827,7 +3827,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "balazo-100",
           name: "Балазо 100",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 1209, currency: "USD", indicativePrice: 22.46 }, { label: "5 л", price: 1182, currency: "USD", indicativePrice: 21.96 }],
+          packs: [{ label: "1 л", price: 1208, currency: "USD", indicativePrice: 22.46 }, { label: "5 л", price: 1181, currency: "USD", indicativePrice: 21.96 }],
           unit: "л",
           tagline: "Інсекто-акарицид проти широкого спектру шкідників плодових і польових культур",
           description:
@@ -3908,7 +3908,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "mospilan",
           name: "Моспілан",
           brand: "Sumi Agro",
-          packs: [{ label: "400 гр", price: 2823, currency: "USD", indicativePrice: 52.46 }],
+          packs: [{ label: "400 гр", price: 2822, currency: "USD", indicativePrice: 52.46 }],
           unit: "кг",
           tagline: "Оригінальний японський інсектицид, безпечний для бджіл у період цвітіння",
           description:
@@ -3935,7 +3935,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "nissoran",
           name: "Ніссоран",
           brand: "Sumi Agro",
-          packs: [{ label: "1 кг", price: 2473, currency: "USD", indicativePrice: 45.95 }],
+          packs: [{ label: "1 кг", price: 2472, currency: "USD", indicativePrice: 45.95 }],
           unit: "кг",
           tagline: "Оригінальний японський акарицид, що діє на яйця, личинки та німфи кліщів",
           description:
@@ -3962,7 +3962,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "sanmait",
           name: "Санмайт",
           brand: "Sumi Agro",
-          packs: [{ label: "500 гр", price: 2924, currency: "USD", indicativePrice: 54.34 }],
+          packs: [{ label: "500 гр", price: 2923, currency: "USD", indicativePrice: 54.34 }],
           unit: "кг",
           tagline: "Акарицид №1 — контроль кліщів на всіх рухомих стадіях",
           description:
@@ -4014,7 +4014,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "teppeki",
           name: "Теппекі",
           brand: "Sumi Agro",
-          packs: [{ label: "140 гр", price: 10764, currency: "USD", indicativePrice: 200.04 }, { label: "500 гр", price: 10613, currency: "USD", indicativePrice: 197.23 }],
+          packs: [{ label: "140 гр", price: 10762, currency: "USD", indicativePrice: 200.04 }, { label: "500 гр", price: 10610, currency: "USD", indicativePrice: 197.23 }],
           unit: "кг",
           tagline: "Досконалий контроль попелиць та білокрилок з новим механізмом дії",
           description:
@@ -4040,7 +4040,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "leksykon",
           name: "Лексикон",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 4191, currency: "USD", indicativePrice: 77.88 }],
+          packs: [{ label: "5 л", price: 4190, currency: "USD", indicativePrice: 77.88 }],
           unit: "л",
           tagline: "Двокомпонентний інсектицид широкого спектра з нокдаун-ефектом",
           description:
@@ -4121,7 +4121,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "travers",
           name: "Траверс",
           brand: "Himagro M",
-          packs: [{ label: "1 кг", price: 1126, currency: "USD", indicativePrice: 20.92 }],
+          packs: [{ label: "1 кг", price: 1125, currency: "USD", indicativePrice: 20.92 }],
           unit: "кг",
           tagline: "Авермектиновий інсектицид з овіцидною дією проти лускокрилих",
           description:
@@ -4154,7 +4154,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "imisid-bt",
           name: "Імісід БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "5 л", price: 1126, currency: "USD", indicativePrice: 20.92 }],
+          packs: [{ label: "5 л", price: 1125, currency: "USD", indicativePrice: 20.92 }],
           unit: "л",
           tagline: "Інсектицидний протруйник для захисту сходів кукурудзи та соняшнику",
           description:
@@ -4262,7 +4262,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "tiaben-t",
           name: "Тіабен Т",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 1394, currency: "USD", indicativePrice: 25.9 }, { label: "5 л", price: 1378, currency: "USD", indicativePrice: 25.61 }],
+          packs: [{ label: "1 л", price: 1393, currency: "USD", indicativePrice: 25.9 }, { label: "5 л", price: 1378, currency: "USD", indicativePrice: 25.61 }],
           unit: "л",
           tagline: "Комбінований фунгіцидний протруйник з мікроелементами для стимуляції коренеутворення",
           description:
@@ -4289,7 +4289,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "triolan",
           name: "Тріолан",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 1314, currency: "USD", indicativePrice: 24.41 }, { label: "5 л", price: 1287, currency: "USD", indicativePrice: 23.91 }],
+          packs: [{ label: "1 л", price: 1313, currency: "USD", indicativePrice: 24.41 }, { label: "5 л", price: 1286, currency: "USD", indicativePrice: 23.91 }],
           unit: "л",
           tagline: "Триплексний інсекто-фунгіцидний протруйник для зернових",
           description:
