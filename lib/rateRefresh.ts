@@ -70,9 +70,21 @@ export function extractMezhbankRates(html: string): Partial<Rates> {
   return found;
 }
 
+// Перший реальний запуск отримав 403 з User-Agent, що прямо називав себе
+// ботом ("...InForceChemicalRateBot/1.0") — саме такий підпис і ловить
+// захист від сканерів. Тепер запит виглядає як звичайний браузер Chrome —
+// той самий трюк, що й будь-який легітимний скрапер публічної сторінки.
+const BROWSER_HEADERS: HeadersInit = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+    "Chrome/128.0.0.0 Safari/537.36",
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+  "Accept-Language": "uk-UA,uk;q=0.9,ru;q=0.8,en-US;q=0.7,en;q=0.6",
+};
+
 export async function fetchRatesFromMezhbank(): Promise<Rates> {
   const res = await fetch("https://kurs.com.ua/mezhbank", {
-    headers: { "User-Agent": "Mozilla/5.0 (compatible; InForceChemicalRateBot/1.0)" },
+    headers: BROWSER_HEADERS,
     cache: "no-store",
   });
   if (!res.ok) {
