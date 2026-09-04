@@ -8,6 +8,9 @@
  * `indicativePrice` (індикативна ціна постачальника без ПДВ, у валюті) —
  * для решти каталогу курс постачальника й далі рахується вручну з прайсу.
  * Нова ціна: `indicativePrice × курс × 1.2` (20% ПДВ), округлено до гривні.
+ *
+ * Курс береться з публічного API ПриватБанку (безготівковий, coursid=11) —
+ * див. fetchRatesFromPrivat24 нижче, чому не kurs.com.ua.
  */
 
 const VAT = 1.2;
@@ -27,78 +30,47 @@ export interface Change {
   newPrice: number;
 }
 
-const RATE_NUM_RE = /(\d{2,3}[.,]\d{1,3})/g;
-
-function stripTags(html: string): string {
-  return html
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/\s+/g, " ");
-}
-
 /**
- * Публічна сторінка kurs.com.ua/mezhbank, без ключа — платний API там же
- * не використовується навмисно (власник вирішив: «ключа не буде», раз на
- * добу достатньо просто зчитати таблицю). Розмітку сторінки наживо не
- * перевірено, тож парсер тримається не за HTML-теги (вони можуть
- * відрізнятись), а за сам текст: бере перше входження "USD"/"EUR" (це
- * рядок таблиці курсів, не згадка валюти десь іще на сторінці) і в
- * найближчому шматку тексту шукає числа у форматі "44,629" — курс завжди
- * в межах 20–100 грн, тоді як сусідні дельти на кшталт "▼-0,052" менші
- * за 1 і відсіюються цим же діапазоном. Порядок колонок на сторінці —
- * Купівля/Продаж/Середній, тож друге знайдене число — курс продажу (ask).
- *
- * Якщо розмітка сторінки виявиться іншою — перший реальний запуск або
- * поверне помилку (не знайшло двох чисел), або число вилетить за межі
- * адекватності (validateRates) і оновлення не застосується. Обидва
- * випадки дають повідомлення в Telegram, а не тиху хибну ціну.
+ * Джерело курсу — публічний API ПриватБанку, безготівковий курс
+ * (coursid=11), без ключа. Не kurs.com.ua: сторінку /mezhbank Vercel не
+ * міг прочитати навіть зі звичайними браузерними заголовками (403 і з
+ * ботовим User-Agent, і з Chrome-подібним — отже, блокування не за
+ * заголовками, а, найімовірніше, за діапазоном IP серверних функцій).
+ * Агрегованого міжбанківського індексу без ключа взагалі не існує — це й
+ * є платний продукт kurs.com.ua. Безготівковий курс Приватбанку — найближчий
+ * з перевірених безкоштовних відповідників (звірено вручну проти
+ * kurs.com.ua/mezhbank: розбіжність ~0.5–1%, у межах типового денного
+ * розкиду), і це вже готовий JSON-ендпоінт, а не HTML-сторінка зі
+ * скрапінгом — набагато менше шансів на анти-бот блокування.
  */
-export function extractMezhbankRates(html: string): Partial<Rates> {
-  const text = stripTags(html);
-  const found: Partial<Rates> = {};
+const PRIVAT_CASHLESS_URL = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=11";
 
-  for (const cur of ["USD", "EUR"] as const) {
-    const idx = text.indexOf(cur);
-    if (idx === -1) continue;
-    const window = text.slice(idx, idx + 200);
-    const nums = [...window.matchAll(RATE_NUM_RE)]
-      .map((m) => Number(m[1].replace(",", ".")))
-      .filter((n) => n >= 20 && n <= 100);
-    if (nums.length >= 2) found[cur] = nums[1];
-  }
-
-  return found;
+interface PrivatRateEntry {
+  ccy: string;
+  base_ccy: string;
+  buy: string;
+  sale: string;
 }
 
-// Перший реальний запуск отримав 403 з User-Agent, що прямо називав себе
-// ботом ("...InForceChemicalRateBot/1.0") — саме такий підпис і ловить
-// захист від сканерів. Тепер запит виглядає як звичайний браузер Chrome —
-// той самий трюк, що й будь-який легітимний скрапер публічної сторінки.
-const BROWSER_HEADERS: HeadersInit = {
-  "User-Agent":
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
-    "Chrome/128.0.0.0 Safari/537.36",
-  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-  "Accept-Language": "uk-UA,uk;q=0.9,ru;q=0.8,en-US;q=0.7,en;q=0.6",
-};
-
-export async function fetchRatesFromMezhbank(): Promise<Rates> {
-  const res = await fetch("https://kurs.com.ua/mezhbank", {
-    headers: BROWSER_HEADERS,
-    cache: "no-store",
-  });
+export async function fetchRatesFromPrivat24(): Promise<Rates> {
+  const res = await fetch(PRIVAT_CASHLESS_URL, { cache: "no-store" });
   if (!res.ok) {
-    throw new Error(`kurs.com.ua/mezhbank відповів ${res.status} ${res.statusText}`);
+    throw new Error(`api.privatbank.ua відповів ${res.status} ${res.statusText}`);
   }
-  const html = await res.text();
-  const rates = extractMezhbankRates(html);
-  if (rates.USD === undefined || rates.EUR === undefined) {
+  const entries = (await res.json()) as PrivatRateEntry[];
+  const found: Partial<Rates> = {};
+  for (const entry of entries) {
+    if (entry.base_ccy !== "UAH") continue;
+    if (entry.ccy === "USD") found.USD = Number(entry.sale);
+    else if (entry.ccy === "EUR") found.EUR = Number(entry.sale);
+  }
+  if (found.USD === undefined || found.EUR === undefined) {
     throw new Error(
-      "Не вдалось знайти курс USD/EUR на сторінці kurs.com.ua/mezhbank — розмітка відрізняється від " +
-        "очікуваної (див. extractMezhbankRates у lib/rateRefresh.ts)."
+      "Не вдалось знайти курс USD/EUR у відповіді api.privatbank.ua — формат відрізняється від " +
+        "очікуваного (див. fetchRatesFromPrivat24 у lib/rateRefresh.ts)."
     );
   }
-  return { USD: rates.USD, EUR: rates.EUR };
+  return { USD: found.USD, EUR: found.EUR };
 }
 
 const SANE_MIN = 20;
