@@ -1,4 +1,11 @@
-import { applyChanges, fetchRatesFromKurs } from "@/lib/rateRefresh";
+import {
+  applyChanges,
+  detectJump,
+  extractBakedRates,
+  fetchRatesFromMezhbank,
+  validateRates,
+} from "@/lib/rateRefresh";
+import { sendRateRefreshNotification } from "@/lib/telegram";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +20,9 @@ const FILE_PATH = "lib/catalog-data.ts";
  * підтвердження»). Викликається виключно Vercel Cron (див. `vercel.json`),
  * підтверджує це заголовком Authorization за CRON_SECRET.
  *
+ * Курс береться з публічної сторінки /mezhbank, без ключа — власник
+ * вирішив, що платний API не потрібен, досить раз на добу зчитати таблицю.
+ *
  * Сайт статично рендерить ціни під час збірки — тут немає окремого сховища
  * "поточного курсу", яке читалось би при кожному показі сторінки. Замість
  * цього роут читає lib/catalog-data.ts напряму з GitHub, рахує нові ціни
@@ -21,10 +31,14 @@ const FILE_PATH = "lib/catalog-data.ts";
  * GitHub Contents API. Push у main — це і є тригер: Vercel вже підключений
  * до репозиторію й задеплоїть новий прод сам, без додаткових кроків.
  *
- * Це означає: жодного проміжного огляду diff перед виходом у прод. Якщо
- * колись знадобиться повернути ручне підтвердження — досить прибрати блок
- * PUT нижче й замість нього відкривати pull request (GitHub API це теж
- * уміє), не чіпаючи решту логіки.
+ * Жодного проміжного огляду diff перед виходом у прод — так і задумано.
+ * Єдина протидія: validateRates ловить сміття з парсера (0, NaN, випадково
+ * підхоплена дельта на кшталт "▼-0,052") і скасовує оновлення, а
+ * detectJump — не блокує реальний ринковий стрибок (власник хоче саме
+ * відображати фактичний курс), лише позначає його в Telegram. Кожен запуск
+ * — успішний, без змін чи з помилкою — шле одне повідомлення в Telegram
+ * (lib/telegram.ts): без людини в контурі це єдиний канал, яким видно, що
+ * крон взагалі спрацював.
  */
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
@@ -33,16 +47,17 @@ export async function GET(request: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const kursKey = process.env.KURS_API_KEY;
   const githubToken = process.env.GITHUB_TOKEN;
-  if (!kursKey || !githubToken) {
-    const missing = [!kursKey && "KURS_API_KEY", !githubToken && "GITHUB_TOKEN"].filter(Boolean).join(", ");
-    console.error(`refresh-rate cron: відсутні змінні оточення: ${missing}`);
-    return Response.json({ ok: false, error: `Відсутні змінні оточення: ${missing}` }, { status: 500 });
+  if (!githubToken) {
+    const message = "Відсутня змінна оточення GITHUB_TOKEN";
+    console.error(`refresh-rate cron: ${message}`);
+    await sendRateRefreshNotification({ ok: false, error: message }).catch(() => {});
+    return Response.json({ ok: false, error: message }, { status: 500 });
   }
 
   try {
-    const rates = await fetchRatesFromKurs(kursKey);
+    const rates = await fetchRatesFromMezhbank();
+    validateRates(rates);
 
     const ghHeaders = {
       Authorization: `Bearer ${githubToken}`,
@@ -60,10 +75,16 @@ export async function GET(request: Request) {
     const file = (await getRes.json()) as { content: string; sha: string };
     const src = Buffer.from(file.content, "base64").toString("utf-8");
 
+    const anomaly = detectJump(rates, extractBakedRates(src));
     const { next, changes } = applyChanges(src, rates);
 
     if (changes.length === 0) {
       console.log(`refresh-rate cron: курс USD ${rates.USD} / EUR ${rates.EUR}, змін немає`);
+      // Каталог уже консистентний із цим курсом — далі нема чого комітити,
+      // тож збій самого Telegram тут не повинен перетворити успіх на 500.
+      await sendRateRefreshNotification({ ok: true, rates, changed: 0, anomaly }).catch((e) =>
+        console.error("refresh-rate cron: не вдалось надіслати сповіщення в Telegram", e)
+      );
       return Response.json({ ok: true, rates, changed: 0 });
     }
 
@@ -75,7 +96,7 @@ export async function GET(request: Request) {
         body: JSON.stringify({
           message:
             `Автооновлення курсу: USD ${rates.USD}, EUR ${rates.EUR} (${changes.length} поз.)\n\n` +
-            `Щоденний крон, без ручного підтвердження — kurs.com.ua, курс продажу (ask) міжбанку.`,
+            `Щоденний крон, без ручного підтвердження — kurs.com.ua/mezhbank, курс продажу (ask).`,
           content: Buffer.from(next, "utf-8").toString("base64"),
           sha: file.sha,
           branch: REPO_BRANCH,
@@ -88,12 +109,17 @@ export async function GET(request: Request) {
 
     console.log(
       `refresh-rate cron: курс USD ${rates.USD} / EUR ${rates.EUR}, оновлено ${changes.length} поз., ` +
-        `запушено в ${REPO_BRANCH}`
+        `запушено в ${REPO_BRANCH}${anomaly ? `; ${anomaly}` : ""}`
     );
-    return Response.json({ ok: true, rates, changed: changes.length });
+    // Коміт уже запушено — збій сповіщення не має маскувати успішне оновлення 500-кою.
+    await sendRateRefreshNotification({ ok: true, rates, changed: changes.length, anomaly }).catch((e) =>
+      console.error("refresh-rate cron: не вдалось надіслати сповіщення в Telegram", e)
+    );
+    return Response.json({ ok: true, rates, changed: changes.length, anomaly });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`refresh-rate cron: помилка — ${message}`);
+    await sendRateRefreshNotification({ ok: false, error: message }).catch(() => {});
     return Response.json({ ok: false, error: message }, { status: 500 });
   }
 }

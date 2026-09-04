@@ -161,3 +161,44 @@ export async function sendCartOrder(
 export async function sendProductQuestion(data: ProductQuestionInput): Promise<void> {
   await sendTelegramMessage(formatQuestionMessage(data));
 }
+
+export interface RateRefreshSummary {
+  ok: boolean;
+  rates?: { USD: number; EUR: number };
+  changed?: number;
+  /** Стрибок понад поріг за добу — ціну все одно застосовано, це лише позначка для людини. */
+  anomaly?: string;
+  error?: string;
+}
+
+/**
+ * Щоденний крон нікому не підзвітний, окрім цього повідомлення — власник
+ * попросив бачити результат у чаті щодня, а не лише коли щось ламається.
+ */
+function formatRateRefreshMessage(s: RateRefreshSummary): string {
+  if (!s.ok) {
+    return [
+      "🔴 *Оновлення курсу — помилка*",
+      "",
+      escapeMarkdownV2(s.error ?? "невідома помилка"),
+      "",
+      timestampLine(),
+    ].join("\n");
+  }
+
+  const lines = [
+    s.anomaly ? "🟡 *Оновлення курсу*" : "🟢 *Оновлення курсу*",
+    "",
+    `*USD:* ${escapeMarkdownV2(String(s.rates!.USD))}  *EUR:* ${escapeMarkdownV2(String(s.rates!.EUR))}`,
+    `*Змінено позицій:* ${s.changed}`,
+  ];
+  if (s.anomaly) {
+    lines.push("", `⚠️ ${escapeMarkdownV2(s.anomaly)}`);
+  }
+  lines.push("", timestampLine());
+  return lines.join("\n");
+}
+
+export async function sendRateRefreshNotification(summary: RateRefreshSummary): Promise<void> {
+  await sendTelegramMessage(formatRateRefreshMessage(summary));
+}
