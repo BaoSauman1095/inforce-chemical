@@ -3,8 +3,8 @@
  * lib/rateRefresh.ts (використовується і тут, і в крон-роуті
  * app/api/cron/refresh-rate/route.ts для щоденного автозапуску).
  *
- * Курс береться з публічного API ПриватБанку (безготівковий курс,
- * coursid=11, без ключа) — найближчий безкоштовний відповідник
+ * Курс береться з публічного API Monobank (без ключа), курс продажу
+ * (rateSell) — вищий з пари, найближчий безкоштовний відповідник
  * міжбанківського курсу продажу. Або вручну прапорцями --usd / --eur.
  *
  * Запуск:
@@ -14,7 +14,7 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { applyChanges, fetchRatesFromPrivat24, type Rates } from "../lib/rateRefresh";
+import { applyChanges, fetchRatesFromMonobank, type Rates } from "../lib/rateRefresh";
 
 const CATALOG_PATH = join(__dirname, "..", "lib", "catalog-data.ts");
 
@@ -34,9 +34,9 @@ async function main() {
   const rates: Rates =
     args.usd !== undefined && args.eur !== undefined
       ? { USD: args.usd, EUR: args.eur }
-      : await fetchRatesFromPrivat24();
+      : await fetchRatesFromMonobank();
 
-  console.log(`Курс (безготівковий, ПриватБанк): USD ${rates.USD}, EUR ${rates.EUR}\n`);
+  console.log(`Курс продажу (Monobank): USD ${rates.USD}, EUR ${rates.EUR}\n`);
 
   const src = readFileSync(CATALOG_PATH, "utf-8");
   const { next, changes } = applyChanges(src, rates);
