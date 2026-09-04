@@ -15,8 +15,17 @@ export interface DosageRow {
 export interface PackOption {
   /** Displayed size label, e.g. "5 л" or "25 кг". */
   label: string;
-  /** Per-unit price (грн) when this specific pack size is selected. */
+  /** Per-unit price (грн, з ПДВ) — те, що показується й рахується на сайті. */
   price?: number;
+  /**
+   * Індикативна ціна постачальника (без ПДВ, у валюті) і сама валюта — коли
+   * задані, `scripts/refresh-rate.ts` перераховує з них `price` за свіжим
+   * курсом з kurs.com.ua замість курсу, зашитого в прайс постачальника.
+   * Позиції без цих полів свіжий курс не чіпає — `price` лишається таким,
+   * яким його востаннє вирахувано вручну з прайсу.
+   */
+  currency?: "USD" | "EUR";
+  indicativePrice?: number;
 }
 
 export interface CatalogItem {
