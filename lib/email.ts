@@ -18,7 +18,7 @@ function escapeHtml(value: string): string {
     .replace(/>/g, "&gt;");
 }
 
-const MANAGER_EMAIL = "vladyslav.podterebo@ifchemical.com";
+const MANAGER_EMAILS = ["vladyslav.podterebo@ifchemical.com", "oleksandr.lanin@ifchemical.com"];
 const FROM_ADDRESS = "IN FORCE CHEMICAL <noreply@inforcechemical.com>";
 
 export class EmailNotifyError extends Error {
@@ -45,7 +45,7 @@ async function sendEmail(subject: string, html: string): Promise<void> {
       },
       body: JSON.stringify({
         from: FROM_ADDRESS,
-        to: MANAGER_EMAIL,
+        to: MANAGER_EMAILS,
         subject,
         html,
       }),
