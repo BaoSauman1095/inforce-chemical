@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { contactFormSchema } from "@/lib/validation";
 import { sendTelegramLead, TelegramNotifyError } from "@/lib/telegram";
+import { sendLeadEmail } from "@/lib/email";
 import { getClientIp, isRateLimited } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -36,6 +37,12 @@ export async function POST(req: NextRequest) {
     }
 
     await sendTelegramLead(parsed);
+    // Пошта — додатковий канал: чекаємо завершення (інакше serverless-функція
+    // може обірвати відправку одразу після return), але збій тут не має
+    // блокувати відповідь клієнту.
+    await sendLeadEmail(parsed).catch((e) =>
+      console.error("[send-notification] Email delivery failed:", e)
+    );
 
     return NextResponse.json({ ok: true });
   } catch (err) {

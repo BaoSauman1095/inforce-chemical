@@ -3,6 +3,7 @@ import { ZodError } from "zod";
 import { cartOrderSchema } from "@/lib/validation";
 import { resolveOrderItems } from "@/lib/products";
 import { sendCartOrder, TelegramNotifyError } from "@/lib/telegram";
+import { sendCartOrderEmail } from "@/lib/email";
 import { getClientIp, isRateLimited } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -49,6 +50,10 @@ export async function POST(req: NextRequest) {
     }
 
     await sendCartOrder(parsed, lines);
+    // Пошта — додатковий канал, збій тут не має блокувати відповідь клієнту.
+    await sendCartOrderEmail(parsed, lines).catch((e) =>
+      console.error("[cart-order] Email delivery failed:", e)
+    );
 
     return NextResponse.json({ ok: true });
   } catch (err) {
