@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { productQuestionSchema } from "@/lib/validation";
 import { sendProductQuestion, TelegramNotifyError } from "@/lib/telegram";
+import { sendProductQuestionEmail } from "@/lib/email";
 import { getClientIp, isRateLimited } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -36,6 +37,10 @@ export async function POST(req: NextRequest) {
     }
 
     await sendProductQuestion(parsed);
+    // Пошта — додатковий канал, збій тут не має блокувати відповідь клієнту.
+    await sendProductQuestionEmail(parsed).catch((e) =>
+      console.error("[product-question] Email delivery failed:", e)
+    );
 
     return NextResponse.json({ ok: true });
   } catch (err) {
