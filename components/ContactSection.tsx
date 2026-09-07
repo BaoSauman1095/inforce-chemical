@@ -125,7 +125,8 @@ export default function ContactSection() {
             </p>
             <p className="mt-2.5 text-[15px] leading-relaxed text-paper/[.72]">
               Доставка по всій Україні. Відвантаження зі складу після
-              погодження заявки.
+              погодження заявки. Вартість доставки згідно з тарифами
+              перевізника.
             </p>
           </div>
         </div>
