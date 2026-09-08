@@ -4,8 +4,8 @@ export const SITE_URL =
 
 export const SITE_NAME = "IN FORCE CHEMICAL";
 
-export const PHONE_DISPLAY = process.env.NEXT_PUBLIC_PHONE ?? "+380 66 571 28 00";
-export const PHONE_TEL = process.env.NEXT_PUBLIC_PHONE_TEL ?? "+380665712800";
+export const PHONE_DISPLAY = "+380 66 571 28 00";
+export const PHONE_TEL = "+380665712800";
 
 export const SOCIALS = {
   instagram: "https://instagram.com/inforcechemical_",

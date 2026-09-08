@@ -307,9 +307,10 @@ Vercel → Project Settings → Environment Variables (для продакшен
 TELEGRAM_BOT_TOKEN=<токен бота, див. .env.local або Vercel>
 TELEGRAM_CHAT_ID=<id групи, див. .env.local або Vercel>
 NEXT_PUBLIC_SITE_URL=https://inforce-chemical.vercel.app
-NEXT_PUBLIC_PHONE=+380 66 571 28 00
-NEXT_PUBLIC_PHONE_TEL=+380665712800
 ```
+
+Телефон (`PHONE_DISPLAY`/`PHONE_TEL`) — не env var, а константи прямо в
+`lib/constants.ts`, свідомо (менше клопоту, ніж через Vercel env var).
 
 ⚠️ Не перевірялось повторно в цій серії сесій, чи `.env.local` досі має
 стару заглушку `NEXT_PUBLIC_SITE_URL=https://inforcechemical.ua` — перевірте
