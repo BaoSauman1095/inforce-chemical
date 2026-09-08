@@ -307,8 +307,8 @@ Vercel → Project Settings → Environment Variables (для продакшен
 TELEGRAM_BOT_TOKEN=<токен бота, див. .env.local або Vercel>
 TELEGRAM_CHAT_ID=<id групи, див. .env.local або Vercel>
 NEXT_PUBLIC_SITE_URL=https://inforce-chemical.vercel.app
-NEXT_PUBLIC_PHONE=0-800-33-10-80
-NEXT_PUBLIC_PHONE_TEL=0800331080
+NEXT_PUBLIC_PHONE=+380 66 571 28 00
+NEXT_PUBLIC_PHONE_TEL=+380665712800
 ```
 
 ⚠️ Не перевірялось повторно в цій серії сесій, чи `.env.local` досі має
