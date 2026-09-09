@@ -76,9 +76,6 @@ export default function ContactSection() {
             >
               {PHONE_DISPLAY}
             </a>
-            <p className="mt-2 text-sm leading-relaxed text-paper/55">
-              Безкоштовно з усіх номерів України
-            </p>
           </div>
 
           <div className="h-px bg-white/10" />
