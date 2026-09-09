@@ -1678,7 +1678,6 @@ const CATALOG_SOURCE: Catalog = {
           slug: "propley-bt",
           name: "Проплей БТ",
           brand: "Ocean Invest",
-          hidden: true,
           packs: [{ label: "20 л", price: 328 }],
           unit: "л",
           tagline: "Ґрунтовий гербіцид проти злакових бур'янів",
