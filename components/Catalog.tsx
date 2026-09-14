@@ -13,7 +13,13 @@ import type { CatalogTab, FlatCatalogItem } from "@/lib/types";
 const PAGE_SIZE = 12;
 
 function CatalogInner() {
-  const [tab, setTab] = useState<CatalogTab>("seeds");
+  // Повернення з картки товару веде на /products?tab=<вкладка> — щоб
+  // список відкрився там, звідки товар відкрили, а не завжди на «Насінні».
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const initialTab: CatalogTab = tabParam === "fert" || tabParam === "prot" ? tabParam : "seeds";
+
+  const [tab, setTab] = useState<CatalogTab>(initialTab);
   const [brand, setBrand] = useState("all");
   const [crop, setCrop] = useState("all");
   const [group, setGroup] = useState("all");
@@ -23,7 +29,6 @@ function CatalogInner() {
 
   // Клік по логотипу партнера веде на /?brand=<бренд>#catalog — звідси
   // підхоплюємо бренд, перемикаємось на його вкладку й прокручуємось сюди.
-  const searchParams = useSearchParams();
   const brandParam = searchParams.get("brand");
 
   useEffect(() => {
