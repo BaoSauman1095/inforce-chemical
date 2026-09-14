@@ -8,18 +8,35 @@ import { CATALOG, CATALOG_TABS } from "@/lib/catalog-data";
 import { CROP_FILTERS, itemCropSources, matchesCrop } from "@/lib/crops";
 import { findTabForBrand } from "@/lib/products";
 import { cn } from "@/lib/utils";
-import type { CatalogTab, FlatCatalogItem } from "@/lib/types";
+import type { CatalogGroup, CatalogTab, FlatCatalogItem } from "@/lib/types";
 
 const PAGE_SIZE = 12;
+
+/** «Всі товари» — псевдовкладка, що не звужує каталог до жодної з трьох. */
+type TabFilter = CatalogTab | "all";
+
+const TAB_OPTIONS: { key: TabFilter; label: string; shortLabel?: string; icon: string }[] = [
+  { key: "all", label: "Всі товари", shortLabel: "Всі", icon: "🗂️" },
+  ...CATALOG_TABS,
+];
+
+type GroupWithTab = CatalogGroup & { tabKey: CatalogTab };
+
+// Порахувати один раз на модуль: дані каталогу статичні, перераховувати
+// об'єднаний список при кожному рендері немає сенсу.
+const ALL_GROUPS: GroupWithTab[] = CATALOG_TABS.flatMap((t) =>
+  CATALOG[t.key].map((g) => ({ ...g, tabKey: t.key }))
+);
 
 function CatalogInner() {
   // Повернення з картки товару веде на /products?tab=<вкладка> — щоб
   // список відкрився там, звідки товар відкрили, а не завжди на «Насінні».
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
-  const initialTab: CatalogTab = tabParam === "fert" || tabParam === "prot" ? tabParam : "seeds";
+  const initialTab: TabFilter =
+    tabParam === "seeds" || tabParam === "fert" || tabParam === "prot" ? tabParam : "all";
 
-  const [tab, setTab] = useState<CatalogTab>(initialTab);
+  const [tab, setTab] = useState<TabFilter>(initialTab);
   const [brand, setBrand] = useState("all");
   const [crop, setCrop] = useState("all");
   const [group, setGroup] = useState("all");
@@ -44,7 +61,17 @@ function CatalogInner() {
     document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
   }, [brandParam]);
 
-  const groups = CATALOG[tab];
+  // «Всі товари» — об'єднання трьох вкладок; інакше показуємо лише обрану.
+  const groups: GroupWithTab[] = useMemo(
+    () => (tab === "all" ? ALL_GROUPS : ALL_GROUPS.filter((g) => g.tabKey === tab)),
+    [tab]
+  );
+
+  // Пошук шукає по всьому каталогу незалежно від обраної вкладки: людина, що
+  // набирає назву препарату, не має знати заздалегідь, у «Добривах» він чи
+  // деінде — звужувати результати до поточної вкладки лише заважало б.
+  const searchActive = query.trim().length > 0;
+  const searchGroups = searchActive ? ALL_GROUPS : groups;
 
   const brands = useMemo(() => {
     const set = new Set<string>();
@@ -97,7 +124,7 @@ function CatalogInner() {
     const q = query.trim().toLowerCase();
     const out: FlatCatalogItem[] = [];
 
-    groups.forEach((g) => {
+    searchGroups.forEach((g) => {
       if (group !== "all" && g.title !== group) return;
       g.items.forEach((it) => {
         if (brand !== "all" && it.brand !== brand) return;
@@ -107,19 +134,19 @@ function CatalogInner() {
           ...it,
           group: g.title,
           icon: g.icon,
-          tab,
+          tab: g.tabKey,
           slotLabel: `фото — ${it.name}`,
         });
       });
     });
 
     return out;
-  }, [groups, group, brand, activeCrop, query, tab]);
+  }, [searchGroups, group, brand, activeCrop, query]);
 
   const items = allItems.slice(0, visible);
   const hasMore = allItems.length > items.length;
 
-  function selectTab(next: CatalogTab) {
+  function selectTab(next: TabFilter) {
     setTab(next);
     setBrand("all");
     setGroup("all");
@@ -184,8 +211,8 @@ function CatalogInner() {
       {/* Вкладки й пошук — один виділений блок: це головний вибір на сторінці. */}
       <div className="mb-4 rounded-[22px] border border-brand/40 bg-brand/[.10] p-2.5 shadow-[0_0_0_1px_rgba(139,26,43,.14),0_18px_40px_-24px_rgba(139,26,43,.8)]">
         <div className="flex flex-col gap-2.5 lg:flex-row lg:items-stretch">
-          <div className="grid grid-cols-3 gap-2 lg:flex lg:flex-none">
-            {CATALOG_TABS.map((t) => {
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:flex lg:flex-none">
+            {TAB_OPTIONS.map((t) => {
               const active = tab === t.key;
               return (
                 <button
