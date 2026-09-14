@@ -122,25 +122,42 @@ function CatalogInner() {
 
   const allItems: FlatCatalogItem[] = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const out: FlatCatalogItem[] = [];
 
-    searchGroups.forEach((g) => {
-      if (group !== "all" && g.title !== group) return;
-      g.items.forEach((it) => {
-        if (brand !== "all" && it.brand !== brand) return;
-        if (activeCrop && !matchesCrop(itemCropSources(it, g.title), activeCrop)) return;
-        if (q && !`${it.name} ${it.brand}`.toLowerCase().includes(q)) return;
-        out.push({
-          ...it,
-          group: g.title,
-          icon: g.icon,
-          tab: g.tabKey,
-          slotLabel: `фото — ${it.name}`,
+    // Рахуємо кожну вкладку окремо, а тоді перемежовуємо по черзі (насіння /
+    // добриво / ЗЗР). Просте злиття списків підряд на вкладці «Всі товари»
+    // показало б спершу суцільне насіння — його в каталозі найбільше, і
+    // погортавши кілька екранів, добрива й ЗЗР так і не з'являться.
+    const perTab: FlatCatalogItem[][] = CATALOG_TABS.map((t) => {
+      const out: FlatCatalogItem[] = [];
+      searchGroups
+        .filter((g) => g.tabKey === t.key)
+        .forEach((g) => {
+          if (group !== "all" && g.title !== group) return;
+          g.items.forEach((it) => {
+            if (brand !== "all" && it.brand !== brand) return;
+            if (activeCrop && !matchesCrop(itemCropSources(it, g.title), activeCrop)) return;
+            if (q && !`${it.name} ${it.brand}`.toLowerCase().includes(q)) return;
+            out.push({
+              ...it,
+              group: g.title,
+              icon: g.icon,
+              tab: g.tabKey,
+              slotLabel: `фото — ${it.name}`,
+            });
+          });
         });
-      });
+      return out;
     });
 
-    return out;
+    const merged: FlatCatalogItem[] = [];
+    const maxLen = Math.max(0, ...perTab.map((arr) => arr.length));
+    for (let i = 0; i < maxLen; i++) {
+      perTab.forEach((arr) => {
+        if (arr[i]) merged.push(arr[i]);
+      });
+    }
+
+    return merged;
   }, [searchGroups, group, brand, activeCrop, query]);
 
   const items = allItems.slice(0, visible);
