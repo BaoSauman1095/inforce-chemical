@@ -1099,7 +1099,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "hidrofert-15-5-30",
           name: "Гідроферт 15.5.30",
           brand: "Biolchim",
-          packs: [{ label: "25 кг", price: 141, currency: "EUR", indicativePrice: 2.25 }],
+          packs: [{ label: "25 кг", price: 140, currency: "EUR", indicativePrice: 2.25 }],
           unit: "кг",
           tagline: "Калійне добриво для наливу коренеплодів і плодів",
           description:
@@ -1210,7 +1210,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kropmaks",
           name: "Кропмакс",
           brand: "Holland Farming",
-          packs: [{ label: "1 л", price: 1160, currency: "EUR", indicativePrice: 18.57 }, { label: "5 л", price: 1128, currency: "EUR", indicativePrice: 18.05 }, { label: "20 л", price: 1080, currency: "EUR", indicativePrice: 17.28 }],
+          packs: [{ label: "1 л", price: 1159, currency: "EUR", indicativePrice: 18.57 }, { label: "5 л", price: 1126, currency: "EUR", indicativePrice: 18.05 }, { label: "20 л", price: 1078, currency: "EUR", indicativePrice: 17.28 }],
           unit: "л",
           tagline: "Ультраконцентрований біостимулятор з амінокислотами та фітогормонами",
           description:
@@ -1234,7 +1234,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "filloton",
           name: "Філлотон",
           brand: "Biolchim",
-          packs: [{ label: "1 л", price: 390, currency: "EUR", indicativePrice: 6.24 }, { label: "5 л", price: 390, currency: "EUR", indicativePrice: 6.24 }, { label: "20 л", price: 390, currency: "EUR", indicativePrice: 6.24 }],
+          packs: [{ label: "1 л", price: 389, currency: "EUR", indicativePrice: 6.24 }, { label: "5 л", price: 389, currency: "EUR", indicativePrice: 6.24 }, { label: "20 л", price: 389, currency: "EUR", indicativePrice: 6.24 }],
           unit: "л",
           tagline: "Біостимулятор для відновлення рослини після стресу",
           description:
