@@ -40,7 +40,7 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
       <Breadcrumbs
         items={[
           { label: "Головна", href: "/" },
-          { label: "Каталог", href: "/products" },
+          { label: "Каталог", href: `/products?tab=${product.tab}` },
           { label: product.group },
         ]}
       />
@@ -53,7 +53,7 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
       </div>
 
       <Link
-        href="/products"
+        href={`/products?tab=${product.tab}`}
         className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-paper/60 transition-colors hover:text-paper"
       >
         ← Назад до каталогу
