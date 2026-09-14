@@ -9,7 +9,7 @@ export default function ProductsLayout({ children }: { children: React.ReactNode
       <SmoothScroll />
       <div className="relative z-10">
         <Header />
-        <main>{children}</main>
+        <main className="pb-24 md:pb-0">{children}</main>
         <Footer />
         <MobileCTA />
       </div>
