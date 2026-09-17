@@ -999,7 +999,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "hidrofert-13-40-13",
           name: "Гідроферт 13.40.13",
           brand: "Biolchim",
-          packs: [{ label: "25 кг", price: 184, currency: "EUR", indicativePrice: 2.95 }],
+          packs: [{ label: "25 кг", price: 183, currency: "EUR", indicativePrice: 2.95 }],
           unit: "кг",
           tagline: "Стартове водорозчинне добриво з високим вмістом фосфору",
           description:
@@ -1049,7 +1049,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "hidrofert-18-18-18",
           name: "Гідроферт 18.18.18",
           brand: "Biolchim",
-          packs: [{ label: "25 кг", price: 145, currency: "EUR", indicativePrice: 2.32 }],
+          packs: [{ label: "25 кг", price: 144, currency: "EUR", indicativePrice: 2.32 }],
           unit: "кг",
           tagline: "Збалансоване NPK-добриво для активного вегетативного росту",
           description:
@@ -1074,7 +1074,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "hidrofert-20-20-20",
           name: "Гідроферт 20.20.20",
           brand: "Biolchim",
-          packs: [{ label: "25 кг", price: 161, currency: "EUR", indicativePrice: 2.58 }],
+          packs: [{ label: "25 кг", price: 160, currency: "EUR", indicativePrice: 2.58 }],
           unit: "кг",
           tagline: "Концентроване NPK-добриво для крапельного зрошення",
           description:
@@ -1130,7 +1130,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "mikrofol-kombi",
           name: "Мікрофол Комбі",
           brand: "Biolchim",
-          packs: [{ label: "1 кг", price: 555, currency: "EUR", indicativePrice: 8.89 }],
+          packs: [{ label: "1 кг", price: 553, currency: "EUR", indicativePrice: 8.89 }],
           unit: "кг",
           tagline: "Концентрований комплекс мікроелементів з високим вмістом магнію",
           description:
@@ -1155,7 +1155,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "multybor-21",
           name: "Мультибор 21",
           brand: "Biolchim",
-          packs: [{ label: "10 кг", price: 267, currency: "EUR", indicativePrice: 4.28 }],
+          packs: [{ label: "10 кг", price: 266, currency: "EUR", indicativePrice: 4.28 }],
           unit: "кг",
           tagline: "Концентроване борне добриво для цвітіння й запилення",
           description:
@@ -1180,7 +1180,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "mahnistart-np-zn",
           name: "Магністарт NP Zn",
           brand: "Biolchim",
-          packs: [{ label: "15 кг", price: 150, currency: "EUR", indicativePrice: 2.4 }],
+          packs: [{ label: "15 кг", price: 149, currency: "EUR", indicativePrice: 2.4 }],
           unit: "кг",
           tagline: "Мікрогранульоване стартове добриво з фосфором і цинком",
           description:
@@ -1210,7 +1210,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kropmaks",
           name: "Кропмакс",
           brand: "Holland Farming",
-          packs: [{ label: "1 л", price: 1159, currency: "EUR", indicativePrice: 18.57 }, { label: "5 л", price: 1126, currency: "EUR", indicativePrice: 18.05 }, { label: "20 л", price: 1078, currency: "EUR", indicativePrice: 17.28 }],
+          packs: [{ label: "1 л", price: 1154, currency: "EUR", indicativePrice: 18.57 }, { label: "5 л", price: 1122, currency: "EUR", indicativePrice: 18.05 }, { label: "20 л", price: 1074, currency: "EUR", indicativePrice: 17.28 }],
           unit: "л",
           tagline: "Ультраконцентрований біостимулятор з амінокислотами та фітогормонами",
           description:
@@ -1234,7 +1234,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "filloton",
           name: "Філлотон",
           brand: "Biolchim",
-          packs: [{ label: "1 л", price: 389, currency: "EUR", indicativePrice: 6.24 }, { label: "5 л", price: 389, currency: "EUR", indicativePrice: 6.24 }, { label: "20 л", price: 389, currency: "EUR", indicativePrice: 6.24 }],
+          packs: [{ label: "1 л", price: 388, currency: "EUR", indicativePrice: 6.24 }, { label: "5 л", price: 388, currency: "EUR", indicativePrice: 6.24 }, { label: "20 л", price: 388, currency: "EUR", indicativePrice: 6.24 }],
           unit: "л",
           tagline: "Біостимулятор для відновлення рослини після стресу",
           description:
