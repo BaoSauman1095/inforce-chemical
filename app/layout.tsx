@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Montserrat } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { PHONE_DISPLAY, PHONE_TEL, SITE_NAME, SITE_URL, SOCIALS } from "@/lib/constants";
 import CartProvider from "@/components/CartProvider";
@@ -148,6 +149,7 @@ export default function RootLayout({
         <p className="sr-only">
           Телефон для замовлень: {PHONE_DISPLAY}
         </p>
+        <Analytics />
       </body>
     </html>
   );
