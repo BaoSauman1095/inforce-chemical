@@ -181,6 +181,21 @@ export const PRODUCT_PHOTO_SLUGS = new Set([
   "iolen",
   "ksilo-sulfo",
   "nemo-cl",
+  "avenher",
+  "aviron",
+  "ambasador",
+  "armada",
+  "arhitekt",
+  "austin",
+  "konstruktor",
+  "amaron",
+  "naruto",
+  "hoshi",
+  "inochi",
+  "autbag",
+  "klok",
+  "liron",
+  "dikvat-himagro",
 ]);
 
 export function productPhotoSrc(slug: string): string | null {
