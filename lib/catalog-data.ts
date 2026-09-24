@@ -1491,7 +1491,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "halop-bt",
           name: "Галоп БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "1 л", price: 217, currency: "USD", indicativePrice: 4.01 }, { label: "20 л", price: 236, currency: "USD", indicativePrice: 4.36 }],
+          packs: [{ label: "1 л", price: 217, currency: "USD", indicativePrice: 4.01 }, { label: "20 л", price: 242, currency: "USD", indicativePrice: 4.47 }],
           unit: "л",
           tagline: "Гербіцид суцільної дії для знищення бур'янів і десикації",
           description:
@@ -2147,7 +2147,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "total-himagro",
           name: "Тотал",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 298, currency: "USD", indicativePrice: 5.51 }, { label: "5 л", price: 269, currency: "USD", indicativePrice: 4.98 }, { label: "10 л", price: 218, currency: "USD", indicativePrice: 4.03 }, { label: "20 л", price: 194, currency: "USD", indicativePrice: 3.59 }],
+          packs: [{ label: "1 л", price: 306, currency: "USD", indicativePrice: 5.67 }, { label: "5 л", price: 276, currency: "USD", indicativePrice: 5.1 }, { label: "10 л", price: 226, currency: "USD", indicativePrice: 4.18 }, { label: "20 л", price: 223, currency: "USD", indicativePrice: 4.13 }],
           unit: "л",
           tagline: "Гербіцид суцільної дії для знищення бур'янів і десикації",
           description:
@@ -2174,7 +2174,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "total-k-himagro",
           name: "Тотал К",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 362, currency: "USD", indicativePrice: 6.69 }, { label: "5 л", price: 307, currency: "USD", indicativePrice: 5.68 }, { label: "10 л", price: 272, currency: "USD", indicativePrice: 5.03 }, { label: "20 л", price: 253, currency: "USD", indicativePrice: 4.68 }],
+          packs: [{ label: "1 л", price: 373, currency: "USD", indicativePrice: 6.9 }, { label: "5 л", price: 319, currency: "USD", indicativePrice: 5.9 }, { label: "10 л", price: 280, currency: "USD", indicativePrice: 5.18 }, { label: "20 л", price: 258, currency: "USD", indicativePrice: 4.78 }],
           unit: "л",
           tagline: "Гербіцид суцільної дії з калійною сіллю гліфосату для авіаобробки",
           description:
@@ -2201,7 +2201,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "total-pauer-himagro",
           name: "Тотал Пауер",
           brand: "Himagro M",
-          packs: [{ label: "1 кг", price: 431, currency: "USD", indicativePrice: 7.97 }, { label: "10 кг", price: 377, currency: "USD", indicativePrice: 6.98 }],
+          packs: [{ label: "1 кг", price: 440, currency: "USD", indicativePrice: 8.14 }, { label: "10 кг", price: 397, currency: "USD", indicativePrice: 7.35 }],
           unit: "кг",
           tagline: "Гліфосат найвищої концентрації з мінімальною нормою витрати",
           description:
@@ -4319,7 +4319,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "zhar-bt",
           name: "Жар БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "20 л", price: 140 }],
+          packs: [{ label: "20 л", price: 140, currency: "USD", indicativePrice: 2.59 }],
           unit: "л",
           tagline: "Швидкий контактний десикант без обмежень на висів наступних культур",
           description:
@@ -4464,7 +4464,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "fomover-bt",
           name: "Фомовер БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "1 л", price: 558 }],
+          packs: [{ label: "1 л", price: 558, currency: "USD", indicativePrice: 10.33 }],
           unit: "л",
           tagline: "Концентрований суперзмочувач для проблемних поверхонь листя",
           description:
