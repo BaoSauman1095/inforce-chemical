@@ -15,7 +15,7 @@ export default function RelatedProducts({ items }: { items: FlatCatalogItem[] })
         <span className="h-px flex-1 bg-white/[.12]" />
       </div>
 
-      <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-[18px] lg:grid-cols-4">
         {items.map((item) => {
           const photoSrc = productPhotoSrc(item.slug);
           return (

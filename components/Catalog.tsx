@@ -302,7 +302,7 @@ function CatalogInner() {
 
       <div
         key={`${tab}-${group}-${brand}-${crop}-${query}`}
-        className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        className="grid grid-cols-2 gap-3 sm:gap-[18px] lg:grid-cols-3 xl:grid-cols-4"
       >
         {items.map((item) => (
           <ProductCard key={`${item.group}-${item.brand}-${item.name}`} item={item} />
