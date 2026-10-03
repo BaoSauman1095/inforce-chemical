@@ -1310,7 +1310,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "mikrofol-kombi",
           name: "Мікрофол Комбі",
           brand: "Biolchim",
-          packs: [{ label: "1 кг", price: 545, currency: "EUR", indicativePrice: 8.89 }],
+          packs: [{ label: "1 кг", price: 544, currency: "EUR", indicativePrice: 8.89 }],
           unit: "кг",
           tagline: "Концентрований комплекс мікроелементів з високим вмістом магнію",
           description:
@@ -1390,7 +1390,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kropmaks",
           name: "Кропмакс",
           brand: "Holland Farming",
-          packs: [{ label: "1 л", price: 1139, currency: "EUR", indicativePrice: 18.57 }, { label: "5 л", price: 1107, currency: "EUR", indicativePrice: 18.05 }, { label: "20 л", price: 1060, currency: "EUR", indicativePrice: 17.28 }],
+          packs: [{ label: "1 л", price: 1137, currency: "EUR", indicativePrice: 18.57 }, { label: "5 л", price: 1105, currency: "EUR", indicativePrice: 18.05 }, { label: "20 л", price: 1058, currency: "EUR", indicativePrice: 17.28 }],
           unit: "л",
           tagline: "Ультраконцентрований біостимулятор з амінокислотами та фітогормонами",
           description:
@@ -1414,7 +1414,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "filloton",
           name: "Філлотон",
           brand: "Biolchim",
-          packs: [{ label: "1 л", price: 383, currency: "EUR", indicativePrice: 6.24 }, { label: "5 л", price: 383, currency: "EUR", indicativePrice: 6.24 }, { label: "20 л", price: 383, currency: "EUR", indicativePrice: 6.24 }],
+          packs: [{ label: "1 л", price: 382, currency: "EUR", indicativePrice: 6.24 }, { label: "5 л", price: 382, currency: "EUR", indicativePrice: 6.24 }, { label: "20 л", price: 382, currency: "EUR", indicativePrice: 6.24 }],
           unit: "л",
           tagline: "Біостимулятор для відновлення рослини після стресу",
           description:
