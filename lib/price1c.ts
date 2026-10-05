@@ -184,6 +184,11 @@ interface Splice {
   replacement: string;
 }
 
+/** Мітка партії: `packLabel`, а коли порожній — `characteristic` (так портал віддає «залишки 2024»). */
+function labelOf(p: Price1CPack): string | null {
+  return p.packLabel || p.characteristic || null;
+}
+
 /** Готове число для `price` каталогу під цю пачку — ставка чи сума за упаковку, залежно від типу пачки. */
 function pickPrice(pack: Price1CPack, label: string, unit: string): number {
   return isFlatPackPrice(label, unit) ? pack.priceUahPerPack : pack.priceUahPerUnit;
@@ -223,16 +228,14 @@ export function applyPrice1CChanges(
 
         let wantedIndex = entry.packs.findIndex((p) => p.packLabel === label);
         if (wantedIndex === -1 && label === singleCatalogPack) {
-          wantedIndex = entry.packs.findIndex((p) => p.packLabel === null);
-        }
-        if (wantedIndex === -1 && label === singleCatalogPack) {
           // Партії «залишки 20XX» / «(акція)»: у каталозі одна пачка, а портал
           // віддає кілька партій окремими фасуваннями — береться найбільша
           // адекватна ціна серед них (рішення власника).
           let best = -1;
           let bestPrice = 0;
           entry.packs.forEach((p, i) => {
-            if (!p.packLabel || !LEFTOVER_LABEL_RE.test(p.packLabel)) return;
+            const l = labelOf(p);
+            if (!l || !LEFTOVER_LABEL_RE.test(l)) return;
             usedPortalPacks.add(i);
             const price = pickPrice(p, label, unit);
             if (!Number.isFinite(price) || price <= 0 || price > MAX_SANE_PRICE) return;
@@ -242,6 +245,9 @@ export function applyPrice1CChanges(
             }
           });
           wantedIndex = best;
+        }
+        if (wantedIndex === -1 && label === singleCatalogPack) {
+          wantedIndex = entry.packs.findIndex((p) => !p.packLabel && !p.characteristic);
         }
         if (wantedIndex === -1) return full; // портал нічого не каже про цю пачку — не чіпаємо
         usedPortalPacks.add(wantedIndex);
@@ -267,8 +273,11 @@ export function applyPrice1CChanges(
 
     entry.packs.forEach((p, i) => {
       if (usedPortalPacks.has(i)) return;
-      const labelDesc = p.packLabel ?? p.characteristic ?? "(без мітки)";
-      warnings.push(`${slug}: у каталозі немає пачки з міткою "${labelDesc}" — пропущено`);
+      const labelDesc = labelOf(p) ?? "(без мітки)";
+      warnings.push(
+        `${slug}: у каталозі немає пачки з міткою "${labelDesc}" — пропущено ` +
+          `[packLabel=${JSON.stringify(p.packLabel)}, characteristic=${JSON.stringify(p.characteristic)}, size=${p.packSize}]`
+      );
     });
 
     if (entry.unit !== undefined && entry.unit !== unit) {
