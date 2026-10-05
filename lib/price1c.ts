@@ -266,10 +266,12 @@ export function applyPrice1CChanges(
         let wantedIndex = entry.packs.findIndex((p) => p.packLabel === label && !isExcludedVariant(p));
         if (wantedIndex === -1) {
           // Інший запис того самого розміру: у каталозі «0,25 кг», на порталі «250 гр».
+          // Лише для розпізнаних фасувань: у нерозпізнаних (packLabel null) packSize=1
+          // — це заглушка, а не розмір («залишки 2021» не є пачкою «1 кг»).
           const size = catalogPackSize(label, unit);
           if (size !== undefined) {
             wantedIndex = entry.packs.findIndex(
-              (p) => !isExcludedVariant(p) && Math.abs(p.packSize - size) < 1e-9
+              (p) => !!p.packLabel && !isExcludedVariant(p) && Math.abs(p.packSize - size) < 1e-9
             );
           }
         }
