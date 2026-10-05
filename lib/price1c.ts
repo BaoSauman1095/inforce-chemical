@@ -75,6 +75,11 @@ import { isFlatPackPrice } from "./utils";
  *    відповіді — це сигнал, що портал раптом почав віддавати щось інше,
  *    ніж «індикативна передоплата в гривні» (власник явно просив ТІЛЬКИ
  *    її) — весь запуск скасовується, зміни каталогу не застосовуються.
+ *  - Службові варіанти фасування («часткова втрата», «знижка», «УУ»,
+ *    списання, утилізація, товарний вигляд) ніколи не беруться й не
+ *    потрапляють у попередження.
+ *  - Фасування зіставляється за міткою, а якщо мітки різняться — за
+ *    розміром («0,25 кг» у каталозі ↔ «250 гр», size 0.25 на порталі).
  *  - Партії «залишки 20XX» / «(акція)»: якщо в каталозі під цим slug одна
  *    пачка, а портал віддає лише такі партії — береться найбільша
  *    адекватна ціна серед них. Партії з іншими мітками («пошкоджено
@@ -163,6 +168,25 @@ export async function fetchPrices1C(): Promise<Price1CEntry[]> {
 
 const MAX_SANE_PRICE = 10_000_000;
 const LEFTOVER_LABEL_RE = /залишки|акці/i;
+// Службові/дефектні варіанти фасування, які на сайт не йдуть (початкове
+// правило власника): часткова втрата, знижка, списання, утилізація, УУ,
+// товарний вигляд.
+const EXCLUDED_VARIANT_RE = /втрат|знижк|списан|утилізац|товарн|(^|[\s,(])УУ([\s,)]|$)/i;
+
+function isExcludedVariant(p: Price1CPack): boolean {
+  return EXCLUDED_VARIANT_RE.test(`${p.packLabel ?? ""} ${p.characteristic ?? ""}`);
+}
+
+/** Розмір пачки з мітки каталогу в базових одиницях товару («0,25 кг» → 0.25, «500 гр» при «кг» → 0.5). */
+function catalogPackSize(label: string, unit: string): number | undefined {
+  const m = label.trim().match(/^(\d+(?:[.,]\d+)?)\s*(кг|гр|г|л|мл)$/i);
+  if (!m) return undefined;
+  const n = Number(m[1].replace(",", "."));
+  const u = m[2].toLowerCase();
+  if (unit === "кг") return u === "кг" ? n : u === "гр" || u === "г" ? n / 1000 : undefined;
+  if (unit === "л") return u === "л" ? n : u === "мл" ? n / 1000 : undefined;
+  return undefined;
+}
 
 // Іменовані групи вимагають ES2018+, а спільний tsconfig проєкту тримає
 // ES2017 — тож нумеровані групи, так само як у lib/rateRefresh.ts.
@@ -226,7 +250,16 @@ export function applyPrice1CChanges(
       (full, label: string, priceStr: string | undefined) => {
         seenLabels.add(label);
 
-        let wantedIndex = entry.packs.findIndex((p) => p.packLabel === label);
+        let wantedIndex = entry.packs.findIndex((p) => p.packLabel === label && !isExcludedVariant(p));
+        if (wantedIndex === -1) {
+          // Інший запис того самого розміру: у каталозі «0,25 кг», на порталі «250 гр».
+          const size = catalogPackSize(label, unit);
+          if (size !== undefined) {
+            wantedIndex = entry.packs.findIndex(
+              (p) => !isExcludedVariant(p) && Math.abs(p.packSize - size) < 1e-9
+            );
+          }
+        }
         if (wantedIndex === -1 && label === singleCatalogPack) {
           // Партії «залишки 20XX» / «(акція)»: у каталозі одна пачка, а портал
           // віддає кілька партій окремими фасуваннями — береться найбільша
@@ -273,6 +306,7 @@ export function applyPrice1CChanges(
 
     entry.packs.forEach((p, i) => {
       if (usedPortalPacks.has(i)) return;
+      if (isExcludedVariant(p)) return; // дефектні варіанти навмисно ігноруються, шуму в попередженнях не треба
       const labelDesc = labelOf(p) ?? "(без мітки)";
       warnings.push(
         `${slug}: у каталозі немає пачки з міткою "${labelDesc}" — пропущено ` +
