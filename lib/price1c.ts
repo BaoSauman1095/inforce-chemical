@@ -1,3 +1,5 @@
+import { isFlatPackPrice } from "./utils";
+
 /**
  * Злиття цін із 1С у lib/catalog-data.ts — той самий патерн, що й
  * lib/rateRefresh.ts для курсу валют (використовується і тут, і в
@@ -9,37 +11,70 @@
  * жодних бізнес-правил 1С — умову продажу (Н11 передоплата проти Н1
  * кредит/Н6 вексель), валюту, курс, заглушки «ціну не задано» (9999.99
  * тощо), мінімальну ціну. Усе це вже застосоване на боці порталу
- * (окремий проєкт inforce-manager) — сюди приходить вже готове, відфільтроване
- * число в гривнях, з ПДВ. Якщо колись знадобиться звірити, звідки взялась
- * конкретна цифра — питання до порталу, не до цього файлу.
+ * (https://inforcechemical.online/api/public-prices, окремий проєкт
+ * inforce-manager) — сюди приходить вже готове число в гривнях, з ПДВ.
  *
- * Контракт з порталом (GET {PUBLIC_PRICES_API_URL}, заголовок
- * `Authorization: Bearer {PUBLIC_PRICES_API_TOKEN}`):
+ * Контракт (підтверджено на реальному ендпоінті):
+ *
+ *   GET {PUBLIC_PRICES_API_URL}
+ *   Authorization: Bearer {PUBLIC_PRICES_API_TOKEN}
  *
  *   200 OK
- *   [
- *     { "slug": "armada", "packs": [{ "label": "п.о.", "priceUah": 13109 }] },
- *     { "slug": "aviron", "packs": [] }
- *   ]
+ *   {
+ *     "ok": true,
+ *     "vat": 1.2,
+ *     "priceType": "prepay_indicative",
+ *     "currency": "UAH",
+ *     "asOf": "2026-10-05T06:33:54.898Z",
+ *     "count": 203,
+ *     "products": [
+ *       {
+ *         "slug": "imisid-bt",
+ *         "unit": "л",
+ *         "priceUahPerUnitFrom": 1129.4,
+ *         "packs": [
+ *           {
+ *             "characteristic": "5 л",
+ *             "packLabel": "5 л",
+ *             "packSize": 5,
+ *             "priceUahPerUnit": 1129.4,
+ *             "priceUahPerPack": 5647.02,
+ *             "source": { "value": 20.92, "currency": "USD", "rate": 44.989 }
+ *           }
+ *         ]
+ *       }
+ *     ]
+ *   }
+ *   401 — токен хибний/відсутній. 503 — на порталі не налаштовано токен.
  *
- * `priceUah` — вже готове число саме для поля `price` у catalog-data.ts:
- * якщо пачка «флетова» (isFlatPackPrice — «п.о.», «500 г» тощо) це сума за
- * упаковку, інакше — ставка за базову одиницю (грн/кг, грн/л), так само, як
- * і решта каталогу вже зберігається (див. packTotalPrice у lib/utils.ts).
- * Перевід із валюти 1С у гривню, додавання ПДВ (×1.2) і вибір курсу — все
- * це рахує портал, тут цієї математики свідомо немає.
+ * `priceUahPerUnit`/`priceUahPerPack` — уже готові числа (з ПДВ, перевід у
+ * гривню й усе інше вже застосовано на порталі). Яке з двох іде в поле
+ * `price` каталогу — вирішує сам каталог: для «флетових» пачок
+ * (isFlatPackPrice — «п.о.», «500 г» тощо) це сума за упаковку
+ * (`priceUahPerPack`), інакше — ставка за базову одиницю, грн/кг чи грн/л
+ * (`priceUahPerUnit`), так само, як решта каталогу вже зберігається (див.
+ * packTotalPrice у lib/utils.ts). `source` — лише для логів/перевірки,
+ * на сайт не виводиться.
+ *
+ * `packLabel` може бути `null` (фасування не розпізнане порталом, типовий
+ * випадок — насіння з одним-єдиним «п.о.»). У такому разі пачка
+ * зіставляється з єдиною пачкою каталогу під цим slug — якщо пачок
+ * декілька, зіставити нема як, це потрапляє в попередження.
  *
  * Безпека (щоб збій чи неповна відповідь порталу не стерли реальні ціни):
- *  - Торкаємось ЛИШЕ (slug, label), які явно присутні у відповіді.
- *    Відсутній у відповіді slug або пачка — ціна каталогу не змінюється.
- *  - `priceUah: null` для присутньої пачки — це явне прибирання ціни
- *    (товар стає «за запитом»). Порожній `packs: []` для slug — це НЕ
- *    команда «прибрати все», а «порталу зараз нема чого сказати про цей
- *    товар» — нічого не чіпаємо.
- *  - Підозріле число (не скінченне, ≤0 або >10 000 000 грн) — пачка
+ *  - Торкаємось ЛИШЕ (slug, пачка), які явно присутні у відповіді.
+ *    Відсутній у відповіді slug або пачка — ціна каталогу не змінюється
+ *    (товарів без ціни портал не віддає взагалі — відсутність slug означає
+ *    «портал ще не знає цей товар», а не «ціну прибрати»).
+ *  - Підозріле число (не скінченне, ≤0 або >10 000 000) — пачка
  *    пропускається з попередженням, решта відповіді обробляється.
- *  - Пачка, якої немає в lib/catalog-data.ts під цим slug — попередження,
- *    без падіння всього запуску.
+ *  - Пачка, якої немає в lib/catalog-data.ts під цим slug (за packLabel,
+ *    або — коли він null — за єдиністю пачки) — попередження, без
+ *    падіння всього запуску.
+ *  - `currency !== "UAH"` чи `priceType !== "prepay_indicative"` у
+ *    відповіді — це сигнал, що портал раптом почав віддавати щось інше,
+ *    ніж «індикативна передоплата в гривні» (власник явно просив ТІЛЬКИ
+ *    її) — весь запуск скасовується, зміни каталогу не застосовуються.
  *  - Коли 1С дає ціну для пачки, яку досі вів курсовий крон
  *    (currency/indicativePrice), ці поля прибираються — товар остаточно
  *    переходить під 1С і далі ігнорується lib/rateRefresh.ts (її regex
@@ -47,23 +82,32 @@
  */
 
 export interface Price1CPack {
-  label: string;
-  /** Готове число для `price`, або null/undefined — явно прибрати ціну. */
-  priceUah?: number | null;
+  characteristic: string | null;
+  packLabel: string | null;
+  packSize: number;
+  priceUahPerUnit: number;
+  priceUahPerPack: number;
 }
 
 export interface Price1CEntry {
   slug: string;
+  unit?: string;
   packs: Price1CPack[];
 }
 
-export interface Price1CChange {
-  slug: string;
-  pack: string;
-  oldPrice?: number;
-  /** undefined — ціну прибрано, товар стає «за запитом». */
-  newPrice?: number;
+interface PublicPricesResponse {
+  ok: boolean;
+  vat: number;
+  priceType: string;
+  currency: string;
+  asOf: string;
+  count: number;
+  products: Price1CEntry[];
 }
+
+const EXPECTED_PRICE_TYPE = "prepay_indicative";
+const EXPECTED_CURRENCY = "UAH";
+const EXPECTED_VAT = 1.2;
 
 export async function fetchPrices1C(): Promise<Price1CEntry[]> {
   const url = process.env.PUBLIC_PRICES_API_URL;
@@ -75,28 +119,69 @@ export async function fetchPrices1C(): Promise<Price1CEntry[]> {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
+  if (res.status === 401) {
+    throw new Error(`${url}: 401 — токен хибний або відсутній`);
+  }
+  if (res.status === 503) {
+    throw new Error(`${url}: 503 — на порталі не налаштовано токен`);
+  }
   if (!res.ok) {
     throw new Error(`${url} відповів ${res.status} ${res.statusText}`);
   }
-  const data = (await res.json()) as unknown;
-  if (!Array.isArray(data)) {
-    throw new Error("Відповідь ендпоінта цін не є масивом");
+
+  const data = (await res.json()) as PublicPricesResponse;
+
+  if (!data.ok) {
+    throw new Error("Відповідь порталу має ok: false");
   }
-  return data as Price1CEntry[];
+  if (!Array.isArray(data.products)) {
+    throw new Error("Відповідь порталу не містить масиву products");
+  }
+  if (data.currency !== EXPECTED_CURRENCY) {
+    throw new Error(
+      `Портал віддає ціни у валюті "${data.currency}", очікувалось "${EXPECTED_CURRENCY}" — оновлення скасовано`
+    );
+  }
+  if (data.priceType !== EXPECTED_PRICE_TYPE) {
+    throw new Error(
+      `Портал віддає priceType "${data.priceType}", очікувалось "${EXPECTED_PRICE_TYPE}" — ` +
+        "на сайт має йти лише індикативна ціна передоплати, оновлення скасовано"
+    );
+  }
+  if (data.vat !== EXPECTED_VAT) {
+    throw new Error(
+      `Портал віддає vat ${data.vat}, очікувалось ${EXPECTED_VAT} — ставка ПДВ змінилась або помилка в порталі, оновлення скасовано`
+    );
+  }
+
+  return data.products;
 }
 
 const MAX_SANE_PRICE = 10_000_000;
 
 // Іменовані групи вимагають ES2018+, а спільний tsconfig проєкту тримає
 // ES2017 — тож нумеровані групи, так само як у lib/rateRefresh.ts.
-const ITEM_RE = /slug: "([^"]+)"[\s\S]*?packs: \[([^\n]*?)\],\n/g;
+const ITEM_RE = /slug: "([^"]+)"[\s\S]*?packs: \[([^\n]*?)\],\n\s*unit: "([^"]*)"/g;
 const PACK_OBJ_RE =
   /\{ label: "([^"]*)"(?:, price: ([0-9.]+))?(?:, currency: "(USD|EUR)")?(?:, indicativePrice: ([0-9.]+))?\s*\}/g;
+
+export interface Price1CChange {
+  slug: string;
+  pack: string;
+  oldPrice?: number;
+  /** undefined — ціну прибрано, товар стає «за запитом». */
+  newPrice?: number;
+}
 
 interface Splice {
   start: number;
   end: number;
   replacement: string;
+}
+
+/** Готове число для `price` каталогу під цю пачку — ставка чи сума за упаковку, залежно від типу пачки. */
+function pickPrice(pack: Price1CPack, label: string, unit: string): number {
+  return isFlatPackPrice(label, unit) ? pack.priceUahPerPack : pack.priceUahPerUnit;
 }
 
 export function applyPrice1CChanges(
@@ -114,10 +199,15 @@ export function applyPrice1CChanges(
   while ((m = ITEM_RE.exec(src))) {
     const slug = m[1];
     const packsSrc = m[2];
+    const unit = m[3];
     const entry = bySlug.get(slug);
     if (!entry) continue;
     matchedSlugs.add(slug);
 
+    const catalogLabels = Array.from(packsSrc.matchAll(PACK_OBJ_RE)).map((pm) => pm[1]);
+    const singleCatalogPack = catalogLabels.length === 1 ? catalogLabels[0] : undefined;
+
+    const usedPortalPacks = new Set<number>();
     const seenLabels = new Set<string>();
     let changedThisItem = false;
 
@@ -125,23 +215,26 @@ export function applyPrice1CChanges(
       PACK_OBJ_RE,
       (full, label: string, priceStr: string | undefined) => {
         seenLabels.add(label);
-        const wanted = entry.packs.find((p) => p.label === label);
-        if (!wanted) return full; // 1С нічого не каже про цю пачку — не чіпаємо
 
-        const oldPrice = priceStr ? Number(priceStr) : undefined;
-        const rawNew = wanted.priceUah;
-        const newPrice = rawNew === null || rawNew === undefined ? undefined : rawNew;
+        let wantedIndex = entry.packs.findIndex((p) => p.packLabel === label);
+        if (wantedIndex === -1 && label === singleCatalogPack) {
+          wantedIndex = entry.packs.findIndex((p) => p.packLabel === null);
+        }
+        if (wantedIndex === -1) return full; // портал нічого не каже про цю пачку — не чіпаємо
+        usedPortalPacks.add(wantedIndex);
 
-        if (
-          newPrice !== undefined &&
-          (!Number.isFinite(newPrice) || newPrice <= 0 || newPrice > MAX_SANE_PRICE)
-        ) {
+        const wanted = entry.packs[wantedIndex];
+        const rawNew = pickPrice(wanted, label, unit);
+
+        if (!Number.isFinite(rawNew) || rawNew <= 0 || rawNew > MAX_SANE_PRICE) {
           warnings.push(`${slug} / ${label}: підозріла ціна з 1С (${rawNew}) — пропущено`);
           return full;
         }
+        const newPrice = Math.round(rawNew);
+        const oldPrice = priceStr ? Number(priceStr) : undefined;
 
-        const next = newPrice === undefined ? `{ label: "${label}" }` : `{ label: "${label}", price: ${newPrice} }`;
-        if (next === full) return full; // уже таке саме значення — і без currency/indicativePrice тут бути не повинно
+        const next = `{ label: "${label}", price: ${newPrice} }`;
+        if (next === full) return full;
 
         changedThisItem = true;
         changes.push({ slug, pack: label, oldPrice, newPrice });
@@ -149,10 +242,16 @@ export function applyPrice1CChanges(
       }
     );
 
-    for (const p of entry.packs) {
-      if (!seenLabels.has(p.label)) {
-        warnings.push(`${slug}: у каталозі немає пачки з міткою "${p.label}" — пропущено`);
-      }
+    entry.packs.forEach((p, i) => {
+      if (usedPortalPacks.has(i)) return;
+      const labelDesc = p.packLabel ?? p.characteristic ?? "(без мітки)";
+      warnings.push(`${slug}: у каталозі немає пачки з міткою "${labelDesc}" — пропущено`);
+    });
+
+    if (entry.unit !== undefined && entry.unit !== unit) {
+      warnings.push(
+        `${slug}: одиниця з порталу ("${entry.unit}") не збігається з каталогом ("${unit}") — перевірте вручну`
+      );
     }
 
     if (changedThisItem) {
