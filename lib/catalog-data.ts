@@ -3364,7 +3364,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "meteor-himagro",
           name: "Метеор",
           brand: "Himagro M",
-          packs: [{ label: "1 кг", price: 5409 }, { label: "10 кг", price: 644, currency: "USD", indicativePrice: 11.88 }],
+          packs: [{ label: "1 кг", price: 655, currency: "USD", indicativePrice: 12.08 }, { label: "10 кг", price: 644, currency: "USD", indicativePrice: 11.88 }],
           unit: "кг",
           tagline: "Мідний контактний фунгіцид проти мілдью та плямистостей",
           description:
