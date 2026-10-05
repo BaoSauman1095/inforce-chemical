@@ -1439,7 +1439,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "amalherol-essens",
           name: "Амалгерол Ессенс",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 693 }, { label: "10/15 л", price: 611, currency: "USD", indicativePrice: 11.26 }, { label: "15 л", price: 608 }],
+          packs: [{ label: "1 л", price: 693 }, { label: "15 л", price: 608 }],
           unit: "л",
           tagline: "Мультифункціональний біостимулянт, антистресант та біоактиватор ґрунту",
           description:
@@ -1937,7 +1937,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "tizegold-bt",
           name: "Тізеголд БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "10 л", price: 309 }, { label: "20 л", price: 309 }],
+          packs: [{ label: "10 л", price: 309 }],
           unit: "л",
           tagline: "Ґрунтовий гербіцид подвійної дії для кукурудзи",
           description:
@@ -2724,7 +2724,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "pledzh-50",
           name: "Пледж 50",
           brand: "Sumi Agro",
-          packs: [{ label: "200 гр", price: 1416 }, { label: "400 гр", price: 6566, currency: "USD", indicativePrice: 121.06 }],
+          packs: [{ label: "200 гр", price: 1416 }],
           unit: "кг",
           tagline: "Універсальний гербіцид для сої, пшениці та кукурудзи від дводольних бур'янів",
           description:
