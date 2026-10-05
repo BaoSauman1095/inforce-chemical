@@ -75,6 +75,10 @@ import { isFlatPackPrice } from "./utils";
  *    відповіді — це сигнал, що портал раптом почав віддавати щось інше,
  *    ніж «індикативна передоплата в гривні» (власник явно просив ТІЛЬКИ
  *    її) — весь запуск скасовується, зміни каталогу не застосовуються.
+ *  - Партії «залишки 20XX» / «(акція)»: якщо в каталозі під цим slug одна
+ *    пачка, а портал віддає лише такі партії — береться найбільша
+ *    адекватна ціна серед них. Партії з іншими мітками («пошкоджено
+ *    гризунами», «схожість 60-74%») самі по собі не беруться.
  *  - Коли 1С дає ціну для пачки, яку досі вів курсовий крон
  *    (currency/indicativePrice), ці поля прибираються — товар остаточно
  *    переходить під 1С і далі ігнорується lib/rateRefresh.ts (її regex
@@ -158,6 +162,7 @@ export async function fetchPrices1C(): Promise<Price1CEntry[]> {
 }
 
 const MAX_SANE_PRICE = 10_000_000;
+const LEFTOVER_LABEL_RE = /залишки|акці/i;
 
 // Іменовані групи вимагають ES2018+, а спільний tsconfig проєкту тримає
 // ES2017 — тож нумеровані групи, так само як у lib/rateRefresh.ts.
@@ -219,6 +224,24 @@ export function applyPrice1CChanges(
         let wantedIndex = entry.packs.findIndex((p) => p.packLabel === label);
         if (wantedIndex === -1 && label === singleCatalogPack) {
           wantedIndex = entry.packs.findIndex((p) => p.packLabel === null);
+        }
+        if (wantedIndex === -1 && label === singleCatalogPack) {
+          // Партії «залишки 20XX» / «(акція)»: у каталозі одна пачка, а портал
+          // віддає кілька партій окремими фасуваннями — береться найбільша
+          // адекватна ціна серед них (рішення власника).
+          let best = -1;
+          let bestPrice = 0;
+          entry.packs.forEach((p, i) => {
+            if (!p.packLabel || !LEFTOVER_LABEL_RE.test(p.packLabel)) return;
+            usedPortalPacks.add(i);
+            const price = pickPrice(p, label, unit);
+            if (!Number.isFinite(price) || price <= 0 || price > MAX_SANE_PRICE) return;
+            if (price > bestPrice) {
+              best = i;
+              bestPrice = price;
+            }
+          });
+          wantedIndex = best;
         }
         if (wantedIndex === -1) return full; // портал нічого не каже про цю пачку — не чіпаємо
         usedPortalPacks.add(wantedIndex);
