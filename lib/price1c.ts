@@ -183,6 +183,9 @@ const MAX_SANE_PRICE = 10_000_000;
 const MAX_PRICE_JUMP = 3;
 const MIN_NEW_PACK_SIZE = 0.01;
 const LEFTOVER_LABEL_RE = /залишки|акці/i;
+// Партії, яких на сайті свідомо немає (залишки, акції, знижена схожість):
+// якщо вони не зіставились з пачкою, це не привід для попередження.
+const SILENT_UNMATCHED_RE = /залишки|акці|схожість|пошкоджен/i;
 // Службові/дефектні варіанти фасування, які на сайт не йдуть (початкове
 // правило власника): часткова втрата, знижка, списання, утилізація, УУ,
 // товарний вигляд, пошкоджено гризунами.
@@ -342,10 +345,7 @@ export function applyPrice1CChanges(
       const size = label ? catalogPackSize(label, unit) : undefined;
       if (!label || knownLabels.has(label) || size === undefined) return;
       usedPortalPacks.add(i);
-      if (size < MIN_NEW_PACK_SIZE) {
-        warnings.push(`${slug} / ${label}: підозріло мала фасовка з 1С — не додано`);
-        return;
-      }
+      if (size < MIN_NEW_PACK_SIZE) return; // помилка даних 1С — мовчки не додаємо
       const raw = pickPrice(p, label, unit);
       if (!Number.isFinite(raw) || raw <= 0 || raw > MAX_SANE_PRICE) {
         warnings.push(`${slug} / ${label}: підозріла ціна з 1С (${raw}) — пропущено`);
@@ -375,6 +375,7 @@ export function applyPrice1CChanges(
     entry.packs.forEach((p, i) => {
       if (usedPortalPacks.has(i)) return;
       if (isExcludedVariant(p)) return; // дефектні варіанти навмисно ігноруються, шуму в попередженнях не треба
+      if (SILENT_UNMATCHED_RE.test(`${p.packLabel ?? ""} ${p.characteristic ?? ""}`)) return;
       const labelDesc = labelOf(p) ?? "(без мітки)";
       warnings.push(
         `${slug}: у каталозі немає пачки з міткою "${labelDesc}" — пропущено ` +
