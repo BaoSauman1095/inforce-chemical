@@ -89,7 +89,7 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
               {formatPrice(selectedPack.price)} грн
               {!isFlatPackPrice(selectedPack.label, product.unit) && `/${product.unit}`}
               <span className="ml-2 align-middle font-sans text-[13px] font-medium text-[#8a8582]">
-                з ПДВ
+                орієнтовно, з ПДВ
               </span>
             </p>
           ) : (
