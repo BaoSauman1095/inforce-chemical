@@ -65,6 +65,11 @@ export async function GET(request: Request) {
 
     const { next, changes, warnings } = applyPrice1CChanges(src, entries);
 
+    // У Telegram влазить лише перша частина попереджень (ліміт 4096 символів),
+    // повний список — тільки тут, у Vercel → Logs. По рядку на попередження:
+    // Vercel обрізає довгі рядки логу, а весь список в одному не поміститься.
+    warnings.forEach((w) => console.warn(`sync-1c-prices cron: попередження: ${w}`));
+
     if (changes.length === 0) {
       console.log(
         `sync-1c-prices cron: отримано ${entries.length} поз. від порталу, змін немає` +
