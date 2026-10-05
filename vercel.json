@@ -4,6 +4,10 @@
     {
       "path": "/api/cron/refresh-rate",
       "schedule": "17 5 * * *"
+    },
+    {
+      "path": "/api/cron/sync-1c-prices",
+      "schedule": "30 12 * * *"
     }
   ]
 }

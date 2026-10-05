@@ -202,3 +202,52 @@ function formatRateRefreshMessage(s: RateRefreshSummary): string {
 export async function sendRateRefreshNotification(summary: RateRefreshSummary): Promise<void> {
   await sendTelegramMessage(formatRateRefreshMessage(summary));
 }
+
+export interface Price1CSyncSummary {
+  ok: boolean;
+  changed?: number;
+  /** Нестандартні випадки (невідомий slug/пачка, підозріле число) — оновлення все одно застосовується. */
+  warnings?: string[];
+  error?: string;
+}
+
+/**
+ * Так само, як і refresh-rate — без людини в контурі, тож єдиний спосіб
+ * побачити, що крон синхронізації цін з 1С взагалі спрацював.
+ */
+function formatPrice1CSyncMessage(s: Price1CSyncSummary): string {
+  if (!s.ok) {
+    return [
+      "🔴 *Синхронізація цін з 1С — помилка*",
+      "",
+      escapeMarkdownV2(s.error ?? "невідома помилка"),
+      "",
+      timestampLine(),
+    ].join("\n");
+  }
+
+  const warnings = s.warnings ?? [];
+  const hasWarnings = warnings.length > 0;
+  const lines = [
+    hasWarnings ? "🟡 *Синхронізація цін з 1С*" : "🟢 *Синхронізація цін з 1С*",
+    "",
+    `*Змінено позицій:* ${s.changed}`,
+  ];
+  if (hasWarnings) {
+    // Telegram-повідомлення обмежене 4096 символами — на випадок масового
+    // неспівпадіння slug'ів (напр. портал ще не синхронізований з каталогом)
+    // показуємо перші 15, решту — одним рядком, щоб не зрізало саме повідомлення.
+    const MAX_SHOWN = 15;
+    const shown = warnings.slice(0, MAX_SHOWN).map((w) => escapeMarkdownV2(`• ${w}`));
+    lines.push("", "⚠️ Попередження:", ...shown);
+    if (warnings.length > MAX_SHOWN) {
+      lines.push(escapeMarkdownV2(`…і ще ${warnings.length - MAX_SHOWN}`));
+    }
+  }
+  lines.push("", timestampLine());
+  return lines.join("\n");
+}
+
+export async function sendPrice1CSyncNotification(summary: Price1CSyncSummary): Promise<void> {
+  await sendTelegramMessage(formatPrice1CSyncMessage(summary));
+}
