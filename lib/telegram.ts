@@ -7,8 +7,13 @@ function escapeMarkdownV2(value: string): string {
   return value.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, (ch) => `\\${ch}`);
 }
 
+/** Час у Києві: сервер Vercel живе в UTC, тож без timeZone повідомлення «відстають» від київського на 2–3 години. */
+function formatKyivTime(date: Date): string {
+  return date.toLocaleString("uk-UA", { timeZone: "Europe/Kyiv" });
+}
+
 function timestampLine(): string {
-  return `_${escapeMarkdownV2(new Date().toLocaleString("uk-UA"))}_`;
+  return `_${escapeMarkdownV2(formatKyivTime(new Date()))}_`;
 }
 
 function formatLeadMessage(data: ContactFormInput): string {
@@ -206,7 +211,9 @@ export async function sendRateRefreshNotification(summary: RateRefreshSummary): 
 export interface Price1CSyncSummary {
   ok: boolean;
   changed?: number;
-  /** Нестандартні випадки (невідомий slug/пачка, підозріле число) — оновлення все одно застосовується. */
+  /** Час, станом на який портал склав прайс (ISO) — коли 1С востаннє оновила ціни. */
+  asOf?: string;
+  /** Нестандартні випадки (стрибок ціни, підозріле число, розбіжність одиниць) — оновлення все одно застосовується. */
   warnings?: string[];
   error?: string;
 }
@@ -233,6 +240,12 @@ function formatPrice1CSyncMessage(s: Price1CSyncSummary): string {
     "",
     `*Змінено позицій:* ${s.changed}`,
   ];
+  if (s.asOf) {
+    const asOf = new Date(s.asOf);
+    if (!Number.isNaN(asOf.getTime())) {
+      lines.push(`*Ціни з порталу станом на:* ${escapeMarkdownV2(formatKyivTime(asOf))}`);
+    }
+  }
   if (hasWarnings) {
     // Telegram-повідомлення обмежене 4096 символами — на випадок масового
     // неспівпадіння slug'ів (напр. портал ще не синхронізований з каталогом)
