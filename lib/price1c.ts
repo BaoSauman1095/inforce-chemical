@@ -80,6 +80,9 @@ import { isFlatPackPrice } from "./utils";
  *    потрапляють у попередження.
  *  - Фасування зіставляється за міткою, а якщо мітки різняться — за
  *    розміром («0,25 кг» у каталозі ↔ «250 гр», size 0.25 на порталі).
+ *  - Розмір, якого ще немає в каталозі (5 л, 10 л, мішок іншої ваги), —
+ *    це окрема фасування з окремою ціною: додається до пачок товару
+ *    (лише для товарів в кг/л і лише для міток-розмірів).
  *  - Партії «залишки 20XX» / «(акція)»: якщо в каталозі під цим slug одна
  *    пачка, а портал віддає лише такі партії — береться найбільша
  *    адекватна ціна серед них. Партії з іншими мітками («пошкоджено
@@ -167,6 +170,9 @@ export async function fetchPrices1C(): Promise<Price1CEntry[]> {
 }
 
 const MAX_SANE_PRICE = 10_000_000;
+// Менше 10 г / 10 мл — майже напевно помилка в даних 1С (напр. «4 мл» у
+// товару, що продається каністрами), таку фасовку на сайт не додаємо.
+const MIN_NEW_PACK_SIZE = 0.01;
 const LEFTOVER_LABEL_RE = /залишки|акці/i;
 // Службові/дефектні варіанти фасування, які на сайт не йдуть (початкове
 // правило власника): часткова втрата, знижка, списання, утилізація, УУ,
@@ -245,7 +251,7 @@ export function applyPrice1CChanges(
     const seenLabels = new Set<string>();
     let changedThisItem = false;
 
-    const newPacksSrc = packsSrc.replace(
+    let newPacksSrc = packsSrc.replace(
       PACK_OBJ_RE,
       (full, label: string, priceStr: string | undefined) => {
         seenLabels.add(label);
@@ -303,6 +309,48 @@ export function applyPrice1CChanges(
         return next;
       }
     );
+
+    // Нові фасування: розмір є на порталі, а в каталозі його ще немає. 5 л і
+    // 10 л — різні каністри з різною ціною, тож додаємо як окрему пачку
+    // (рішення власника; те саме для мішків). Лише для товарів в кг/л і лише
+    // для міток-розмірів («10 л», «250 гр») — партії й службові мітки не додаються.
+    const knownLabels = new Set(catalogLabels);
+    const added: { label: string; price: number }[] = [];
+    entry.packs.forEach((p, i) => {
+      if (usedPortalPacks.has(i) || isExcludedVariant(p)) return;
+      const label = p.packLabel;
+      const size = label ? catalogPackSize(label, unit) : undefined;
+      if (!label || knownLabels.has(label) || size === undefined) return;
+      usedPortalPacks.add(i);
+      if (size < MIN_NEW_PACK_SIZE) {
+        warnings.push(`${slug} / ${label}: підозріло мала фасовка з 1С — не додано`);
+        return;
+      }
+      const raw = pickPrice(p, label, unit);
+      if (!Number.isFinite(raw) || raw <= 0 || raw > MAX_SANE_PRICE) {
+        warnings.push(`${slug} / ${label}: підозріла ціна з 1С (${raw}) — пропущено`);
+        return;
+      }
+      knownLabels.add(label);
+      added.push({ label, price: Math.round(raw) });
+    });
+    if (added.length) {
+      const objs = Array.from(newPacksSrc.matchAll(PACK_OBJ_RE)).map((m) => ({
+        text: m[0],
+        size: catalogPackSize(m[1], unit),
+      }));
+      const all = [
+        ...objs,
+        ...added.map((a) => ({
+          text: `{ label: "${a.label}", price: ${a.price} }`,
+          size: catalogPackSize(a.label, unit),
+        })),
+      ];
+      if (all.every((x) => x.size !== undefined)) all.sort((a, b) => a.size! - b.size!);
+      newPacksSrc = all.map((x) => x.text).join(", ");
+      changedThisItem = true;
+      added.forEach((a) => changes.push({ slug, pack: a.label, newPrice: a.price }));
+    }
 
     entry.packs.forEach((p, i) => {
       if (usedPortalPacks.has(i)) return;
