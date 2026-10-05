@@ -125,7 +125,7 @@ const EXPECTED_PRICE_TYPE = "prepay_indicative";
 const EXPECTED_CURRENCY = "UAH";
 const EXPECTED_VAT = 1.2;
 
-export async function fetchPrices1C(): Promise<Price1CEntry[]> {
+export async function fetchPrices1C(): Promise<{ entries: Price1CEntry[]; asOf: string }> {
   const url = process.env.PUBLIC_PRICES_API_URL;
   const token = process.env.PUBLIC_PRICES_API_TOKEN;
   if (!url) throw new Error("Відсутня змінна оточення PUBLIC_PRICES_API_URL");
@@ -170,7 +170,7 @@ export async function fetchPrices1C(): Promise<Price1CEntry[]> {
     );
   }
 
-  return data.products;
+  return { entries: data.products, asOf: data.asOf };
 }
 
 const MAX_SANE_PRICE = 10_000_000;

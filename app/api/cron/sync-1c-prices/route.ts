@@ -45,7 +45,11 @@ export async function GET(request: Request) {
   }
 
   try {
-    const entries = await fetchPrices1C();
+    const { entries, asOf } = await fetchPrices1C();
+
+    // Прайс старший за добу — 1С/портал давно не синхронізувались, крон віддасть застарілі ціни.
+    const asOfMs = new Date(asOf).getTime();
+    const stale = Number.isFinite(asOfMs) && Date.now() - asOfMs > 36 * 3600 * 1000;
 
     const ghHeaders = {
       Authorization: `Bearer ${githubToken}`,
@@ -64,6 +68,7 @@ export async function GET(request: Request) {
     const src = Buffer.from(file.content, "base64").toString("utf-8");
 
     const { next, changes, warnings } = applyPrice1CChanges(src, entries);
+    if (stale) warnings.unshift(`Портал віддає прайс станом на ${asOf} — старший за 36 годин, перевірте синхронізацію порталу з 1С`);
 
     // У Telegram влазить лише перша частина попереджень (ліміт 4096 символів),
     // повний список — тільки тут, у Vercel → Logs. По рядку на попередження:
@@ -75,7 +80,7 @@ export async function GET(request: Request) {
         `sync-1c-prices cron: отримано ${entries.length} поз. від порталу, змін немає` +
           (warnings.length ? `; попереджень: ${warnings.length}` : "")
       );
-      await sendPrice1CSyncNotification({ ok: true, changed: 0, warnings }).catch((e) =>
+      await sendPrice1CSyncNotification({ ok: true, changed: 0, asOf, warnings }).catch((e) =>
         console.error("sync-1c-prices cron: не вдалось надіслати сповіщення в Telegram", e)
       );
       return Response.json({ ok: true, changed: 0, warnings });
@@ -104,7 +109,7 @@ export async function GET(request: Request) {
       `sync-1c-prices cron: оновлено ${changes.length} поз., запушено в ${REPO_BRANCH}` +
         (warnings.length ? `; попереджень: ${warnings.length}` : "")
     );
-    await sendPrice1CSyncNotification({ ok: true, changed: changes.length, warnings }).catch((e) =>
+    await sendPrice1CSyncNotification({ ok: true, changed: changes.length, asOf, warnings }).catch((e) =>
       console.error("sync-1c-prices cron: не вдалось надіслати сповіщення в Telegram", e)
     );
     return Response.json({ ok: true, changed: changes.length, warnings });

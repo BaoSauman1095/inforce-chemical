@@ -7,7 +7,7 @@
     },
     {
       "path": "/api/cron/sync-1c-prices",
-      "schedule": "30 12 * * *"
+      "schedule": "0 8 * * *"
     }
   ]
 }
