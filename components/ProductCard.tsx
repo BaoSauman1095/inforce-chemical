@@ -55,6 +55,14 @@ export default function ProductCard({ item }: { item: FlatCatalogItem }) {
         <p className="mt-1.5 font-heading text-base font-bold leading-tight text-[#141414]">
           {item.name}
         </p>
+        {item.activeIngredient && (
+          <p
+            title={item.activeIngredient}
+            className="mt-1 line-clamp-2 text-[11.5px] leading-snug text-[#8a8582]"
+          >
+            {item.activeIngredient}
+          </p>
+        )}
 
         <div className="mt-2.5 flex flex-wrap gap-[5px]">
           {item.packs.map((pack, i) => (

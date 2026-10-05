@@ -65,6 +65,9 @@ export default function ProductDetail({ product, related }: ProductDetailProps) 
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[.15em] text-brand">{product.brand}</p>
           <h2 className="mt-1.5 font-heading text-[26px] font-extrabold text-[#141414]">{product.name}</h2>
+          {product.activeIngredient && (
+            <p className="mt-1 max-w-[46ch] text-[13px] leading-snug text-[#8a8582]">{product.activeIngredient}</p>
+          )}
 
           {product.packs.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
