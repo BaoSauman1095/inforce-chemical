@@ -1937,7 +1937,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "tizegold-bt",
           name: "Тізеголд БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "10 л", price: 309 }],
+          packs: [{ label: "10 л", price: 309 }, { label: "20 л", price: 309 }],
           unit: "л",
           tagline: "Ґрунтовий гербіцид подвійної дії для кукурудзи",
           description:
