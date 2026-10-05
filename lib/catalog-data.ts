@@ -1439,7 +1439,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "amalherol-essens",
           name: "Амалгерол Ессенс",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 693 }, { label: "10/15 л", price: 611, currency: "USD", indicativePrice: 11.26 }],
+          packs: [{ label: "1 л", price: 693 }, { label: "10/15 л", price: 611, currency: "USD", indicativePrice: 11.26 }, { label: "15 л", price: 608 }],
           unit: "л",
           tagline: "Мультифункціональний біостимулянт, антистресант та біоактиватор ґрунту",
           description:
@@ -1468,7 +1468,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "biflai",
           name: "Біфлай",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 1018, currency: "USD", indicativePrice: 18.77 }],
+          packs: [{ label: "1 л", price: 1018, currency: "USD", indicativePrice: 18.77 }, { label: "5 л", price: 1013 }],
           unit: "л",
           tagline: "Приваблювач комах-запилювачів для максимального запилення польових культур",
           description:
@@ -1937,7 +1937,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "tizegold-bt",
           name: "Тізеголд БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "20 л", price: 309 }],
+          packs: [{ label: "10 л", price: 309 }, { label: "20 л", price: 309 }],
           unit: "л",
           tagline: "Ґрунтовий гербіцид подвійної дії для кукурудзи",
           description:
@@ -2120,7 +2120,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "etaforon",
           name: "Етафорон",
           brand: "Himagro M",
-          packs: [{ label: "0,25 кг", price: 9728, currency: "USD", indicativePrice: 179.35 }],
+          packs: [{ label: "0,25 кг", price: 9683 }],
           unit: "кг",
           tagline: "Унікальний гербіцид для контролю хрестоцвітих бур'янів у ріпаку",
           description:
@@ -2302,7 +2302,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "orion",
           name: "Оріон",
           brand: "Himagro M",
-          packs: [{ label: "0,25 кг", price: 4728, currency: "USD", indicativePrice: 87.17 }],
+          packs: [{ label: "0,25 кг", price: 4706 }],
           unit: "кг",
           tagline: "Гербіцид проти дводольних бур'янів, стійких до 2,4-Д, у зернових, кукурудзі й сої",
           description:
@@ -2435,7 +2435,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "trystar-himagro",
           name: "Тристар",
           brand: "Himagro M",
-          packs: [{ label: "0,35 кг", price: 1189, currency: "USD", indicativePrice: 21.92 }],
+          packs: [{ label: "0,35 кг", price: 1183 }],
           unit: "кг",
           tagline: "Трикомпонентний гербіцид максимально широкого спектра дводольних бур'янів",
           description:
@@ -2487,7 +2487,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "flumet",
           name: "Флумет",
           brand: "Himagro M",
-          packs: [{ label: "0,5 кг", price: 8107, currency: "USD", indicativePrice: 149.46 }],
+          packs: [{ label: "0,5 кг", price: 8069 }],
           unit: "кг",
           tagline: "Гербіцид для зернових і сої з низькими нормами витрати",
           description:
@@ -2724,7 +2724,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "pledzh-50",
           name: "Пледж 50",
           brand: "Sumi Agro",
-          packs: [{ label: "400 гр", price: 6566, currency: "USD", indicativePrice: 121.06 }],
+          packs: [{ label: "200 гр", price: 1416 }, { label: "400 гр", price: 6566, currency: "USD", indicativePrice: 121.06 }],
           unit: "кг",
           tagline: "Універсальний гербіцид для сої, пшениці та кукурудзи від дводольних бур'янів",
           description:
@@ -3364,7 +3364,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "meteor-himagro",
           name: "Метеор",
           brand: "Himagro M",
-          packs: [{ label: "1 кг", price: 655, currency: "USD", indicativePrice: 12.08 }, { label: "10 кг", price: 644, currency: "USD", indicativePrice: 11.88 }],
+          packs: [{ label: "1 кг", price: 5409 }, { label: "10 кг", price: 644, currency: "USD", indicativePrice: 11.88 }],
           unit: "кг",
           tagline: "Мідний контактний фунгіцид проти мілдью та плямистостей",
           description:
@@ -3834,7 +3834,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "yutaka",
           name: "Ютака",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 1264, currency: "USD", indicativePrice: 23.3 }],
+          packs: [{ label: "5 л", price: 1264, currency: "USD", indicativePrice: 23.3 }, { label: "10 л", price: 1258 }],
           unit: "л",
           tagline: "Новий трикомпонентний фунгіцид для інтенсивного захисту",
           description:
@@ -4271,7 +4271,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "nissoran",
           name: "Ніссоран",
           brand: "Sumi Agro",
-          packs: [{ label: "1 кг", price: 2481 }],
+          packs: [{ label: "500 гр", price: 1240 }, { label: "1 кг", price: 2481 }],
           unit: "кг",
           tagline: "Оригінальний японський акарицид, що діє на яйця, личинки та німфи кліщів",
           description:
@@ -5036,7 +5036,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "fumifos",
           name: "Фуміфос",
           brand: "Himagro M",
-          packs: [{ label: "0,48 кг", price: 696, currency: "USD", indicativePrice: 12.83 }, { label: "1 кг", price: 536 }],
+          packs: [{ label: "0,48 кг", price: 693 }, { label: "1 кг", price: 536 }],
           unit: "кг",
           tagline: "Фумігант для повного знезараження зерна та складських приміщень",
           description:
