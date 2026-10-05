@@ -1414,7 +1414,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "filloton",
           name: "Філлотон",
           brand: "Biolchim",
-          packs: [{ label: "1 л", price: 378 }, { label: "5 л", price: 382, currency: "EUR", indicativePrice: 6.24 }, { label: "20 л", price: 382, currency: "EUR", indicativePrice: 6.24 }],
+          packs: [{ label: "1 л", price: 378 }, { label: "5 л" }, { label: "20 л" }],
           unit: "л",
           tagline: "Біостимулятор для відновлення рослини після стресу",
           description:
@@ -1667,7 +1667,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "bob-bt",
           name: "Боб БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "5 л", price: 444, currency: "USD", indicativePrice: 8.19 }, { label: "10 л", price: 442 }],
+          packs: [{ label: "5 л" }, { label: "10 л", price: 442 }],
           unit: "л",
           tagline: "Селективний гербіцид для сої, гороху та зернових",
           description:
@@ -2196,7 +2196,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kratos",
           name: "Кратос",
           brand: "Himagro M",
-          packs: [{ label: "10 л", price: 326, currency: "USD", indicativePrice: 6.01 }, { label: "20 л", price: 318 }],
+          packs: [{ label: "10 л" }, { label: "20 л", price: 318 }],
           unit: "л",
           tagline: "Ґрунтовий гербіцид для чистого старту соняшнику, кукурудзи й сої",
           description:
@@ -2223,7 +2223,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "luazyt",
           name: "Луазит",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 681 }, { label: "5 л", price: 656, currency: "USD", indicativePrice: 12.1 }, { label: "10 л", price: 641, currency: "USD", indicativePrice: 11.81 }, { label: "20 л", price: 629, currency: "USD", indicativePrice: 11.59 }],
+          packs: [{ label: "1 л", price: 681 }, { label: "5 л" }, { label: "10 л" }, { label: "20 л" }],
           unit: "л",
           tagline: "Протизлаковий гербіцид м'якої дії на культуру, незалежно від фази",
           description:
@@ -2249,7 +2249,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "optymum",
           name: "Оптимум",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 656 }, { label: "5 л", price: 624 }, { label: "10 л", price: 603 }, { label: "20 л", price: 593, currency: "USD", indicativePrice: 10.94 }],
+          packs: [{ label: "1 л", price: 656 }, { label: "5 л", price: 624 }, { label: "10 л", price: 603 }, { label: "20 л" }],
           unit: "л",
           tagline: "Гормональний гербіцид проти дводольних бур'янів, стійких до 2,4-Д і МЦПА",
           description:
@@ -2514,7 +2514,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "tsukron-plus-himagro",
           name: "Цукрон +",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 1282, currency: "USD", indicativePrice: 23.63 }, { label: "5 л", price: 1043 }, { label: "20 л", price: 1013, currency: "USD", indicativePrice: 18.67 }],
+          packs: [{ label: "1 л", price: 1282, currency: "USD", indicativePrice: 23.63 }, { label: "5 л", price: 1043 }, { label: "20 л" }],
           unit: "л",
           tagline: "Гербіцид проти осотів і падалиці соняшнику в буряках, ріпаку й кукурудзі",
           description:
@@ -3337,7 +3337,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "brodvei",
           name: "Бродвей",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 814, currency: "USD", indicativePrice: 15.0 }, { label: "5 л", price: 798 }, { label: "20 л", price: 770, currency: "USD", indicativePrice: 14.19 }],
+          packs: [{ label: "1 л", price: 814, currency: "USD", indicativePrice: 15.0 }, { label: "5 л", price: 798 }, { label: "20 л" }],
           unit: "л",
           tagline: "Стробілуриновий фунгіцид найширшого спектра дії",
           description:
@@ -3391,7 +3391,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "snuker",
           name: "Снукер",
           brand: "Himagro M",
-          packs: [{ label: "5 л", price: 1245, currency: "USD", indicativePrice: 22.96 }, { label: "10 л", price: 1183 }, { label: "20 л", price: 1129 }],
+          packs: [{ label: "5 л" }, { label: "10 л", price: 1183 }, { label: "20 л", price: 1129 }],
           unit: "л",
           tagline: "Триазольний фунгіцид з рістрегулюючим ефектом для ріпаку й пшениці",
           description:
@@ -3834,7 +3834,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "yutaka",
           name: "Ютака",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 1264, currency: "USD", indicativePrice: 23.3 }, { label: "10 л", price: 1258 }],
+          packs: [{ label: "5 л" }, { label: "10 л", price: 1258 }],
           unit: "л",
           tagline: "Новий трикомпонентний фунгіцид для інтенсивного захисту",
           description:
@@ -3913,7 +3913,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kazumin",
           name: "Казумін",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 1362 }, { label: "5 л", price: 4533, currency: "USD", indicativePrice: 83.57 }],
+          packs: [{ label: "1 л", price: 1362 }, { label: "5 л" }],
           unit: "л",
           tagline: "Біологічний бактерицид і фунгіцид лікувальної дії проти бактеріального опіку",
           description:
@@ -4108,7 +4108,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "tor-bt",
           name: "Тор БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "5 л", price: 312, currency: "USD", indicativePrice: 5.76 }],
+          packs: [{ label: "5 л" }],
           unit: "л",
           tagline: "Швидкий піретроїдний інсектицид широкого спектра",
           description:
@@ -4323,7 +4323,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "silker",
           name: "Сілкер",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 2240 }, { label: "5 л", price: 2090, currency: "USD", indicativePrice: 38.53 }, { label: "10 л", price: 2080 }],
+          packs: [{ label: "1 л", price: 2240 }, { label: "5 л" }, { label: "10 л", price: 2080 }],
           unit: "л",
           tagline: "Контроль дрібних шкідників без хімічних діючих речовин",
           description:
@@ -4430,7 +4430,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "rancho",
           name: "Ранчо",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 1181 }, { label: "5 л", price: 1130, currency: "USD", indicativePrice: 20.84 }],
+          packs: [{ label: "1 л", price: 1181 }, { label: "5 л" }],
           unit: "л",
           tagline: "Неонікотиноїдний інсектицид швидкої системної дії",
           description:
@@ -4685,7 +4685,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "mega-dikvat",
           name: "Мега Дикват",
           brand: "Himagro M",
-          packs: [{ label: "10 л", price: 326, currency: "USD", indicativePrice: 6.01 }, { label: "20 л", price: 319 }],
+          packs: [{ label: "10 л" }, { label: "20 л", price: 319 }],
           unit: "л",
           tagline: "Швидкий контактний десикант, стійкий до змивання дощем через 30 хвилин",
           description:
@@ -5005,7 +5005,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "prolif",
           name: "Проліф",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 199 }, { label: "5 л", price: 189, currency: "USD", indicativePrice: 3.49 }],
+          packs: [{ label: "1 л", price: 199 }, { label: "5 л" }],
           unit: "л",
           tagline: "Ад'ювант-змочувач на основі поліспиртів для покращення покриття листка",
           description:
