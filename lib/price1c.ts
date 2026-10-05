@@ -68,6 +68,8 @@ import { isFlatPackPrice } from "./utils";
  *    «портал ще не знає цей товар», а не «ціну прибрати»).
  *  - Підозріле число (не скінченне, ≤0 або >10 000 000) — пачка
  *    пропускається з попередженням, решта відповіді обробляється.
+ *  - Товари з порталу, яких немає в каталозі, мовчки ігноруються (рішення
+ *    власника: у каталог їх не заливаємо, шуму в попередженнях не треба).
  *  - Пачка, якої немає в lib/catalog-data.ts під цим slug (за packLabel,
  *    або — коли він null — за єдиністю пачки) — попередження, без
  *    падіння всього запуску.
@@ -183,8 +185,8 @@ const MIN_NEW_PACK_SIZE = 0.01;
 const LEFTOVER_LABEL_RE = /залишки|акці/i;
 // Службові/дефектні варіанти фасування, які на сайт не йдуть (початкове
 // правило власника): часткова втрата, знижка, списання, утилізація, УУ,
-// товарний вигляд.
-const EXCLUDED_VARIANT_RE = /втрат|знижк|списан|утилізац|товарн|(^|[\s,(])УУ([\s,)]|$)/i;
+// товарний вигляд, пошкоджено гризунами.
+const EXCLUDED_VARIANT_RE = /втрат|знижк|списан|утилізац|товарн|пошкоджен|(^|[\s,(])УУ([\s,)]|$)/i;
 
 function isExcludedVariant(p: Price1CPack): boolean {
   return EXCLUDED_VARIANT_RE.test(`${p.packLabel ?? ""} ${p.characteristic ?? ""}`);
@@ -239,7 +241,6 @@ export function applyPrice1CChanges(
   const changes: Price1CChange[] = [];
   const warnings: string[] = [];
   const splices: Splice[] = [];
-  const matchedSlugs = new Set<string>();
 
   ITEM_RE.lastIndex = 0;
   let m: RegExpExecArray | null;
@@ -249,7 +250,6 @@ export function applyPrice1CChanges(
     const unit = m[3];
     const entry = bySlug.get(slug);
     if (!entry) continue;
-    matchedSlugs.add(slug);
 
     const catalogLabels = Array.from(packsSrc.matchAll(PACK_OBJ_RE)).map((pm) => pm[1]);
     const singleCatalogPack = catalogLabels.length === 1 ? catalogLabels[0] : undefined;
@@ -266,10 +266,12 @@ export function applyPrice1CChanges(
         let wantedIndex = entry.packs.findIndex((p) => p.packLabel === label && !isExcludedVariant(p));
         if (wantedIndex === -1) {
           // Інший запис того самого розміру: у каталозі «0,25 кг», на порталі «250 гр».
+          // Лише для розпізнаних фасувань: у нерозпізнаних (packLabel null) packSize=1
+          // — це заглушка, а не розмір («залишки 2021» не є пачкою «1 кг»).
           const size = catalogPackSize(label, unit);
           if (size !== undefined) {
             wantedIndex = entry.packs.findIndex(
-              (p) => !isExcludedVariant(p) && Math.abs(p.packSize - size) < 1e-9
+              (p) => !!p.packLabel && !isExcludedVariant(p) && Math.abs(p.packSize - size) < 1e-9
             );
           }
         }
@@ -281,7 +283,7 @@ export function applyPrice1CChanges(
           let bestPrice = 0;
           entry.packs.forEach((p, i) => {
             const l = labelOf(p);
-            if (!l || !LEFTOVER_LABEL_RE.test(l)) return;
+            if (!l || !LEFTOVER_LABEL_RE.test(l) || isExcludedVariant(p)) return;
             usedPortalPacks.add(i);
             const price = pickPrice(p, label, unit);
             if (!Number.isFinite(price) || price <= 0 || price > MAX_SANE_PRICE) return;
@@ -389,12 +391,6 @@ export function applyPrice1CChanges(
     if (changedThisItem) {
       const start = m.index + m[0].lastIndexOf(packsSrc);
       splices.push({ start, end: start + packsSrc.length, replacement: newPacksSrc });
-    }
-  }
-
-  for (const entry of entries) {
-    if (!matchedSlugs.has(entry.slug)) {
-      warnings.push(`${entry.slug}: немає такого товару в lib/catalog-data.ts — пропущено`);
     }
   }
 
