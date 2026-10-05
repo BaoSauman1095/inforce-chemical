@@ -87,6 +87,8 @@ import { isFlatPackPrice } from "./utils";
  *  - Розмір, якого ще немає в каталозі (5 л, 10 л, мішок іншої ваги), —
  *    це окрема фасування з окремою ціною: додається до пачок товару
  *    (лише для товарів в кг/л і лише для міток-розмірів).
+ *  - Товар в літрах, який портал знає, але пачки від 5 л якого не віддає:
+ *    ціна такої пачки прибирається («Ціна за запитом», рішення власника).
  *  - Партії «залишки 20XX» / «(акція)»: якщо в каталозі під цим slug одна
  *    пачка, а портал віддає лише такі партії — береться найбільша
  *    адекватна ціна серед них. Партії з іншими мітками («пошкоджено
@@ -181,6 +183,9 @@ const MAX_SANE_PRICE = 10_000_000;
 // одиниця), а не реальний рух ціни. Така зміна не застосовується, а йде в
 // попередження — перевіряється вручну.
 const MAX_PRICE_JUMP = 3;
+// Від скількох літрів пачка, якої немає в 1С, показується без ціни (рішення
+// власника: 5 л і більше — це окремі каністри, ціну за них вгадувати не можна).
+const NO_PRICE_FROM_LITERS = 5;
 const MIN_NEW_PACK_SIZE = 0.01;
 const LEFTOVER_LABEL_RE = /залишки|акці/i;
 // Партії, яких на сайті свідомо немає (залишки, акції, знижена схожість):
@@ -193,6 +198,12 @@ const EXCLUDED_VARIANT_RE = /втрат|знижк|списан|утилізац
 
 function isExcludedVariant(p: Price1CPack): boolean {
   return EXCLUDED_VARIANT_RE.test(`${p.packLabel ?? ""} ${p.characteristic ?? ""}`);
+}
+
+/** Літри з мітки на кшталт «5 л» чи «10/15 л» (береться менше число); для інших міток — undefined. */
+function labelLiters(label: string): number | undefined {
+  const m = label.trim().match(/^(\d+(?:[.,]\d+)?)(?:\/\d+(?:[.,]\d+)?)*\s*л$/i);
+  return m ? Number(m[1].replace(",", ".")) : undefined;
 }
 
 /** Розмір пачки з мітки каталогу в базових одиницях товару («0,25 кг» → 0.25, «500 гр» при «кг» → 0.5). */
@@ -300,7 +311,19 @@ export function applyPrice1CChanges(
         if (wantedIndex === -1 && label === singleCatalogPack) {
           wantedIndex = entry.packs.findIndex((p) => !p.packLabel && !p.characteristic);
         }
-        if (wantedIndex === -1) return full; // портал нічого не каже про цю пачку — не чіпаємо
+        if (wantedIndex === -1) {
+          // Портал знає цей товар, але цієї пачки не віддає. Для великих каністр
+          // (від 5 л) ціну прибираємо — на сайті «Ціна за запитом». Для решти
+          // пачок нічого не чіпаємо. Порожній список пачок від порталу — не
+          // команда стирати, а «нічого сказати».
+          const liters = unit === "л" ? labelLiters(label) : undefined;
+          if (liters !== undefined && liters >= NO_PRICE_FROM_LITERS && priceStr && entry.packs.length > 0) {
+            changedThisItem = true;
+            changes.push({ slug, pack: label, oldPrice: Number(priceStr) });
+            return `{ label: "${label}" }`;
+          }
+          return full;
+        }
         usedPortalPacks.add(wantedIndex);
 
         const wanted = entry.packs[wantedIndex];
