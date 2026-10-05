@@ -170,6 +170,9 @@ export async function fetchPrices1C(): Promise<Price1CEntry[]> {
 }
 
 const MAX_SANE_PRICE = 10_000_000;
+// Менше 10 г / 10 мл — майже напевно помилка в даних 1С (напр. «4 мл» у
+// товару, що продається каністрами), таку фасовку на сайт не додаємо.
+const MIN_NEW_PACK_SIZE = 0.01;
 const LEFTOVER_LABEL_RE = /залишки|акці/i;
 // Службові/дефектні варіанти фасування, які на сайт не йдуть (початкове
 // правило власника): часткова втрата, знижка, списання, утилізація, УУ,
@@ -316,8 +319,13 @@ export function applyPrice1CChanges(
     entry.packs.forEach((p, i) => {
       if (usedPortalPacks.has(i) || isExcludedVariant(p)) return;
       const label = p.packLabel;
-      if (!label || knownLabels.has(label) || catalogPackSize(label, unit) === undefined) return;
+      const size = label ? catalogPackSize(label, unit) : undefined;
+      if (!label || knownLabels.has(label) || size === undefined) return;
       usedPortalPacks.add(i);
+      if (size < MIN_NEW_PACK_SIZE) {
+        warnings.push(`${slug} / ${label}: підозріло мала фасовка з 1С — не додано`);
+        return;
+      }
       const raw = pickPrice(p, label, unit);
       if (!Number.isFinite(raw) || raw <= 0 || raw > MAX_SANE_PRICE) {
         warnings.push(`${slug} / ${label}: підозріла ціна з 1С (${raw}) — пропущено`);
