@@ -175,6 +175,20 @@ export async function fetchPrices1C(): Promise<{ entries: Price1CEntry[]; asOf: 
   return { entries: data.products, asOf: data.asOf };
 }
 
+// Товари, що в 1С/порталі мають інший slug, ніж у каталозі сайту:
+// «slug у порталі» → «slug у lib/catalog-data.ts». Гібриди ріпаку Limagrain там
+// лежать як «…-kruizer-ripak» (насіння, протруєне Cruiser) — це та сама позиція,
+// що на сайті (рішення власника). Прямий збіг slug завжди має пріоритет.
+const PORTAL_SLUG_ALIASES: Record<string, string> = {
+  "avenher-kruizer-ripak": "avenher",
+  "aviron-kruizer-ripak": "aviron",
+  "ambassador-kruizer-ripak": "ambasador",
+  "armada-kruizer-ripak": "armada",
+  "arkhitekt-kruizer-ripak": "arhitekt",
+  "austin-kruizer-ripak": "austin",
+  "konstruktor-kl-kruizer-ripak": "konstruktor",
+};
+
 const MAX_SANE_PRICE = 10_000_000;
 // Менше 10 г / 10 мл — майже напевно помилка в даних 1С (напр. «4 мл» у
 // товару, що продається каністрами), таку фасовку на сайт не додаємо.
@@ -251,7 +265,14 @@ export function applyPrice1CChanges(
   src: string,
   entries: Price1CEntry[]
 ): { next: string; changes: Price1CChange[]; warnings: string[] } {
-  const bySlug = new Map(entries.map((e) => [e.slug, e]));
+  const bySlug = new Map<string, Price1CEntry>();
+  for (const e of entries) {
+    const alias = PORTAL_SLUG_ALIASES[e.slug];
+    if (alias && !bySlug.has(alias)) bySlug.set(alias, e);
+  }
+  for (const e of entries) {
+    if (!PORTAL_SLUG_ALIASES[e.slug]) bySlug.set(e.slug, e);
+  }
   const changes: Price1CChange[] = [];
   const warnings: string[] = [];
   const splices: Splice[] = [];
