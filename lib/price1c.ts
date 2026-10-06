@@ -219,6 +219,17 @@ const SILENT_UNMATCHED_RE = /залишки|акці|схожість|пошко
 const EXCLUDED_VARIANT_RE =
   /втрат|знижк|списан|утилізац|товарн|пошкоджен|\(\s*1\s*грн\s*\)|(^|[\s,(])УУ([\s,)]|$)/i;
 
+/** Рік партії з мітки «залишки 2026» чи «залишки 2023–2026» (береться найбільший); без року — undefined. */
+function labelYear(label: string): number | undefined {
+  const years = Array.from(label.matchAll(/\b(20\d{2})\b/g)).map((m) => Number(m[1]));
+  return years.length ? Math.max(...years) : undefined;
+}
+
+/** Поточний рік за Києвом — на ньому відсікаються партії майбутніх років. */
+function kyivYear(now: Date): number {
+  return Number(new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Kyiv", year: "numeric" }).format(now));
+}
+
 function isExcludedVariant(p: Price1CPack): boolean {
   return EXCLUDED_VARIANT_RE.test(`${p.packLabel ?? ""} ${p.characteristic ?? ""}`);
 }
@@ -278,8 +289,10 @@ function pickPrice(pack: Price1CPack, label: string, unit: string, vatFactor = 1
 
 export function applyPrice1CChanges(
   src: string,
-  entries: Price1CEntry[]
+  entries: Price1CEntry[],
+  now: Date = new Date()
 ): { next: string; changes: Price1CChange[]; warnings: string[] } {
+  const currentYear = kyivYear(now);
   const bySlug = new Map<string, Price1CEntry>();
   for (const e of entries) {
     const alias = PORTAL_SLUG_ALIASES[e.slug];
@@ -339,18 +352,26 @@ export function applyPrice1CChanges(
         }
         if (wantedIndex === -1 && label === singleCatalogPack) {
           // Партії «залишки 20XX» / «(акція)»: у каталозі одна пачка, а портал
-          // віддає кілька партій окремими фасуваннями — береться найбільша
-          // адекватна ціна серед них (рішення власника).
+          // віддає кілька партій окремими фасуваннями. Рішення власника: беремо
+          // партію поточного року, а якщо її немає — найсвіжішу з минулих;
+          // партії майбутніх років («очікуємо поставку») не враховуються.
+          // Партії без року («акція») — лише якщо немає жодної з роком.
+          // У межах одного року береться найбільша адекватна ціна.
           let best = -1;
+          let bestYear = -2;
           let bestPrice = 0;
           entry.packs.forEach((p, i) => {
             const l = labelOf(p);
             if (!l || !LEFTOVER_LABEL_RE.test(l) || isExcludedVariant(p)) return;
             usedPortalPacks.add(i);
+            const year = labelYear(l);
+            if (year !== undefined && year > currentYear) return;
             const price = pickPrice(p, label, unit, vatFactor);
             if (!Number.isFinite(price) || price <= 0 || price > MAX_SANE_PRICE) return;
-            if (price > bestPrice) {
+            const rank = year ?? -1;
+            if (rank > bestYear || (rank === bestYear && price > bestPrice)) {
               best = i;
+              bestYear = rank;
               bestPrice = price;
             }
           });
