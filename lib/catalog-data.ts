@@ -410,7 +410,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "invitejshn",
           name: "Інвітейшн",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 4835 }],
+          packs: [{ label: "п.о." }],
           unit: "п.о.",
           tagline: "Високоенергетичний силос для стабільного здоров'я худоби",
           description:
@@ -746,7 +746,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg31252",
           name: "ЛГ 31252",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 4284 }],
+          packs: [{ label: "п.о." }],
           unit: "п.о.",
           tagline: "Універсальний гібрид ФАО 260 для зерна, крупи й силосу",
           description:
@@ -770,7 +770,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg31271",
           name: "ЛГ 31271",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 4835 }],
+          packs: [{ label: "п.о." }],
           unit: "п.о.",
           tagline: "Високоенергетичний силосний гібрид ФАО 270 з оптимальним співвідношенням зерна",
           description:

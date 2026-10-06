@@ -87,7 +87,7 @@ export default function ProductCard({ item }: { item: FlatCatalogItem }) {
           <p className="mt-3 font-heading text-[15px] font-bold text-brand">
             {formatPrice(selectedPack.price)} грн
             {!isFlatPackPrice(selectedPack.label, item.unit) && `/${item.unit}`}
-            <span className="ml-1 font-sans text-[11px] font-medium text-[#8a8582]">орієнтовно, з ПДВ</span>
+            <span className="ml-1 font-sans text-[11px] font-medium text-[#8a8582]">з ПДВ</span>
           </p>
         ) : (
           <p className="mt-3 font-heading text-[13.5px] font-semibold text-[#8a8582]">
