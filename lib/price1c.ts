@@ -126,6 +126,14 @@ interface PublicPricesResponse {
 const EXPECTED_PRICE_TYPE = "prepay_indicative";
 const EXPECTED_CURRENCY = "UAH";
 const EXPECTED_VAT = 1.2;
+/**
+ * Насіння оподатковується ПДВ 14%, решта — 20%. Портал віддає ціни з 20%
+ * (`vat: 1.2`), тож для товарів вкладки «Насіння» ціна перераховується:
+ * без ПДВ = ціна / 1.2, з ПДВ 14% = без ПДВ × 1.14 (разом ціна × 0.95).
+ */
+const SEED_VAT = 1.14;
+const SEEDS_START_MARK = "\n  seeds: [";
+const SEEDS_END_MARK = "\n  fert: [";
 
 export async function fetchPrices1C(): Promise<{ entries: Price1CEntry[]; asOf: string }> {
   const url = process.env.PUBLIC_PRICES_API_URL;
@@ -264,8 +272,8 @@ function samePackagingUnit(a: string, b: string): boolean {
 }
 
 /** Готове число для `price` каталогу під цю пачку — ставка чи сума за упаковку, залежно від типу пачки. */
-function pickPrice(pack: Price1CPack, label: string, unit: string): number {
-  return isFlatPackPrice(label, unit) ? pack.priceUahPerPack : pack.priceUahPerUnit;
+function pickPrice(pack: Price1CPack, label: string, unit: string, vatFactor = 1): number {
+  return (isFlatPackPrice(label, unit) ? pack.priceUahPerPack : pack.priceUahPerUnit) * vatFactor;
 }
 
 export function applyPrice1CChanges(
@@ -284,6 +292,17 @@ export function applyPrice1CChanges(
   const warnings: string[] = [];
   const splices: Splice[] = [];
 
+  // Межі вкладки «Насіння» у вихідному тексті каталогу. Якщо їх не знайдено,
+  // насіння отримало б 20% ПДВ, тож це стоп-кран: оновлення скасовується.
+  const seedsStart = src.indexOf(SEEDS_START_MARK);
+  const seedsEnd = src.indexOf(SEEDS_END_MARK);
+  if (seedsStart === -1 || seedsEnd === -1 || seedsEnd < seedsStart) {
+    throw new Error(
+      "Не знайдено межі вкладки «Насіння» в каталозі (seeds/fert) — неможливо застосувати ПДВ 14%, оновлення скасовано"
+    );
+  }
+  const seedVatFactor = SEED_VAT / EXPECTED_VAT;
+
   ITEM_RE.lastIndex = 0;
   let m: RegExpExecArray | null;
   while ((m = ITEM_RE.exec(src))) {
@@ -292,6 +311,7 @@ export function applyPrice1CChanges(
     const unit = m[3];
     const entry = bySlug.get(slug);
     if (!entry) continue;
+    const vatFactor = m.index >= seedsStart && m.index < seedsEnd ? seedVatFactor : 1;
 
     const catalogLabels = Array.from(packsSrc.matchAll(PACK_OBJ_RE)).map((pm) => pm[1]);
     const singleCatalogPack = catalogLabels.length === 1 ? catalogLabels[0] : undefined;
@@ -327,7 +347,7 @@ export function applyPrice1CChanges(
             const l = labelOf(p);
             if (!l || !LEFTOVER_LABEL_RE.test(l) || isExcludedVariant(p)) return;
             usedPortalPacks.add(i);
-            const price = pickPrice(p, label, unit);
+            const price = pickPrice(p, label, unit, vatFactor);
             if (!Number.isFinite(price) || price <= 0 || price > MAX_SANE_PRICE) return;
             if (price > bestPrice) {
               best = i;
@@ -355,7 +375,7 @@ export function applyPrice1CChanges(
         usedPortalPacks.add(wantedIndex);
 
         const wanted = entry.packs[wantedIndex];
-        const rawNew = pickPrice(wanted, label, unit);
+        const rawNew = pickPrice(wanted, label, unit, vatFactor);
 
         if (!Number.isFinite(rawNew) || rawNew <= 0 || rawNew > MAX_SANE_PRICE) {
           warnings.push(`${slug} / ${label}: підозріла ціна з 1С (${rawNew}) — пропущено`);
@@ -397,7 +417,7 @@ export function applyPrice1CChanges(
       if (!label || knownLabels.has(label) || size === undefined) return;
       usedPortalPacks.add(i);
       if (size < MIN_NEW_PACK_SIZE) return; // помилка даних 1С — мовчки не додаємо
-      const raw = pickPrice(p, label, unit);
+      const raw = pickPrice(p, label, unit, vatFactor);
       if (!Number.isFinite(raw) || raw <= 0 || raw > MAX_SANE_PRICE) {
         warnings.push(`${slug} / ${label}: підозріла ціна з 1С (${raw}) — пропущено`);
         return;
