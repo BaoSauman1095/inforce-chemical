@@ -992,7 +992,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "avenher",
           name: "Авенгер",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 12491 }],
+          packs: [{ label: "п.о.", price: 12246 }],
           unit: "п.о.",
           tagline: "Гібрид ріпаку озимого з максимальним потенціалом урожайності",
           description:
@@ -1017,7 +1017,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "aviron",
           name: "Авірон",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 7544 }],
+          packs: [{ label: "п.о.", price: 7396 }],
           unit: "п.о.",
           tagline: "Пластичний гібрид N-Flex з високою зимостійкістю — залишки партії",
           description:
@@ -1043,7 +1043,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "ambasador",
           name: "Амбассадор",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 11563 }],
+          packs: [{ label: "п.о.", price: 11337 }],
           unit: "п.о.",
           tagline: "Гібрид з високою адаптивністю і генетичною стійкістю до фомозу та TuYV",
           description:
@@ -1069,7 +1069,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "armada",
           name: "Армада",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 13109 }],
+          packs: [{ label: "п.о.", price: 12852 }],
           unit: "п.о.",
           tagline: "Середньостиглий гібрид N-Flex/Sclero-Flex з високою зимостійкістю",
           description:
@@ -1095,7 +1095,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "arhitekt",
           name: "Архітект",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 9090 }],
+          packs: [{ label: "п.о.", price: 8912 }],
           unit: "п.о.",
           tagline: "Один з найпопулярніших гібридів у Європі — залишки партії",
           description:
@@ -1121,7 +1121,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "austin",
           name: "Аустін",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 7420 }],
+          packs: [{ label: "п.о.", price: 7275 }],
           unit: "п.о.",
           tagline: "Гібрид з відмінним комплексом стійкості до хвороб і розтріскування стручків",
           description:
@@ -1146,7 +1146,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "konstruktor",
           name: "Конструктор КЛ",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 9894 }],
+          packs: [{ label: "п.о.", price: 9700 }],
           unit: "п.о.",
           tagline: "Гібрид на технології Clearfield з потенціалом урожайності до 70 ц/га",
           description:
