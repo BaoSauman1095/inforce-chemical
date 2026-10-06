@@ -256,6 +256,12 @@ function labelOf(p: Price1CPack): string | null {
   return p.packLabel || p.characteristic || null;
 }
 
+/** «п.о.» у каталозі і «міш»/«мішок»/«уп» у 1С — одна й та сама пакувальна одиниця (насіння, мішки). */
+const PACKAGING_UNITS = new Set(["п.о.", "міш", "мішок", "уп", "упак", "упаковка"]);
+function samePackagingUnit(a: string, b: string): boolean {
+  return PACKAGING_UNITS.has(a.trim().toLowerCase()) && PACKAGING_UNITS.has(b.trim().toLowerCase());
+}
+
 /** Готове число для `price` каталогу під цю пачку — ставка чи сума за упаковку, залежно від типу пачки. */
 function pickPrice(pack: Price1CPack, label: string, unit: string): number {
   return isFlatPackPrice(label, unit) ? pack.priceUahPerPack : pack.priceUahPerUnit;
@@ -427,7 +433,7 @@ export function applyPrice1CChanges(
       );
     });
 
-    if (entry.unit !== undefined && entry.unit !== unit) {
+    if (entry.unit !== undefined && entry.unit !== unit && !samePackagingUnit(entry.unit, unit)) {
       warnings.push(
         `${slug}: одиниця з порталу ("${entry.unit}") не збігається з каталогом ("${unit}") — перевірте вручну`
       );
