@@ -20,7 +20,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50450",
           name: "ЛГ50450",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 9672 }],
+          packs: [{ label: "п.о.", price: 8233 }],
           unit: "п.о.",
           tagline: "Нова генетика для стабільно високого раннього врожаю",
           description:
@@ -44,7 +44,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50455-klp",
           name: "ЛГ50455 КЛП",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 11169 }],
+          packs: [{ label: "п.о.", price: 9326 }],
           unit: "п.о.",
           tagline: "Найвищий урожай серед ранніх гібридів Clearfield Plus",
           description:
@@ -92,7 +92,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50479-sx",
           name: "ЛГ50479 SX",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 11744 }],
+          packs: [{ label: "п.о.", price: 9787 }],
           unit: "п.о.",
           tagline: "Високоврожайний гібрид технології Express у своїй групі стиглості",
           description:
@@ -116,7 +116,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50480",
           name: "ЛГ50480",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 9672 }],
+          packs: [{ label: "п.о.", price: 7887 }],
           unit: "п.о.",
           tagline: "Низькорослий посухостійкий гібрид для півдня і сходу України",
           description:
@@ -140,7 +140,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50550-klp",
           name: "ЛГ50550 КЛП",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 11456 }],
+          packs: [{ label: "п.о.", price: 9441 }],
           unit: "п.о.",
           tagline: "Максимальна стабільність у групі стиглості на технології Clearfield Plus",
           description:
@@ -164,7 +164,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50639-sx",
           name: "ЛГ50639 SX",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 11514 }],
+          packs: [{ label: "п.о.", price: 9729 }],
           unit: "п.о.",
           tagline: "Високоврожайний гібрид Express Sun для степу й лісостепу",
           description:
@@ -188,7 +188,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-5555-klp",
           name: "ЛГ5555 КЛП",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 10420 }],
+          packs: [{ label: "п.о.", price: 8808 }],
           unit: "п.о.",
           tagline: "Посухостійкий низькорослий гібрид Clearfield Plus для півдня України",
           description:
@@ -212,7 +212,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-59580",
           name: "ЛГ59580",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 10766 }],
+          packs: [{ label: "п.о.", price: 8981 }],
           unit: "п.о.",
           tagline: "Гібрид Express для південних регіонів з високою стресостійкістю",
           description:
