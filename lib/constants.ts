@@ -18,6 +18,7 @@ export const NAV_LINKS = [
   { href: "/", label: "Головна" },
   { href: "/#catalog", label: "Каталог продукції" },
   { href: "/#partners", label: "Партнери" },
+  { href: "/kalkulyator", label: "Калькулятор фермера" },
   { href: "/#contacts", label: "Контакти" },
 ] as const;
 
