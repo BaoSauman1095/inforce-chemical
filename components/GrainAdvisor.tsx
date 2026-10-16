@@ -14,6 +14,8 @@ interface CropRow {
   stock: string;
   priceNow: string;
   priceFuture: string;
+  /** Витрати на 1 га, грн; порожньо — рентабельність не рахується. */
+  costPerHa?: string;
 }
 
 interface FormState {
@@ -23,6 +25,7 @@ interface FormState {
   storageCost: string;
   storageLoss: string;
   creditRate: string;
+  protectCost?: boolean;
 }
 
 const STORAGE_KEY = "grain-advisor-v1";
@@ -37,6 +40,7 @@ function rowFromCrop(id: string, area: number, yieldT: number): CropRow {
     stock: "",
     priceNow: c.priceNow ? String(c.priceNow) : "",
     priceFuture: c.priceFuture ? String(c.priceFuture) : "",
+    costPerHa: "",
   };
 }
 
@@ -47,6 +51,7 @@ const DEFAULT_STATE: FormState = {
   storageCost: "0",
   storageLoss: "0",
   creditRate: "0",
+  protectCost: false,
 };
 
 function num(v: string): number {
@@ -65,6 +70,8 @@ function stockOf(r: CropRow): number {
 const uah = (v: number) => `${formatPrice(Math.round(v))} грн`;
 const tons = (v: number) =>
   `${new Intl.NumberFormat("uk-UA", { maximumFractionDigits: 1 }).format(Math.round(v * 10) / 10)} т`;
+const formatPct = (v: number) =>
+  `${new Intl.NumberFormat("uk-UA", { maximumFractionDigits: 0 }).format(Math.round(v))}%`;
 const coef = (v: number) => new Intl.NumberFormat("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
 
 function NumField({
@@ -148,6 +155,9 @@ export default function GrainAdvisor() {
       stockT: stockOf(r),
       priceNow: num(r.priceNow),
       priceFuture: num(r.priceFuture),
+      areaHa: num(r.area),
+      yieldT: num(r.yieldT),
+      costPerHa: num(r.costPerHa ?? ""),
     }));
     return advise(crops, {
       cashNeeded: cash,
@@ -155,6 +165,7 @@ export default function GrainAdvisor() {
       storageCostPerTonMonth: num(state.storageCost),
       storageLossPctPerMonth: num(state.storageLoss),
       creditRatePct: num(state.creditRate),
+      protectCost: !!state.protectCost,
     });
   }, [state, cash]);
 
@@ -225,10 +236,20 @@ export default function GrainAdvisor() {
                         value={r.priceFuture}
                         onChange={(v) => setRow(r.key, { priceFuture: v })}
                       />
+                      <NumField
+                        label="Витрати на 1 га"
+                        suffix="грн/га"
+                        value={r.costPerHa ?? ""}
+                        placeholder="необов'язково"
+                        onChange={(v) => setRow(r.key, { costPerHa: v })}
+                      />
                     </div>
                     <p className="mt-2.5 text-[12.5px] text-[#8a8582]">
                       Валовий збір: {tons(gross)}
                       {r.stock.trim() ? ` · у розрахунку: ${tons(stockOf(r))}` : ""}
+                      {num(r.costPerHa ?? "") > 0 && num(r.yieldT) > 0
+                        ? ` · собівартість 1 т: ${uah(num(r.costPerHa ?? "") / num(r.yieldT))}`
+                        : ""}
                     </p>
                   </div>
                 );
@@ -271,6 +292,21 @@ export default function GrainAdvisor() {
                 Зберігання і втрати маси зменшують майбутню ціну тонни. Ставка кредиту потрібна, щоб порівняти:
                 продати зерно зараз чи позичити ту саму суму і продати пізніше.
               </p>
+              <label className="mt-4 flex cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={!!state.protectCost}
+                  onChange={(e) => set({ protectCost: e.target.checked })}
+                  className="mt-1 h-4 w-4 flex-none accent-[#8B1A2B]"
+                />
+                <span className="text-[14px] leading-snug text-[#3d3a38]">
+                  Не продавати нижче собівартості, поки вистачає інших культур
+                  <span className="mt-0.5 block text-[12.5px] text-[#8a8582]">
+                    Потрібні витрати на 1 га. Гроші на вирощування вже витрачено, тож правило може зменшити загальний
+                    прибуток — нижче буде видно, на скільки.
+                  </span>
+                </span>
+              </label>
             </details>
           </Panel>
         </div>
@@ -289,6 +325,11 @@ export default function GrainAdvisor() {
                         <span className="text-brand">{l.name}</span>: продати {tons(l.tons)}
                       </p>
                       <p className="text-[14px] font-semibold text-[#5f5b58]">{uah(l.revenue)}</p>
+                      {l.belowCost && (
+                        <p className="w-full text-[12.5px] text-[#8a8582]">
+                          Ціна зараз нижча за собівартість тонни, але інші культури втратили б більше.
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -328,6 +369,80 @@ export default function GrainAdvisor() {
               </>
             )}
           </Panel>
+
+          {ready && result.hectares.length === 0 && (
+            <p className="rounded-[18px] border border-white/10 px-4 py-3.5 text-[13.5px] leading-relaxed text-paper/70">
+              Внесіть «Витрати на 1 га» для культур — калькулятор покаже собівартість тонни, прибуток і рентабельність
+              кожного гектара.
+            </p>
+          )}
+
+          {ready && result.hectares.length > 0 && (
+            <Panel title="Рентабельність 1 га">
+              {(() => {
+                const top = result.hectares[0];
+                return (
+                  <p className="text-[14.5px] leading-relaxed text-[#3d3a38]">
+                    Найрентабельніший гектар за очікуваними цінами — <b>{top.name.toLowerCase()}</b>:{" "}
+                    {uah(top.profitFuture)} прибутку з 1 га ({formatPct(top.marginFuturePct)}).
+                  </p>
+                );
+              })()}
+              <div className="mt-4 flex flex-col gap-3">
+                {result.hectares.map((h) => (
+                  <div key={h.id} className="rounded-2xl border border-[#ebe7e4] p-3.5">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                      <p className="font-heading text-[15.5px] font-bold text-[#141414]">{h.name}</p>
+                      <p className="text-[12.5px] text-[#8a8582]">
+                        {formatPrice(h.areaHa)} га · собівартість 1 т {uah(h.costPerTon)}
+                      </p>
+                    </div>
+                    <div className="mt-2.5 grid grid-cols-3 gap-2">
+                      {[
+                        { label: "Зараз", profit: h.profitNow, pctv: h.marginNowPct },
+                        { label: "За прогнозом", profit: h.profitFuture, pctv: h.marginFuturePct },
+                        { label: "За планом", profit: h.profitPlan, pctv: h.marginPlanPct },
+                      ].map((x) => (
+                        <div key={x.label} className="min-w-0 rounded-xl bg-[#f6f3f1] px-2.5 py-2">
+                          <p className="text-[10.5px] font-semibold uppercase tracking-[.06em] text-[#8a8582]">{x.label}</p>
+                          <p
+                            className={cn(
+                              "mt-0.5 text-[14px] font-bold",
+                              x.profit < 0 ? "text-red-700" : "text-[#141414]"
+                            )}
+                          >
+                            {formatPct(x.pctv)}
+                          </p>
+                          <p className="text-[11.5px] leading-tight text-[#5f5b58]">
+                            {formatPrice(Math.round(x.profit))} <span className="whitespace-nowrap">грн/га</span>
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {result.farmProfit !== null && (
+                <p className="mt-4 text-[14px] leading-relaxed text-[#3d3a38]">
+                  Прибуток усіх гектарів господарства за рекомендованим планом: <b>{uah(result.farmProfit)}</b>.
+                  План підібрано так, щоб ця сума була найбільшою за потрібних {uah(cash)} зараз.
+                </p>
+              )}
+              {result.costRule && (
+                <p className="mt-3 rounded-xl bg-[#f6f3f1] px-3.5 py-3 text-[13.5px] leading-relaxed text-[#3d3a38]">
+                  {state.protectCost
+                    ? "Правило «не продавати нижче собівартості» увімкнене: воно коштує господарству "
+                    : "Якщо увімкнути правило «не продавати нижче собівартості», господарство недоотримає ще "}
+                  <b>{uah(result.costRule.withRule - result.costRule.withoutRule)}</b> майбутнього доходу (втрата{" "}
+                  {uah(result.costRule.withRule)} проти {uah(result.costRule.withoutRule)} без нього).
+                </p>
+              )}
+              <p className="mt-3 text-[12.5px] leading-relaxed text-[#8a8582]">
+                Рентабельність = прибуток з 1 га / витрати на 1 га. «За планом» — частина врожаю продана зараз, решта за
+                очікуваною ціною.
+              </p>
+            </Panel>
+          )}
 
           {ready && sorted.length > 0 && (
             <Panel title="Чому саме так">

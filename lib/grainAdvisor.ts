@@ -19,6 +19,15 @@
  * (k = 1,8), кукурудза 4000 → 9000 (k = 2,25): 1 000 000 грн вигідніше
  * взяти з соняшнику (66,7 т), втрата майбутнього доходу 800 000 грн проти
  * 1 000 000 з пшениці і 1 250 000 з кукурудзи.
+ *
+ * Рентабельність гектара. Якщо задано площу, урожайність і витрати на 1 га,
+ * для культури рахується собівартість тонни (витрати / урожайність) і
+ * прибуток з 1 га = урожайність × ціна − витрати, рентабельність =
+ * прибуток / витрати. Правило «не продавати нижче собівартості» ставить
+ * культури, у яких ціна зараз нижча за собівартість тонни, у кінець черги.
+ * Витрати вже зроблено, тож мінімум втрат — це водночас максимум сумарного
+ * прибутку всіх гектарів; правило може коштувати господарству грошей, тому
+ * воно вимкнене за замовчуванням, а `costRule` показує його ціну.
  */
 
 export interface CropInput {
@@ -30,6 +39,12 @@ export interface CropInput {
   priceNow: number;
   /** Очікувана ціна в майбутньому (наближена до світової), грн/т. */
   priceFuture: number;
+  /** Посівна площа, га. */
+  areaHa?: number;
+  /** Урожайність, т/га. */
+  yieldT?: number;
+  /** Витрати на вирощування 1 га, грн (насіння, добрива, ЗЗР, паливо, оренда…). */
+  costPerHa?: number;
 }
 
 export interface AdvisorOptions {
@@ -43,6 +58,8 @@ export interface AdvisorOptions {
   storageLossPctPerMonth: number;
   /** Річна ставка кредиту, % — для порівняння «продати чи позичити». 0 — не порівнювати. */
   creditRatePct: number;
+  /** Не продавати культури нижче собівартості, поки вистачає інших. */
+  protectCost?: boolean;
 }
 
 export interface CropAnalysis {
@@ -61,6 +78,33 @@ export interface CropAnalysis {
   lossPerTon: number;
   /** Вартість усього запасу за ціною зараз, грн. */
   valueNow: number;
+  areaHa?: number;
+  yieldT?: number;
+  costPerHa?: number;
+  /** Собівартість 1 т, грн; undefined — не задано витрат чи урожайності. */
+  costPerTon?: number;
+  /** Ціна зараз нижча за собівартість тонни. */
+  belowCost: boolean;
+}
+
+export interface HectareEconomics {
+  id: string;
+  name: string;
+  areaHa: number;
+  yieldT: number;
+  costPerHa: number;
+  costPerTon: number;
+  /** Прибуток з 1 га, грн, і рентабельність, % — за ціною зараз. */
+  profitNow: number;
+  marginNowPct: number;
+  /** Те саме за очікуваною ціною (з урахуванням зберігання). */
+  profitFuture: number;
+  marginFuturePct: number;
+  /** Те саме за рекомендованим планом: частина продана зараз, решта потім. */
+  profitPlan: number;
+  marginPlanPct: number;
+  /** Прибуток з усієї площі культури за планом, грн. */
+  profitPlanTotal: number;
 }
 
 export interface SellLine {
@@ -70,6 +114,8 @@ export interface SellLine {
   revenue: number;
   /** Недоотриманий майбутній дохід через продаж зараз, грн. */
   futureLoss: number;
+  /** Продається нижче собівартості. */
+  belowCost: boolean;
 }
 
 export interface Plan {
@@ -98,6 +144,15 @@ export interface AdvisorResult {
   creditCost: number | null;
   /** Культури, які вигідніше продати зараз незалежно від потреби в грошах. */
   sellNowAnyway: string[];
+  /** Економіка 1 га — лише для культур із площею, урожайністю і витратами. */
+  hectares: HectareEconomics[];
+  /** Прибуток усіх гектарів (з витратами) за планом, грн; null — витрати задано не для всіх культур. */
+  farmProfit: number | null;
+  /**
+   * Порівняння з протилежним налаштуванням «не продавати нижче собівартості»:
+   * втрата майбутнього доходу з правилом і без. null — правило нічого не змінює.
+   */
+  costRule: { withRule: number; withoutRule: number } | null;
 }
 
 const TON_STEP = 0.1;
@@ -113,6 +168,8 @@ export function analyzeCrops(crops: CropInput[], opts: AdvisorOptions): CropAnal
     .map((c) => {
       const netFuture = c.priceFuture * (1 - lossShare) - opts.storageCostPerTonMonth * opts.months;
       const ratio = netFuture / c.priceNow;
+      const costPerTon =
+        c.costPerHa && c.costPerHa > 0 && c.yieldT && c.yieldT > 0 ? c.costPerHa / c.yieldT : undefined;
       return {
         id: c.id,
         name: c.name,
@@ -124,13 +181,23 @@ export function analyzeCrops(crops: CropInput[], opts: AdvisorOptions): CropAnal
         lossPerUah: ratio - 1,
         lossPerTon: netFuture - c.priceNow,
         valueNow: c.stockT * c.priceNow,
+        areaHa: c.areaHa,
+        yieldT: c.yieldT,
+        costPerHa: c.costPerHa,
+        costPerTon,
+        belowCost: costPerTon !== undefined && c.priceNow < costPerTon,
       };
     });
 }
 
-/** Оптимальний план: продавати культури в порядку зростання ratio, поки не набрано суму. */
-export function buildPlan(crops: CropAnalysis[], cashNeeded: number): Plan {
-  const order = [...crops].sort((a, b) => a.ratio - b.ratio);
+/**
+ * Оптимальний план: продавати культури в порядку зростання ratio, поки не
+ * набрано суму. З `protectCost` культури нижче собівартості йдуть останніми.
+ */
+export function buildPlan(crops: CropAnalysis[], cashNeeded: number, protectCost = false): Plan {
+  const order = [...crops].sort(
+    (a, b) => (protectCost ? Number(a.belowCost) - Number(b.belowCost) : 0) || a.ratio - b.ratio
+  );
   const lines: SellLine[] = [];
   let remaining = cashNeeded;
   for (const c of order) {
@@ -138,7 +205,7 @@ export function buildPlan(crops: CropAnalysis[], cashNeeded: number): Plan {
     const tons = Math.min(c.stockT, roundUpTons(remaining / c.priceNow));
     if (tons <= 0) continue;
     const revenue = tons * c.priceNow;
-    lines.push({ id: c.id, name: c.name, tons, revenue, futureLoss: tons * c.lossPerTon });
+    lines.push({ id: c.id, name: c.name, tons, revenue, futureLoss: tons * c.lossPerTon, belowCost: c.belowCost });
     remaining -= revenue;
   }
   return {
@@ -152,7 +219,14 @@ export function buildPlan(crops: CropAnalysis[], cashNeeded: number): Plan {
 export function advise(input: CropInput[], opts: AdvisorOptions): AdvisorResult {
   const crops = analyzeCrops(input, opts);
   const cash = Math.max(0, opts.cashNeeded);
-  const plan = buildPlan(crops, cash);
+  const plan = buildPlan(crops, cash, opts.protectCost);
+  const otherPlan = buildPlan(crops, cash, !opts.protectCost);
+  const costRule =
+    plan.feasible && otherPlan.feasible && Math.abs(otherPlan.futureLoss - plan.futureLoss) > 0.5
+      ? opts.protectCost
+        ? { withRule: plan.futureLoss, withoutRule: otherPlan.futureLoss }
+        : { withRule: otherPlan.futureLoss, withoutRule: plan.futureLoss }
+      : null;
 
   const alternatives: Alternative[] = crops.map((c) => {
     const tons = roundUpTons(cash / c.priceNow);
@@ -176,6 +250,7 @@ export function advise(input: CropInput[], opts: AdvisorOptions): AdvisorResult 
   const planTotal =
     plan.revenue + crops.reduce((s, c) => s + (c.stockT - (soldById.get(c.id) ?? 0)) * c.netFuture, 0);
 
+  const hectares = hectareEconomics(crops, soldById);
   const creditCost =
     opts.creditRatePct > 0 ? (cash * opts.creditRatePct * opts.months) / 1200 : null;
 
@@ -187,5 +262,43 @@ export function advise(input: CropInput[], opts: AdvisorOptions): AdvisorResult 
     planTotal,
     creditCost,
     sellNowAnyway: crops.filter((c) => c.ratio <= 1).map((c) => c.name),
+    hectares,
+    farmProfit:
+      crops.length > 0 && hectares.length === crops.length
+        ? planTotal - crops.reduce((s, c) => s + (c.costPerHa ?? 0) * (c.areaHa ?? 0), 0)
+        : null,
+    costRule,
   };
+}
+
+const pct = (profit: number, cost: number) => (profit / cost) * 100;
+
+/** Прибуток і рентабельність 1 га кожної культури: зараз, за прогнозом і за планом. */
+export function hectareEconomics(crops: CropAnalysis[], soldById: Map<string, number>): HectareEconomics[] {
+  const out: HectareEconomics[] = [];
+  for (const c of crops) {
+    if (!c.areaHa || !c.yieldT || !c.costPerHa || c.costPerTon === undefined) continue;
+    const sold = Math.min(c.stockT, soldById.get(c.id) ?? 0);
+    // Середня ціна тонни за планом: продане — за ціною зараз, решта — за майбутньою.
+    const avgPrice = (sold * c.priceNow + (c.stockT - sold) * c.netFuture) / c.stockT;
+    const profitNow = c.yieldT * c.priceNow - c.costPerHa;
+    const profitFuture = c.yieldT * c.netFuture - c.costPerHa;
+    const profitPlan = c.yieldT * avgPrice - c.costPerHa;
+    out.push({
+      id: c.id,
+      name: c.name,
+      areaHa: c.areaHa,
+      yieldT: c.yieldT,
+      costPerHa: c.costPerHa,
+      costPerTon: c.costPerTon,
+      profitNow,
+      marginNowPct: pct(profitNow, c.costPerHa),
+      profitFuture,
+      marginFuturePct: pct(profitFuture, c.costPerHa),
+      profitPlan,
+      marginPlanPct: pct(profitPlan, c.costPerHa),
+      profitPlanTotal: profitPlan * c.areaHa,
+    });
+  }
+  return out.sort((a, b) => b.profitFuture - a.profitFuture);
 }
