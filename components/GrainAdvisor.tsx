@@ -160,6 +160,12 @@ export default function GrainAdvisor() {
   const storageType = state.storageType ?? "warehouse";
   const normFor = (name: string) =>
     storageType === "custom" ? null : naturalLossNorm(name, storageType, months);
+  const lossRows = state.rows.map((r) => {
+    const norm = normFor(r.name);
+    const lostT = norm ? (stockOf(r) * norm.pct) / 100 : 0;
+    return { key: r.key, name: r.name.trim() || "Культура", norm, lostT, lostUah: lostT * num(r.priceFuture) };
+  });
+  const lossTotal = lossRows.reduce((t, l) => ({ tons: t.tons + l.lostT, uah: t.uah + l.lostUah }), { tons: 0, uah: 0 });
   const result = useMemo(() => {
     const crops: CropInput[] = state.rows.map((r) => ({
       id: r.key,
@@ -326,19 +332,43 @@ export default function GrainAdvisor() {
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <NumField label="Чекати ціну" suffix="міс" value={state.months} onChange={(v) => set({ months: v })} />
                 <NumField label="Зберігання" suffix="грн/т·міс" value={state.storageCost} onChange={(v) => set({ storageCost: v })} />
-                <NumField
-                  label={storageType === "custom" ? "Втрати маси" : "Втрати без норми"}
-                  suffix="%/міс"
-                  value={state.storageLoss}
-                  onChange={(v) => set({ storageLoss: v })}
-                />
                 <NumField label="Ставка кредиту" suffix="% річних" value={state.creditRate} onChange={(v) => set({ creditRate: v })} />
+                {(storageType === "custom" || lossRows.some((l) => !l.norm)) && (
+                  <NumField
+                    label={storageType === "custom" ? "Втрати маси" : "Втрати для культур без норми"}
+                    suffix="%/міс"
+                    value={state.storageLoss}
+                    onChange={(v) => set({ storageLoss: v })}
+                  />
+                )}
               </div>
+              {storageType !== "custom" && lossRows.length > 0 && (
+                <div className="mt-4 rounded-2xl bg-[#f6f3f1] p-3.5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[.1em] text-[#8a8582]">
+                    Втрати маси за {formatPrice(months)} міс. · {STORAGE_TYPES.find((t) => t.id === storageType)?.label}
+                  </p>
+                  <div className="mt-2 flex flex-col gap-1.5">
+                    {lossRows.map((l) => (
+                      <div key={l.key} className="flex items-baseline justify-between gap-3 text-[13.5px]">
+                        <span className="text-[#141414]">{l.name}</span>
+                        <span className="text-right text-[#5f5b58]">
+                          {l.norm
+                            ? `${pctFine(l.norm.pct)} · ${tons(l.lostT)}${l.lostUah > 0 ? ` ≈ ${uah(l.lostUah)}` : ""}`
+                            : `норми немає · ${state.storageLoss || "0"} %/міс`}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {lossTotal.tons > 0 && (
+                    <p className="mt-2.5 border-t border-black/[.06] pt-2 text-[13.5px] font-semibold text-[#141414]">
+                      Разом: {tons(lossTotal.tons)}
+                      {lossTotal.uah > 0 ? ` ≈ ${uah(lossTotal.uah)} за очікуваними цінами` : ""}
+                    </p>
+                  )}
+                </div>
+              )}
               <p className="mt-3 text-[12.5px] leading-relaxed text-[#8a8582]">
-                Природні втрати маси рахуються за нормами Мінагрополітики (наказ від 12.06.2019 № 316) залежно від
-                культури, місця і строку зберігання — їх видно під кожною культурою. Зберігання і втрати зменшують
-                майбутню ціну тонни. Ставка кредиту потрібна, щоб порівняти: продати зерно зараз чи позичити ту саму суму
-                і продати пізніше.
+                Природні втрати маси рахуються за нормами Мінагрополітики (наказ № 316).
               </p>
               <label className="mt-4 flex cursor-pointer items-start gap-3">
                 <input
