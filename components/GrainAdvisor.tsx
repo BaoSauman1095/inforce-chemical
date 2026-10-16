@@ -17,6 +17,10 @@ interface CropRow {
   priceFuture: string;
   /** Витрати на 1 га, грн; порожньо — рентабельність не рахується. */
   costPerHa?: string;
+  /** Кукурудза: лишається в полі, збирання взимку чи навесні. Втрати вводить фермер, не норми наказу № 316. */
+  inField?: boolean;
+  /** Втрати врожаю в полі за весь строк очікування, % маси. */
+  fieldLoss?: string;
 }
 
 interface FormState {
@@ -62,6 +66,8 @@ function num(v: string): number {
   const n = Number(v.replace(/\s/g, "").replace(",", "."));
   return Number.isFinite(n) && n > 0 ? n : 0;
 }
+
+const canStayInField = (name: string) => /кукурудз/i.test(name);
 
 function grossOf(r: CropRow): number {
   return num(r.area) * num(r.yieldT);
@@ -160,10 +166,13 @@ export default function GrainAdvisor() {
   const storageType = state.storageType ?? "warehouse";
   const normFor = (name: string) =>
     storageType === "custom" ? null : naturalLossNorm(name, storageType, months);
+  const inFieldOf = (r: CropRow) => !!r.inField && canStayInField(r.name);
   const lossRows = state.rows.map((r) => {
-    const norm = normFor(r.name);
-    const lostT = norm ? (stockOf(r) * norm.pct) / 100 : 0;
-    return { key: r.key, name: r.name.trim() || "Культура", norm, lostT, lostUah: lostT * num(r.priceFuture) };
+    const field = inFieldOf(r);
+    const norm = field ? null : normFor(r.name);
+    const pct = field ? num(r.fieldLoss ?? "") : norm?.pct ?? 0;
+    const lostT = (stockOf(r) * pct) / 100;
+    return { key: r.key, name: r.name.trim() || "Культура", norm, field, pct, lostT, lostUah: lostT * num(r.priceFuture) };
   });
   const lossTotal = lossRows.reduce((t, l) => ({ tons: t.tons + l.lostT, uah: t.uah + l.lostUah }), { tons: 0, uah: 0 });
   const result = useMemo(() => {
@@ -176,7 +185,12 @@ export default function GrainAdvisor() {
       areaHa: num(r.area),
       yieldT: num(r.yieldT),
       costPerHa: num(r.costPerHa ?? ""),
-      lossPct: storageType === "custom" ? undefined : naturalLossNorm(r.name, storageType, months)?.pct,
+      lossPct: inFieldOf(r)
+        ? num(r.fieldLoss ?? "")
+        : storageType === "custom"
+          ? undefined
+          : naturalLossNorm(r.name, storageType, months)?.pct,
+      storageCostPerTonMonth: inFieldOf(r) ? 0 : undefined,
     }));
     return advise(crops, {
       cashNeeded: cash,
@@ -270,7 +284,36 @@ export default function GrainAdvisor() {
                         ? ` · собівартість 1 т: ${uah(num(r.costPerHa ?? "") / num(r.yieldT))}`
                         : ""}
                     </p>
-                    {storageType !== "custom" && months > 0 && (
+                    {canStayInField(r.name) && (
+                      <div className="mt-3 rounded-xl bg-[#f6f3f1] p-3">
+                        <label className="flex cursor-pointer items-start gap-3">
+                          <input
+                            type="checkbox"
+                            checked={!!r.inField}
+                            onChange={(e) => setRow(r.key, { inField: e.target.checked })}
+                            className="mt-1 h-4 w-4 flex-none accent-[#8B1A2B]"
+                          />
+                          <span className="text-[14px] leading-snug text-[#3d3a38]">
+                            Залишити в полі (збирання взимку або навесні)
+                            <span className="mt-0.5 block text-[12.5px] text-[#8a8582]">
+                              У полі втрати більші, ніж у сховищі, і норми наказу № 316 на них не поширюються — введіть
+                              свої.
+                            </span>
+                          </span>
+                        </label>
+                        {r.inField && (
+                          <div className="mt-3 max-w-[260px]">
+                            <NumField
+                              label="Втрати в полі за весь строк"
+                              suffix="% маси"
+                              value={r.fieldLoss ?? ""}
+                              onChange={(v) => setRow(r.key, { fieldLoss: v })}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {!inFieldOf(r) && storageType !== "custom" && months > 0 && (
                       <p className="mt-1 text-[12.5px] text-[#8a8582]">
                         {(() => {
                           const n = normFor(r.name);
@@ -342,19 +385,28 @@ export default function GrainAdvisor() {
                   />
                 )}
               </div>
-              {storageType !== "custom" && lossRows.length > 0 && (
+              {(storageType !== "custom" || lossRows.some((l) => l.field)) && lossRows.length > 0 && (
                 <div className="mt-4 rounded-2xl bg-[#f6f3f1] p-3.5">
                   <p className="text-[11px] font-semibold uppercase tracking-[.1em] text-[#8a8582]">
-                    Втрати маси за {formatPrice(months)} міс. · {STORAGE_TYPES.find((t) => t.id === storageType)?.label}
+                    Втрати маси за {formatPrice(months)} міс.
+                    {storageType !== "custom" ? ` · ${STORAGE_TYPES.find((t) => t.id === storageType)?.label}` : ""}
                   </p>
                   <div className="mt-2 flex flex-col gap-1.5">
-                    {lossRows.map((l) => (
+                    {lossRows
+                      .filter((l) => storageType !== "custom" || l.field)
+                      .map((l) => (
                       <div key={l.key} className="flex items-baseline justify-between gap-3 text-[13.5px]">
                         <span className="text-[#141414]">{l.name}</span>
                         <span className="text-right text-[#5f5b58]">
-                          {l.norm
-                            ? `${pctFine(l.norm.pct)} · ${tons(l.lostT)}${l.lostUah > 0 ? ` ≈ ${uah(l.lostUah)}` : ""}`
-                            : `норми немає · ${state.storageLoss || "0"} %/міс`}
+                          {l.field
+                            ? l.pct > 0
+                              ? `в полі ${pctFine(l.pct)} · ${tons(l.lostT)}${l.lostUah > 0 ? ` ≈ ${uah(l.lostUah)}` : ""}`
+                              : "в полі: введіть % втрат"
+                            : l.norm
+                              ? `${pctFine(l.norm.pct)} · ${tons(l.lostT)}${l.lostUah > 0 ? ` ≈ ${uah(l.lostUah)}` : ""}`
+                              : storageType === "custom"
+                                ? `${state.storageLoss || "0"} %/міс`
+                                : `норми немає · ${state.storageLoss || "0"} %/міс`}
                         </span>
                       </div>
                     ))}

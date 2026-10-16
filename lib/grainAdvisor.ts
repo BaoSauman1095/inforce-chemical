@@ -50,6 +50,8 @@ export interface CropInput {
    * наказом № 316). Не задано — береться `storageLossPctPerMonth × months`.
    */
   lossPct?: number;
+  /** Вартість зберігання цієї культури, грн/т·міс; не задано — загальна з налаштувань (0 для зерна, що лишилось у полі). */
+  storageCostPerTonMonth?: number;
 }
 
 export interface AdvisorOptions {
@@ -177,7 +179,8 @@ export function analyzeCrops(crops: CropInput[], opts: AdvisorOptions): CropAnal
     .filter((c) => c.stockT > 0 && c.priceNow > 0 && c.priceFuture > 0)
     .map((c) => {
       const lossShare = c.lossPct !== undefined ? share(c.lossPct) : defaultLoss;
-      const netFuture = c.priceFuture * (1 - lossShare) - opts.storageCostPerTonMonth * opts.months;
+      const storageCost = c.storageCostPerTonMonth ?? opts.storageCostPerTonMonth;
+      const netFuture = c.priceFuture * (1 - lossShare) - storageCost * opts.months;
       const ratio = netFuture / c.priceNow;
       const costPerTon =
         c.costPerHa && c.costPerHa > 0 && c.yieldT && c.yieldT > 0 ? c.costPerHa / c.yieldT : undefined;
