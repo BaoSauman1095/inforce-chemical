@@ -116,6 +116,10 @@ export interface SellLine {
   futureLoss: number;
   /** Продається нижче собівартості. */
   belowCost: boolean;
+  /** З якої площі цей урожай, га; undefined — урожайність не задано. */
+  hectares?: number;
+  /** Недоотримано з кожного такого гектара, грн. */
+  lossPerHa?: number;
 }
 
 export interface Plan {
@@ -205,7 +209,17 @@ export function buildPlan(crops: CropAnalysis[], cashNeeded: number, protectCost
     const tons = Math.min(c.stockT, roundUpTons(remaining / c.priceNow));
     if (tons <= 0) continue;
     const revenue = tons * c.priceNow;
-    lines.push({ id: c.id, name: c.name, tons, revenue, futureLoss: tons * c.lossPerTon, belowCost: c.belowCost });
+    const y = c.yieldT && c.yieldT > 0 ? c.yieldT : undefined;
+    lines.push({
+      id: c.id,
+      name: c.name,
+      tons,
+      revenue,
+      futureLoss: tons * c.lossPerTon,
+      belowCost: c.belowCost,
+      hectares: y ? tons / y : undefined,
+      lossPerHa: y ? y * c.lossPerTon : undefined,
+    });
     remaining -= revenue;
   }
   return {

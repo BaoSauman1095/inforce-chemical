@@ -70,6 +70,8 @@ function stockOf(r: CropRow): number {
 const uah = (v: number) => `${formatPrice(Math.round(v))} грн`;
 const tons = (v: number) =>
   `${new Intl.NumberFormat("uk-UA", { maximumFractionDigits: 1 }).format(Math.round(v * 10) / 10)} т`;
+const hectaresFmt = (v: number) =>
+  new Intl.NumberFormat("uk-UA", { maximumFractionDigits: v < 10 ? 1 : 0 }).format(v);
 const formatPct = (v: number) =>
   `${new Intl.NumberFormat("uk-UA", { maximumFractionDigits: 0 }).format(Math.round(v))}%`;
 const coef = (v: number) => new Intl.NumberFormat("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
@@ -325,6 +327,12 @@ export default function GrainAdvisor() {
                         <span className="text-brand">{l.name}</span>: продати {tons(l.tons)}
                       </p>
                       <p className="text-[14px] font-semibold text-[#5f5b58]">{uah(l.revenue)}</p>
+                      {l.hectares !== undefined && l.lossPerHa !== undefined && (
+                        <p className="w-full text-[13px] text-[#5f5b58]">
+                          Це урожай з {hectaresFmt(l.hectares)} га
+                          {l.lossPerHa > 0 ? ` · недоотримаєте ${uah(l.lossPerHa)} з кожного гектара` : ""}
+                        </p>
+                      )}
                       {l.belowCost && (
                         <p className="w-full text-[12.5px] text-[#8a8582]">
                           Ціна зараз нижча за собівартість тонни, але інші культури втратили б більше.
