@@ -45,6 +45,11 @@ export interface CropInput {
   yieldT?: number;
   /** Витрати на вирощування 1 га, грн (насіння, добрива, ЗЗР, паливо, оренда…). */
   costPerHa?: number;
+  /**
+   * Втрати маси за весь строк очікування, % (напр. норма природних втрат за
+   * наказом № 316). Не задано — береться `storageLossPctPerMonth × months`.
+   */
+  lossPct?: number;
 }
 
 export interface AdvisorOptions {
@@ -166,10 +171,12 @@ function roundUpTons(t: number): number {
 }
 
 export function analyzeCrops(crops: CropInput[], opts: AdvisorOptions): CropAnalysis[] {
-  const lossShare = Math.min(1, Math.max(0, (opts.storageLossPctPerMonth * opts.months) / 100));
+  const share = (pct: number) => Math.min(1, Math.max(0, pct / 100));
+  const defaultLoss = share(opts.storageLossPctPerMonth * opts.months);
   return crops
     .filter((c) => c.stockT > 0 && c.priceNow > 0 && c.priceFuture > 0)
     .map((c) => {
+      const lossShare = c.lossPct !== undefined ? share(c.lossPct) : defaultLoss;
       const netFuture = c.priceFuture * (1 - lossShare) - opts.storageCostPerTonMonth * opts.months;
       const ratio = netFuture / c.priceNow;
       const costPerTon =

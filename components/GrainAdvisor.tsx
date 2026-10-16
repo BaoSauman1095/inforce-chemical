@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { cn, formatPrice } from "@/lib/utils";
 import { advise, type CropInput } from "@/lib/grainAdvisor";
 import { GRAIN_CROPS, GRAIN_PRICES_AS_OF } from "@/lib/grainPrices";
+import { naturalLossNorm, STORAGE_TYPES, type StorageType } from "@/lib/grainLossNorms";
 
 interface CropRow {
   key: string;
@@ -26,6 +27,8 @@ interface FormState {
   storageLoss: string;
   creditRate: string;
   protectCost?: boolean;
+  /** Де зберігається зерно: втрати маси — за нормами наказу № 316; "custom" — свій % на місяць. */
+  storageType?: StorageType | "custom";
 }
 
 const STORAGE_KEY = "grain-advisor-v1";
@@ -52,6 +55,7 @@ const DEFAULT_STATE: FormState = {
   storageLoss: "0",
   creditRate: "0",
   protectCost: false,
+  storageType: "warehouse",
 };
 
 function num(v: string): number {
@@ -72,6 +76,8 @@ const tons = (v: number) =>
   `${new Intl.NumberFormat("uk-UA", { maximumFractionDigits: 1 }).format(Math.round(v * 10) / 10)} т`;
 const hectaresFmt = (v: number) =>
   new Intl.NumberFormat("uk-UA", { maximumFractionDigits: v < 10 ? 1 : 0 }).format(v);
+const pctFine = (v: number) =>
+  `${new Intl.NumberFormat("uk-UA", { maximumFractionDigits: 3 }).format(Math.round(v * 1000) / 1000)}%`;
 const formatPct = (v: number) =>
   `${new Intl.NumberFormat("uk-UA", { maximumFractionDigits: 0 }).format(Math.round(v))}%`;
 const coef = (v: number) => new Intl.NumberFormat("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
@@ -150,6 +156,10 @@ export default function GrainAdvisor() {
   };
 
   const cash = num(state.cash);
+  const months = num(state.months);
+  const storageType = state.storageType ?? "warehouse";
+  const normFor = (name: string) =>
+    storageType === "custom" ? null : naturalLossNorm(name, storageType, months);
   const result = useMemo(() => {
     const crops: CropInput[] = state.rows.map((r) => ({
       id: r.key,
@@ -160,16 +170,17 @@ export default function GrainAdvisor() {
       areaHa: num(r.area),
       yieldT: num(r.yieldT),
       costPerHa: num(r.costPerHa ?? ""),
+      lossPct: storageType === "custom" ? undefined : naturalLossNorm(r.name, storageType, months)?.pct,
     }));
     return advise(crops, {
       cashNeeded: cash,
-      months: num(state.months),
+      months,
       storageCostPerTonMonth: num(state.storageCost),
       storageLossPctPerMonth: num(state.storageLoss),
       creditRatePct: num(state.creditRate),
       protectCost: !!state.protectCost,
     });
-  }, [state, cash]);
+  }, [state, cash, months, storageType]);
 
   const { plan, crops } = result;
   const sorted = [...crops].sort((a, b) => a.ratio - b.ratio);
@@ -253,6 +264,16 @@ export default function GrainAdvisor() {
                         ? ` · собівартість 1 т: ${uah(num(r.costPerHa ?? "") / num(r.yieldT))}`
                         : ""}
                     </p>
+                    {storageType !== "custom" && months > 0 && (
+                      <p className="mt-1 text-[12.5px] text-[#8a8582]">
+                        {(() => {
+                          const n = normFor(r.name);
+                          return n
+                            ? `Природні втрати за ${formatPrice(months)} міс.: ${pctFine(n.pct)} маси (${tons((stockOf(r) * n.pct) / 100)}) — норма наказу № 316`
+                            : `Норму природних втрат для цієї культури${storageType === "elevator" ? " в елеваторі" : ""} не встановлено — враховано ${state.storageLoss || "0"} %/міс`;
+                        })()}
+                      </p>
+                    )}
                   </div>
                 );
               })}
@@ -284,15 +305,40 @@ export default function GrainAdvisor() {
                 <span className="group-open:hidden">+ Зберігання, строк і кредит</span>
                 <span className="hidden group-open:inline">− Зберігання, строк і кредит</span>
               </summary>
+              <p className="mt-4 text-[11px] font-semibold uppercase tracking-[.1em] text-[#8a8582]">
+                Де зберігається зерно
+              </p>
+              <div className="mt-1.5 flex flex-wrap gap-2">
+                {[...STORAGE_TYPES, { id: "custom" as const, label: "Свій % втрат" }].map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => set({ storageType: t.id })}
+                    className={cn(
+                      "tap-44 rounded-md px-3 py-1.5 text-[13px] font-semibold transition-colors",
+                      storageType === t.id ? "bg-brand text-white" : "bg-brand/[.08] text-brand hover:bg-brand/[.16]"
+                    )}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <NumField label="Чекати ціну" suffix="міс" value={state.months} onChange={(v) => set({ months: v })} />
                 <NumField label="Зберігання" suffix="грн/т·міс" value={state.storageCost} onChange={(v) => set({ storageCost: v })} />
-                <NumField label="Втрати маси" suffix="%/міс" value={state.storageLoss} onChange={(v) => set({ storageLoss: v })} />
+                <NumField
+                  label={storageType === "custom" ? "Втрати маси" : "Втрати без норми"}
+                  suffix="%/міс"
+                  value={state.storageLoss}
+                  onChange={(v) => set({ storageLoss: v })}
+                />
                 <NumField label="Ставка кредиту" suffix="% річних" value={state.creditRate} onChange={(v) => set({ creditRate: v })} />
               </div>
               <p className="mt-3 text-[12.5px] leading-relaxed text-[#8a8582]">
-                Зберігання і втрати маси зменшують майбутню ціну тонни. Ставка кредиту потрібна, щоб порівняти:
-                продати зерно зараз чи позичити ту саму суму і продати пізніше.
+                Природні втрати маси рахуються за нормами Мінагрополітики (наказ від 12.06.2019 № 316) залежно від
+                культури, місця і строку зберігання — їх видно під кожною культурою. Зберігання і втрати зменшують
+                майбутню ціну тонни. Ставка кредиту потрібна, щоб порівняти: продати зерно зараз чи позичити ту саму суму
+                і продати пізніше.
               </p>
               <label className="mt-4 flex cursor-pointer items-start gap-3">
                 <input
