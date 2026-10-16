@@ -539,12 +539,33 @@ export default function GrainAdvisor() {
                     </div>
                     <div className="mt-2.5 grid grid-cols-3 gap-2">
                       {[
-                        { label: "Зараз", profit: h.profitNow, pctv: h.marginNowPct },
-                        { label: "За прогнозом", profit: h.profitFuture, pctv: h.marginFuturePct },
-                        { label: "За планом", profit: h.profitPlan, pctv: h.marginPlanPct },
+                        { label: "Зараз", hint: "весь урожай продано зараз", profit: h.profitNow, pctv: h.marginNowPct },
+                        {
+                          label: "За прогнозом",
+                          hint: "весь урожай продано пізніше",
+                          profit: h.profitFuture,
+                          pctv: h.marginFuturePct,
+                        },
+                        {
+                          label: "За планом",
+                          hint:
+                            Math.abs(h.profitPlan - h.profitFuture) < 0.5
+                              ? "зараз не продається, увесь урожай пізніше"
+                              : "частину продано зараз, решту пізніше",
+                          profit: h.profitPlan,
+                          pctv: h.marginPlanPct,
+                          accent: true,
+                        },
                       ].map((x) => (
-                        <div key={x.label} className="min-w-0 rounded-xl bg-[#f6f3f1] px-2.5 py-2">
+                        <div
+                          key={x.label}
+                          className={cn(
+                            "min-w-0 rounded-xl bg-[#f6f3f1] px-2.5 py-2",
+                            x.accent && "ring-1 ring-brand/40"
+                          )}
+                        >
                           <p className="text-[10.5px] font-semibold uppercase tracking-[.06em] text-[#8a8582]">{x.label}</p>
+                          <p className="mt-0.5 text-[10.5px] leading-tight text-[#8a8582]">{x.hint}</p>
                           <p
                             className={cn(
                               "mt-0.5 text-[14px] font-bold",
@@ -578,8 +599,10 @@ export default function GrainAdvisor() {
                 </p>
               )}
               <p className="mt-3 text-[12.5px] leading-relaxed text-[#8a8582]">
-                Рентабельність = прибуток з 1 га / витрати на 1 га. «За планом» — частина врожаю продана зараз, решта за
-                очікуваною ціною.
+                Рентабельність = прибуток з 1 га / витрати на 1 га. «За прогнозом» — увесь урожай продано пізніше за
+                очікуваною ціною. «За планом» — так, як рекомендує калькулятор: частину продано зараз, щоб зібрати
+                потрібну суму, решту пізніше. Різниця між цими двома колонками — те, скільки гектар втрачає через продаж
+                частини врожаю зараз.
               </p>
             </Panel>
           )}
