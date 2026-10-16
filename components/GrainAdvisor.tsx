@@ -391,8 +391,8 @@ export default function GrainAdvisor() {
 
         <div className="flex min-w-0 flex-col gap-6 lg:sticky lg:top-24">
           <p className="px-1 text-[12px] leading-relaxed -mb-3 text-paper/50">
-            Розрахунок довідковий. Очікувані ціни — прогноз, а не гарантія: якщо ціни не зростуть, втрати від продажу
-            зараз не буде. Рішення приймає господарство.
+            Розрахунок довідковий. Очікувані ціни — прогноз, а не гарантія: якщо ціни не зростуть до очікуваних,
+            недоотриманий дохід, показаний у розрахунку, не виникне. Рішення приймає господарство.
           </p>
           <Panel>
             <p className="text-[11px] font-semibold uppercase tracking-[.15em] text-brand">Рекомендація</p>
