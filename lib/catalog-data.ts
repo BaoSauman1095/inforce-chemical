@@ -2146,7 +2146,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "zlakodyn",
           name: "Злакодин",
           brand: "Himagro M",
-          packs: [{ label: "0,133 кг", price: 16746, currency: "USD", indicativePrice: 304.35 }, { label: "0,2 кг", price: 16147, currency: "USD", indicativePrice: 293.48 }],
+          packs: [{ label: "0,133 кг", price: 16749, currency: "USD", indicativePrice: 304.35 }, { label: "0,2 кг", price: 16151, currency: "USD", indicativePrice: 293.48 }],
           unit: "кг",
           tagline: "Гербіцид проти пирію, стоколосу та падалиці ячменю в озимій пшениці",
           description:
@@ -3010,7 +3010,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "autbag",
           name: "Аутбаг",
           brand: "Himagro M",
-          packs: [{ label: "0,5 л", price: 5277, currency: "USD", indicativePrice: 95.91 }],
+          packs: [{ label: "0,5 л", price: 5278, currency: "USD", indicativePrice: 95.91 }],
           unit: "л",
           tagline: "Контактний гербіцид для контролю дводольних бур'янів у зернових, соняшнику та ріпаку",
           description:
@@ -4795,7 +4795,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "hoshi",
           name: "Хоші",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 1318, currency: "USD", indicativePrice: 23.96 }],
+          packs: [{ label: "5 л", price: 1319, currency: "USD", indicativePrice: 23.96 }],
           unit: "л",
           tagline: "Регулятор росту з фунгіцидним ефектом проти вилягання зернових і ріпаку",
           description:
