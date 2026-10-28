@@ -20,7 +20,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50450",
           name: "ЛГ50450",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 8330 }],
+          packs: [{ label: "п.о.", price: 8303 }],
           unit: "п.о.",
           tagline: "Нова генетика для стабільно високого раннього врожаю",
           description:
@@ -44,7 +44,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50455-klp",
           name: "ЛГ50455 КЛП",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 9437 }],
+          packs: [{ label: "п.о.", price: 9406 }],
           unit: "п.о.",
           tagline: "Найвищий урожай серед ранніх гібридів Clearfield Plus",
           description:
@@ -68,7 +68,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50475",
           name: "ЛГ50475",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 9146 }],
+          packs: [{ label: "п.о.", price: 9115 }],
           unit: "п.о.",
           tagline: "Високоолеїновий гібрид з найвищим урожаєм у групі НО",
           description:
@@ -92,7 +92,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50479-sx",
           name: "ЛГ50479 SX",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 9903 }],
+          packs: [{ label: "п.о.", price: 9870 }],
           unit: "п.о.",
           tagline: "Високоврожайний гібрид технології Express у своїй групі стиглості",
           description:
@@ -164,7 +164,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-50639-sx",
           name: "ЛГ50639 SX",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 9845 }],
+          packs: [{ label: "п.о.", price: 9812 }],
           unit: "п.о.",
           tagline: "Високоврожайний гібрид Express Sun для степу й лісостепу",
           description:
@@ -188,7 +188,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-5555-klp",
           name: "ЛГ5555 КЛП",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 8913 }],
+          packs: [{ label: "п.о.", price: 8883 }],
           unit: "п.о.",
           tagline: "Посухостійкий низькорослий гібрид Clearfield Plus для півдня України",
           description:
@@ -212,7 +212,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-59580",
           name: "ЛГ59580",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 9088 }],
+          packs: [{ label: "п.о.", price: 9057 }],
           unit: "п.о.",
           tagline: "Гібрид Express для південних регіонів з високою стресостійкістю",
           description:
@@ -236,7 +236,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "apsf32-cl",
           name: "АПСФ32",
           brand: "Apsov",
-          packs: [{ label: "п.о.", price: 5128 }],
+          packs: [{ label: "п.о.", price: 5110 }],
           unit: "п.о.",
           tagline: "Ранньо-середньостиглий гібрид Clearfield з високою олійністю",
           description:
@@ -260,7 +260,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "iolen",
           name: "Йолен",
           brand: "Apsov",
-          packs: [{ label: "п.о.", price: 6168 }],
+          packs: [{ label: "п.о.", price: 6147 }],
           unit: "п.о.",
           tagline: "Високоолеїновий гібрид з великим кошиком та стійкістю до фомопсису",
           description:
@@ -284,7 +284,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "ksilo-sulfo",
           name: "Ксіло",
           brand: "Apsov",
-          packs: [{ label: "п.о.", price: 6734 }],
+          packs: [{ label: "п.о.", price: 6712 }],
           unit: "п.о.",
           tagline: "Середньостиглий гібрид технології Сульфо з високим кошиком",
           description:
@@ -308,7 +308,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "nemo-cl",
           name: "Немо",
           brand: "Apsov",
-          packs: [{ label: "п.о.", price: 6374 }],
+          packs: [{ label: "п.о.", price: 6352 }],
           unit: "п.о.",
           tagline: "Ранньо-середньостиглий гібрид Clearfield з високим кошиком",
           description:
@@ -338,7 +338,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "adevei",
           name: "Адевей",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 2621 }],
+          packs: [{ label: "п.о.", price: 2613 }],
           unit: "п.о.",
           tagline: "Стабільно високий урожай на технології Пончо для різних умов вирощування",
           description:
@@ -362,7 +362,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "vesli",
           name: "Веслі",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 3204 }],
+          packs: [{ label: "п.о.", price: 3193 }],
           unit: "п.о.",
           tagline: "Пластичний гібрид ФАО 250 з відмінним потенціалом урожайності",
           description:
@@ -386,7 +386,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "dzhodi",
           name: "Джоді",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 3379 }],
+          packs: [{ label: "п.о.", price: 3367 }],
           unit: "п.о.",
           tagline: "Гібрид для якісного силосу з високим вмістом сухої речовини",
           description:
@@ -434,7 +434,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-30215",
           name: "ЛГ 30215",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 3087 }],
+          packs: [{ label: "п.о.", price: 3077 }],
           unit: "п.о.",
           tagline: "Високотолерантний до посухи гібрид ФАО 220 для класичних технологій",
           description:
@@ -482,7 +482,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-30315",
           name: "ЛГ 30315",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 3204 }],
+          packs: [{ label: "п.о.", price: 3193 }],
           unit: "п.о.",
           tagline: "Високотолерантний до посухи гібрид ФАО 280 з швидкою вологовіддачею",
           description:
@@ -530,7 +530,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "bots",
           name: "Ботс",
           brand: "Farmsaat",
-          packs: [{ label: "п.о.", price: 4253 }],
+          packs: [{ label: "п.о.", price: 4238 }],
           unit: "п.о.",
           tagline: "Найвищі показники врожайності в ранній групі стиглості",
           description:
@@ -578,7 +578,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "yevrobos",
           name: "Євробос",
           brand: "Farmsaat",
-          packs: [{ label: "п.о.", price: 4602 }],
+          packs: [{ label: "п.о.", price: 4587 }],
           unit: "п.о.",
           tagline: "Потужний качан за будь-яких умов вирощування",
           description:
@@ -602,7 +602,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "farmodena",
           name: "Фармодена",
           brand: "Farmsaat",
-          packs: [{ label: "п.о.", price: 4253 }],
+          packs: [{ label: "п.о.", price: 4238 }],
           unit: "п.о.",
           tagline: "Роками перевірений гібрид з високою врожайністю в Європі",
           description:
@@ -626,7 +626,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "farmorits",
           name: "Фарморіц",
           brand: "Farmsaat",
-          packs: [{ label: "п.о.", price: 4020 }],
+          packs: [{ label: "п.о.", price: 4006 }],
           unit: "п.о.",
           tagline: "Лідер за площами посіву в Європі серед гібридів FS",
           description:
@@ -674,7 +674,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "farmerfi",
           name: "Фармьорфі",
           brand: "Farmsaat",
-          packs: [{ label: "п.о.", price: 4369 }],
+          packs: [{ label: "п.о.", price: 4355 }],
           unit: "п.о.",
           tagline: "Високоврожайний пластичний гібрид з гармонійним достиганням",
           description:
@@ -698,7 +698,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "farmuller",
           name: "Фармюллер",
           brand: "Farmsaat",
-          packs: [{ label: "п.о.", price: 4602 }],
+          packs: [{ label: "п.о.", price: 4587 }],
           unit: "п.о.",
           tagline: "Лідер серед гібридів FS на крупу в Польщі",
           description:
@@ -722,7 +722,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg31240",
           name: "ЛГ 31240",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 4078 }],
+          packs: [{ label: "п.о.", price: 4064 }],
           unit: "п.о.",
           tagline: "Гібрид з високою енергією старту для Полісся і Лісостепу",
           description:
@@ -842,7 +842,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg-31330",
           name: "ЛГ 31330",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 3845 }],
+          packs: [{ label: "п.о.", price: 3832 }],
           unit: "п.о.",
           tagline: "Стабільний гібрид ФАО 320 з хорошим профілем стійкості до хвороб",
           description:
@@ -866,7 +866,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg31350",
           name: "ЛГ 31350",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 4602 }],
+          packs: [{ label: "п.о.", price: 4587 }],
           unit: "п.о.",
           tagline: "Гібрид програми Danube з дуже доброю виповненістю качана",
           description:
@@ -890,7 +890,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg31365",
           name: "ЛГ 31365",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 4777 }],
+          packs: [{ label: "п.о.", price: 4761 }],
           unit: "п.о.",
           tagline: "Новий гібрид ФАО 350 програми Danube з найвищою стабільністю",
           description:
@@ -914,7 +914,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "lg31383",
           name: "ЛГ 31383",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 3728 }],
+          packs: [{ label: "п.о.", price: 3716 }],
           unit: "п.о.",
           tagline: "Гібрид ФАО 370 з вираженим stay-green для зерна й силосу",
           description:
@@ -938,7 +938,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "midnait",
           name: "Міднайт",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 3787 }],
+          packs: [{ label: "п.о.", price: 3774 }],
           unit: "п.о.",
           tagline: "Пластичний і стабільний гібрид ФАО 240 для континентальних умов",
           description:
@@ -992,7 +992,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "avenher",
           name: "Авенгер",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 11767 }],
+          packs: [{ label: "п.о.", price: 11728 }],
           unit: "п.о.",
           tagline: "Гібрид ріпаку озимого з максимальним потенціалом урожайності",
           description:
@@ -1017,7 +1017,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "aviron",
           name: "Авірон",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 7107 }],
+          packs: [{ label: "п.о.", price: 7083 }],
           unit: "п.о.",
           tagline: "Пластичний гібрид N-Flex з високою зимостійкістю — залишки партії",
           description:
@@ -1069,7 +1069,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "armada",
           name: "Армада",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 12350 }],
+          packs: [{ label: "п.о.", price: 12309 }],
           unit: "п.о.",
           tagline: "Середньостиглий гібрид N-Flex/Sclero-Flex з високою зимостійкістю",
           description:
@@ -1121,7 +1121,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "austin",
           name: "Аустін",
           brand: "Limagrain",
-          packs: [{ label: "п.о.", price: 6990 }],
+          packs: [{ label: "п.о.", price: 6967 }],
           unit: "п.о.",
           tagline: "Гібрид з відмінним комплексом стійкості до хвороб і розтріскування стручків",
           description:
@@ -1179,7 +1179,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "hidrofert-13-40-13",
           name: "Гідроферт 13.40.13",
           brand: "Biolchim",
-          packs: [{ label: "25 кг", price: 190 }],
+          packs: [{ label: "25 кг", price: 189 }],
           unit: "кг",
           tagline: "Стартове водорозчинне добриво з високим вмістом фосфору",
           description:
@@ -1204,7 +1204,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "hidrofert-3-11-38",
           name: "Гідроферт 3.11.38",
           brand: "Biolchim",
-          packs: [{ label: "25 кг", price: 178 }],
+          packs: [{ label: "25 кг", price: 177 }],
           unit: "кг",
           tagline: "Калійне водорозчинне добриво для якості та дозрівання врожаю",
           description:
@@ -1279,7 +1279,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "hidrofert-15-5-30",
           name: "Гідроферт 15.5.30",
           brand: "Biolchim",
-          packs: [{ label: "25 кг", price: 145 }],
+          packs: [{ label: "25 кг", price: 144 }],
           unit: "кг",
           tagline: "Калійне добриво для наливу коренеплодів і плодів",
           description:
@@ -1310,7 +1310,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "mikrofol-kombi",
           name: "Мікрофол Комбі",
           brand: "Biolchim",
-          packs: [{ label: "1 кг", price: 545 }],
+          packs: [{ label: "1 кг", price: 543 }],
           unit: "кг",
           tagline: "Концентрований комплекс мікроелементів з високим вмістом магнію",
           description:
@@ -1360,7 +1360,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "mahnistart-np-zn",
           name: "Магністарт NP Zn",
           brand: "Biolchim",
-          packs: [{ label: "15 кг", price: 155 }],
+          packs: [{ label: "15 кг", price: 154 }],
           unit: "кг",
           tagline: "Мікрогранульоване стартове добриво з фосфором і цинком",
           description:
@@ -1390,7 +1390,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kropmaks",
           name: "Кропмакс",
           brand: "Holland Farming",
-          packs: [{ label: "1 л", price: 1139 }, { label: "5 л", price: 1107 }, { label: "20 л", price: 1060 }],
+          packs: [{ label: "1 л", price: 1135 }, { label: "5 л", price: 1103 }, { label: "20 л", price: 1056 }],
           unit: "л",
           tagline: "Ультраконцентрований біостимулятор з амінокислотами та фітогормонами",
           description:
@@ -1414,7 +1414,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "filloton",
           name: "Філлотон",
           brand: "Biolchim",
-          packs: [{ label: "1 л", price: 383 }, { label: "5 л" }, { label: "20 л" }],
+          packs: [{ label: "1 л", price: 381 }, { label: "5 л" }, { label: "20 л" }],
           unit: "л",
           tagline: "Біостимулятор для відновлення рослини після стресу",
           description:
@@ -1885,7 +1885,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "propley-bt",
           name: "Проплей БТ",
           brand: "Ocean Invest",
-          packs: [{ label: "20 л", price: 340 }],
+          packs: [{ label: "20 л", price: 341 }],
           unit: "л",
           tagline: "Ґрунтовий гербіцид проти злакових бур'янів",
           description:
@@ -2120,7 +2120,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "etaforon",
           name: "Етафорон",
           brand: "Himagro M",
-          packs: [{ label: "0,25 кг", price: 9832 }],
+          packs: [{ label: "0,25 кг", price: 9834 }],
           unit: "кг",
           tagline: "Унікальний гербіцид для контролю хрестоцвітих бур'янів у ріпаку",
           description:
@@ -2171,7 +2171,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "klinkorn",
           name: "Клінкорн",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 579 }, { label: "10 л", price: 547 }],
+          packs: [{ label: "1 л", price: 580 }, { label: "10 л", price: 547 }],
           unit: "л",
           tagline: "Двокомпонентний гербіцид для кукурудзи проти злакових і дводольних бур'янів",
           description:
@@ -2249,7 +2249,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "optymum",
           name: "Оптимум",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 666 }, { label: "5 л", price: 633 }, { label: "10 л", price: 612 }, { label: "20 л" }],
+          packs: [{ label: "1 л", price: 666 }, { label: "5 л", price: 633 }, { label: "10 л", price: 613 }, { label: "20 л" }],
           unit: "л",
           tagline: "Гормональний гербіцид проти дводольних бур'янів, стійких до 2,4-Д і МЦПА",
           description:
@@ -2302,7 +2302,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "orion",
           name: "Оріон",
           brand: "Himagro M",
-          packs: [{ label: "0,25 кг", price: 4779 }],
+          packs: [{ label: "0,25 кг", price: 4780 }],
           unit: "кг",
           tagline: "Гербіцид проти дводольних бур'янів, стійких до 2,4-Д, у зернових, кукурудзі й сої",
           description:
@@ -2381,7 +2381,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "total-k-himagro",
           name: "Тотал К",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 373 }, { label: "5 л", price: 323 }, { label: "10 л", price: 284 }, { label: "20 л", price: 262 }],
+          packs: [{ label: "1 л", price: 373 }, { label: "5 л", price: 324 }, { label: "10 л", price: 284 }, { label: "20 л", price: 262 }],
           unit: "л",
           tagline: "Гербіцид суцільної дії з калійною сіллю гліфосату для авіаобробки",
           description:
@@ -2487,7 +2487,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "flumet",
           name: "Флумет",
           brand: "Himagro M",
-          packs: [{ label: "0,5 кг", price: 8194 }],
+          packs: [{ label: "0,5 кг", price: 8195 }],
           unit: "кг",
           tagline: "Гербіцид для зернових і сої з низькими нормами витрати",
           description:
@@ -2777,7 +2777,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "samson-super-6od",
           name: "Самсон Супер 6ОД",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 1255 }],
+          packs: [{ label: "5 л", price: 1256 }],
           unit: "л",
           tagline: "Оригінальний японський грамініцид для кукурудзи на технології BAT",
           description:
@@ -2932,7 +2932,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "infanta",
           name: "Інфанта",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 4171 }],
+          packs: [{ label: "1 л", price: 4172 }],
           unit: "л",
           tagline: "Гербіцид проти перерослих бур'янів та падалиці, стійкої до сульфонілсечовин",
           description:
@@ -3310,7 +3310,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "bredli",
           name: "Бредлі",
           brand: "Himagro M",
-          packs: [{ label: "1 л", price: 2684 }, { label: "5 л", price: 2627 }, { label: "10 л", price: 2570 }],
+          packs: [{ label: "1 л", price: 2685 }, { label: "5 л", price: 2627 }, { label: "10 л", price: 2571 }],
           unit: "л",
           tagline: "Системний фунгіцид проти сірої та білої гнилі у профілактичному й антирезистентному захисті",
           description:
@@ -3548,7 +3548,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kallatis",
           name: "Каллатіс",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 1096 }],
+          packs: [{ label: "5 л", price: 1097 }],
           unit: "л",
           tagline: "Ефективно захищає та стимулює ріст рослин",
           description:
@@ -3627,7 +3627,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "manzat",
           name: "Манзат",
           brand: "Sumi Agro",
-          packs: [{ label: "10 кг", price: 493 }],
+          packs: [{ label: "10 кг", price: 494 }],
           unit: "кг",
           tagline: "Надійний і зручний контактний фунгіцид з технологією RainCoat",
           description:
@@ -3654,7 +3654,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "migiva",
           name: "Мігіва",
           brand: "Sumi Agro",
-          packs: [{ label: "500 мл", price: 10308 }],
+          packs: [{ label: "500 мл", price: 10310 }],
           unit: "л",
           tagline: "Інноваційна японська молекула для захисту яблуні від комплексу хвороб",
           description:
@@ -3731,7 +3731,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "parad",
           name: "Парад",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 12972 }],
+          packs: [{ label: "1 л", price: 12975 }],
           unit: "л",
           tagline: "Потужний японський SDHI-фунгіцид проти склеротиніозу та сірої гнилі",
           description:
@@ -3757,7 +3757,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "ranman-top",
           name: "Ранман ТОП",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 3556 }],
+          packs: [{ label: "1 л", price: 3557 }],
           unit: "л",
           tagline: "Прогресивний фунгіцид для захисту овочів в екстремальних умовах",
           description:
@@ -3834,7 +3834,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "yutaka",
           name: "Ютака",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л" }, { label: "10 л", price: 1295 }],
+          packs: [{ label: "5 л" }, { label: "10 л", price: 1296 }],
           unit: "л",
           tagline: "Новий трикомпонентний фунгіцид для інтенсивного захисту",
           description:
@@ -3913,7 +3913,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "kazumin",
           name: "Казумін",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 1383 }, { label: "5 л", price: 4477 }],
+          packs: [{ label: "1 л", price: 1383 }, { label: "5 л", price: 4478 }],
           unit: "л",
           tagline: "Біологічний бактерицид і фунгіцид лікувальної дії проти бактеріального опіку",
           description:
@@ -4217,7 +4217,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "inazuma",
           name: "Іназума",
           brand: "Sumi Agro",
-          packs: [{ label: "5 кг", price: 1573 }],
+          packs: [{ label: "5 кг", price: 1574 }],
           unit: "кг",
           tagline: "Двокомпонентний інсектицид блискавичної дії проти комплексу шкідників",
           description:
@@ -4271,7 +4271,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "nissoran",
           name: "Ніссоран",
           brand: "Sumi Agro",
-          packs: [{ label: "500 гр", price: 1260 }, { label: "1 кг", price: 2519 }],
+          packs: [{ label: "500 гр", price: 1260 }, { label: "1 кг", price: 2520 }],
           unit: "кг",
           tagline: "Оригінальний японський акарицид, що діє на яйця, личинки та німфи кліщів",
           description:
@@ -4323,7 +4323,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "silker",
           name: "Сілкер",
           brand: "Sumi Agro",
-          packs: [{ label: "1 л", price: 2275 }, { label: "5 л" }, { label: "10 л", price: 2112 }],
+          packs: [{ label: "1 л", price: 2276 }, { label: "5 л" }, { label: "10 л", price: 2113 }],
           unit: "л",
           tagline: "Контроль дрібних шкідників без хімічних діючих речовин",
           description:
@@ -4350,7 +4350,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "teppeki",
           name: "Теппекі",
           brand: "Sumi Agro",
-          packs: [{ label: "140 гр", price: 1473 }, { label: "500 гр", price: 5124 }],
+          packs: [{ label: "140 гр", price: 1474 }, { label: "500 гр", price: 5125 }],
           unit: "кг",
           tagline: "Досконалий контроль попелиць та білокрилок з новим механізмом дії",
           description:
@@ -4376,7 +4376,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "leksykon",
           name: "Лексикон",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 4166 }],
+          packs: [{ label: "5 л", price: 4167 }],
           unit: "л",
           tagline: "Двокомпонентний інсектицид широкого спектра з нокдаун-ефектом",
           description:
@@ -4954,7 +4954,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "sendai",
           name: "Сендай",
           brand: "Sumi Agro",
-          packs: [{ label: "5 л", price: 488 }],
+          packs: [{ label: "5 л", price: 489 }],
           unit: "л",
           tagline: "Спеціальний засіб для очищення обприскувача від залишків пестицидів",
           description:
@@ -5036,7 +5036,7 @@ const CATALOG_SOURCE: Catalog = {
           slug: "fumifos",
           name: "Фуміфос",
           brand: "Himagro M",
-          packs: [{ label: "0,48 кг", price: 703 }, { label: "1 кг", price: 537 }],
+          packs: [{ label: "0,48 кг", price: 704 }, { label: "1 кг", price: 537 }],
           unit: "кг",
           tagline: "Фумігант для повного знезараження зерна та складських приміщень",
           description:
