@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Montserrat } from "next/font/google";
+import { Inter, JetBrains_Mono, Montserrat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { PHONE_DISPLAY, PHONE_TEL, SITE_NAME, SITE_URL, SOCIALS } from "@/lib/constants";
@@ -16,6 +16,13 @@ const montserrat = Montserrat({
   subsets: ["latin", "cyrillic"],
   weight: ["500", "600", "700", "800"],
   variable: "--font-montserrat",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500"],
+  variable: "--font-jetbrains-mono",
   display: "swap",
 });
 
@@ -137,7 +144,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="uk" className={`${inter.variable} ${montserrat.variable}`}>
+    <html lang="uk" className={`${inter.variable} ${montserrat.variable} ${jetbrainsMono.variable}`}>
       <head>
         <OrganizationJsonLd />
       </head>
